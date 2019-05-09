@@ -428,7 +428,6 @@ public service_buy(id)
 	new service[serviceData], tariff[tariffData], menuData[512];
 
 	ArrayGetArray(shopServices, playerBuy[id][PLAYER_SERVICE], service);
-
 	ArrayGetArray(service[SERVICES_DATA], playerBuy[id][PLAYER_TARIFF], tariff);
 
 	new Float:servicePrice = float(tariff[SERVICE_TARIFF]);
@@ -717,7 +716,6 @@ public service_code_verified(id)
 			new service[serviceData], tariff[tariffData], ret;
 
 			ArrayGetArray(shopServices, playerBuy[id][PLAYER_SERVICE], service);
-
 			ArrayGetArray(service[SERVICES_DATA], playerBuy[id][PLAYER_TARIFF], tariff);
 
 			if (service[SERVICE_BOUGHT]) ExecuteForward(service[SERVICE_BOUGHT], ret, id, tariff[SERVICE_AMOUNT]);
@@ -786,7 +784,7 @@ public sql_init()
 	if (errorNum) {
 		log_to_file(LOG_FILE, "[ERROR] SQL Error (Init): %s (%d)", error, errorNum);
 
-		set_task(5.0, "sql_init");
+		set_fail_state("Wystapil blad podczas ladowania danych SklepuSMS. Sprawdz logi bledow!");
 
 		return;
 	}
