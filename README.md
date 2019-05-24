@@ -20,6 +20,8 @@ Sklep był testowany na wersjach:
 Własna implementacja pluginu stanowiącego silnik sklepu jest w pełni kompatybilna z oryginalnym API i bazą sklepu.
 Dodatkowo posiada kilka autorskich usprawnień jak chociażby możliwość sprawdzenia aktywnych usług wraz z datą ich wygaśnięcia z poziomu serwera.
 
+Masz problem z działaniem sklepu z HTTPS? [Zajrzyj tutaj](https://github.com/TheDoctor0/sklep-sms/issues/7#issuecomment-491354212).
+
 ## Licencja
 System licencyjny jest domyślnie wyłączony, więc ze sklepu można korzystać całkowicie za darmo.
 
