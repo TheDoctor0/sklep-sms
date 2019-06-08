@@ -22,6 +22,11 @@ Dodatkowo posiada kilka autorskich usprawnień jak chociażby możliwość spraw
 
 Masz problem z działaniem sklepu z HTTPS? [Zajrzyj tutaj](https://github.com/TheDoctor0/sklep-sms/issues/7#issuecomment-491354212).
 
+## Ograniczenia
+Plugin używany na serwerach wykorzystuje moduł Sockets, który nie posiada wsparcia dla protokołu HTTPS.
+
+W przypadku używania HTTPS do obsługi webowej części sklepu (do czego zalecam), należy odkomentować zasady w **.htaccess** (sekcja *Disable HTTTPS For Servers Script*), które wyłączą go dla skryptu *servers_stuff.php* używanego przez plugin jako API.
+
 ## Licencja
 System licencyjny jest domyślnie wyłączony, więc ze sklepu można korzystać całkowicie za darmo.
 
