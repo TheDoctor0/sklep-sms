@@ -4,11 +4,11 @@
     </IfModule>
 
     RewriteEngine On
-
-    # Disable HTTPS For Servers Script...
-    RewriteCond %{HTTPS} on
-    RewriteCond %{REQUEST_URI} ^/servers_stuff\.php$ [NC]
-    RewriteRule (.*) http://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+    
+    # Disable HTTTPS For Servers Script
+    #RewriteCond %{HTTPS} !=on
+    #RewriteCond %{REQUEST_URI} !^/servers_stuff.php$
+    #RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
