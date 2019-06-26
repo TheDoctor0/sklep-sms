@@ -22,7 +22,7 @@
     "ext-simplexml": "*",
     "vlucas/phpdotenv": "^2.4",
     "illuminate/container": "^5.4",
-    "symfony/console": "^3.4",
+    "symfony/console": "^4.3",
     "symfony/debug": "^3.4",
     "symfony/http-foundation": "^3.4",
     "sentry/sentry": "^1.9",
