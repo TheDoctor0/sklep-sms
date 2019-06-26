@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use App\Cache\CacheEnum;
@@ -41,7 +42,7 @@ class ExternalConfigProvider
 
     protected function loadConfig()
     {
-        return $this->cachingRequester->load(CacheEnum::EXTERNAL_CONFIG, static::CACHE_TTL, function() {
+        return $this->cachingRequester->load(CacheEnum::EXTERNAL_CONFIG, static::CACHE_TTL, function () {
             return $this->request();
         });
     }
@@ -49,6 +50,7 @@ class ExternalConfigProvider
     protected function request()
     {
         $response = $this->requester->get('http://license.sklep-sms.pl/config');
+
         return $response ? $response->json() : null;
     }
 

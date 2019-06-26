@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Kernels;
 
 use App\Application;
@@ -46,6 +47,7 @@ abstract class Kernel implements KernelContract
             $handler = $this->app->make(ExceptionHandlerContract::class);
             $e = new FatalThrowableError($e);
             $handler->report($e);
+
             return $handler->render($request, $e);
         }
     }
@@ -69,7 +71,5 @@ abstract class Kernel implements KernelContract
                 return $response;
             }
         }
-
-        return null;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 class MybbUser
@@ -15,7 +16,7 @@ class MybbUser
     /** @var int[] */
     private $mybb_addgroups = [];
 
-    /** @var  int */
+    /** @var int */
     private $mybb_display_group;
 
     /**
@@ -53,8 +54,8 @@ class MybbUser
     }
 
     /**
-     * @param integer $group_id
-     * @param integer $seconds
+     * @param int $group_id
+     * @param int $seconds
      */
     public function prolongShopGroup($group_id, $seconds)
     {
@@ -76,8 +77,8 @@ class MybbUser
      * @param int|null $key
      *
      * @return array
-     *  int expire
-     *  bool was_before
+     *               int expire
+     *               bool was_before
      */
     public function getShopGroup($key = null)
     {

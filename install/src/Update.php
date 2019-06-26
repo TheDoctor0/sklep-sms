@@ -1,4 +1,5 @@
 <?php
+
 namespace Install;
 
 use App\Application;
@@ -28,7 +29,7 @@ class Update
         }
 
         if (file_exists($this->app->path('install/progress'))) {
-            output_page("Aktualizacja trwa, lub została błędnie przeprowadzona.");
+            output_page('Aktualizacja trwa, lub została błędnie przeprowadzona.');
         }
 
         $files_priv = $files_del = [];
@@ -39,7 +40,7 @@ class Update
                 str_replace("\n\r", "\n", file_get_contents($this->app->path('install/storage/update/files_priv.txt')))
             );
         }
-        $files_priv[] = "install";
+        $files_priv[] = 'install';
 
         if (file_exists($this->app->path('install/storage/update/files_del.txt'))) {
             $files_del = explode(

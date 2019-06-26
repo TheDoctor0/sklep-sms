@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Kernels;
 
 use App\Auth;
@@ -67,10 +68,10 @@ class JsonHttpAdminKernel extends Kernel
         $warnings = [];
 
         $data = [];
-        if ($action == "charge_wallet") {
-            if (!get_privilages("manage_users")) {
+        if ($action == 'charge_wallet') {
+            if (!get_privilages('manage_users')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
@@ -78,8 +79,8 @@ class JsonHttpAdminKernel extends Kernel
             $amount = intval($_POST['amount'] * 100);
 
             // ID użytkownika
-            if ($warning = check_for_warnings("uid", $uid)) {
-                $warnings['uid'] = array_merge((array)$warnings['uid'], $warning);
+            if ($warning = check_for_warnings('uid', $uid)) {
+                $warnings['uid'] = array_merge((array) $warnings['uid'], $warning);
             } else {
                 $user2 = $heart->get_user($uid);
                 if (!$user2->isLogged()) {
@@ -98,20 +99,21 @@ class JsonHttpAdminKernel extends Kernel
 
             if (!empty($warnings)) {
                 foreach ($warnings as $brick => $warning) {
-                    $warning = create_dom_element("div", implode("<br />", $warning), [
-                        'class' => "form_warning",
+                    $warning = create_dom_element('div', implode('<br />', $warning), [
+                        'class' => 'form_warning',
                     ]);
                     $data['warnings'][$brick] = $warning;
                 }
-                return new ApiResponse("warnings", $lang->translate('form_wrong_filled'), 0, $data);
+
+                return new ApiResponse('warnings', $lang->translate('form_wrong_filled'), 0, $data);
             }
 
             // Zmiana wartości amount, aby stan konta nie zszedł poniżej zera
             $amount = max($amount, -$user2->getWallet());
 
-            $service_module = $heart->get_service_module("charge_wallet");
+            $service_module = $heart->get_service_module('charge_wallet');
             if (is_null($service_module)) {
-                return new ApiResponse("wrong_module", $lang->translate('bad_module'), 0);
+                return new ApiResponse('wrong_module', $lang->translate('bad_module'), 0);
             }
 
             // Dodawanie informacji o płatności do bazy
@@ -121,7 +123,7 @@ class JsonHttpAdminKernel extends Kernel
             $purchase_data = new Purchase();
             $purchase_data->user = $user2;
             $purchase_data->setPayment([
-                'method'     => "admin",
+                'method'     => 'admin',
                 'payment_id' => $payment_id,
             ]);
             $purchase_data->setOrder([
@@ -144,7 +146,7 @@ class JsonHttpAdminKernel extends Kernel
             );
 
             return new ApiResponse(
-                "charged",
+                'charged',
                 $lang->sprintf(
                     $lang->translate('account_charge_success'),
                     $user2->getUsername(),
@@ -155,30 +157,30 @@ class JsonHttpAdminKernel extends Kernel
             );
         }
 
-        if ($action == "user_service_add") {
-            if (!get_privilages("manage_user_services")) {
+        if ($action == 'user_service_add') {
+            if (!get_privilages('manage_user_services')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
             // Brak usługi
             if (!strlen($_POST['service'])) {
-                return new ApiResponse("no_service", $lang->translate('no_service_chosen'), 0);
+                return new ApiResponse('no_service', $lang->translate('no_service_chosen'), 0);
             }
 
             if (($service_module = $heart->get_service_module($_POST['service'])) === null || !object_implements($service_module,
-                    "IService_UserServiceAdminAdd")) {
-                return new ApiResponse("wrong_module", $lang->translate('bad_module'), 0);
+                    'IService_UserServiceAdminAdd')) {
+                return new ApiResponse('wrong_module', $lang->translate('bad_module'), 0);
             }
 
             $return_data = $service_module->user_service_admin_add($_POST);
 
             // Przerabiamy ostrzeżenia, aby lepiej wyglądały
-            if ($return_data['status'] == "warnings") {
+            if ($return_data['status'] == 'warnings') {
                 foreach ($return_data['data']['warnings'] as $brick => $warning) {
-                    $warning = create_dom_element("div", implode("<br />", $warning), [
-                        'class' => "form_warning",
+                    $warning = create_dom_element('div', implode('<br />', $warning), [
+                        'class' => 'form_warning',
                     ]);
                     $return_data['data']['warnings'][$brick] = $warning;
                 }
@@ -192,41 +194,41 @@ class JsonHttpAdminKernel extends Kernel
             );
         }
 
-        if ($action == "user_service_edit") {
-            if (!get_privilages("manage_user_services")) {
+        if ($action == 'user_service_edit') {
+            if (!get_privilages('manage_user_services')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
             // Brak usługi
             if (!strlen($_POST['service'])) {
-                return new ApiResponse("no_service", "Nie wybrano usługi.", 0);
+                return new ApiResponse('no_service', 'Nie wybrano usługi.', 0);
             }
 
             if (is_null($service_module = $heart->get_service_module($_POST['service']))) {
-                return new ApiResponse("wrong_module", $lang->translate('bad_module'), 0);
+                return new ApiResponse('wrong_module', $lang->translate('bad_module'), 0);
             }
 
             $user_service = get_users_services($_POST['id']);
 
             // Brak takiej usługi w bazie
             if (empty($user_service)) {
-                return new ApiResponse("no_service", $lang->translate('no_service'), 0);
+                return new ApiResponse('no_service', $lang->translate('no_service'), 0);
             }
 
             // Wykonujemy metode edycji usługi użytkownika przez admina na odpowiednim module
             $return_data = $service_module->user_service_admin_edit($_POST, $user_service);
 
             if ($return_data === false) {
-                return new ApiResponse("missing_method", $lang->translate('no_edit_method'), 0);
+                return new ApiResponse('missing_method', $lang->translate('no_edit_method'), 0);
             }
 
             // Przerabiamy ostrzeżenia, aby lepiej wyglądały
-            if ($return_data['status'] == "warnings") {
+            if ($return_data['status'] == 'warnings') {
                 foreach ($return_data['data']['warnings'] as $brick => $warning) {
-                    $warning = create_dom_element("div", implode("<br />", $warning), [
-                        'class' => "form_warning",
+                    $warning = create_dom_element('div', implode('<br />', $warning), [
+                        'class' => 'form_warning',
                     ]);
                     $return_data['data']['warnings'][$brick] = $warning;
                 }
@@ -240,10 +242,10 @@ class JsonHttpAdminKernel extends Kernel
             );
         }
 
-        if ($action == "user_service_delete") {
-            if (!get_privilages("manage_user_services")) {
+        if ($action == 'user_service_delete') {
+            if (!get_privilages('manage_user_services')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
@@ -251,7 +253,7 @@ class JsonHttpAdminKernel extends Kernel
 
             // Brak takiej usługi
             if (empty($user_service)) {
-                return new ApiResponse("no_service", $lang->translate('no_service'), 0);
+                return new ApiResponse('no_service', $lang->translate('no_service'), 0);
             }
 
             // Wywolujemy akcje przy usuwaniu
@@ -259,7 +261,7 @@ class JsonHttpAdminKernel extends Kernel
                 && !$service_module->user_service_delete($user_service, 'admin')
             ) {
                 return new ApiResponse(
-                    "user_service_cannot_be_deleted",
+                    'user_service_cannot_be_deleted',
                     $lang->translate('user_service_cannot_be_deleted'),
                     0
                 );
@@ -267,7 +269,7 @@ class JsonHttpAdminKernel extends Kernel
 
             // Usunięcie usługi użytkownika
             $db->query($db->prepare(
-                "DELETE FROM `" . TABLE_PREFIX . "user_service` " .
+                'DELETE FROM `'.TABLE_PREFIX.'user_service` '.
                 "WHERE `id` = '%d'",
                 [$user_service['id']]
             ));
@@ -286,17 +288,17 @@ class JsonHttpAdminKernel extends Kernel
                 return new ApiResponse('ok', $lang->translate('delete_service'), 1);
             }
 
-            return new ApiResponse("not_deleted", $lang->translate('no_delete_service'), 0);
+            return new ApiResponse('not_deleted', $lang->translate('no_delete_service'), 0);
         }
 
-        if ($action == "user_service_add_form_get") {
-            if (!get_privilages("manage_user_services")) {
+        if ($action == 'user_service_add_form_get') {
+            if (!get_privilages('manage_user_services')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
-            $output = "";
+            $output = '';
             if (($service_module = $heart->get_service_module($_POST['service'])) !== null) {
                 $output = $service_module->user_service_admin_add_form_get();
             }
@@ -304,10 +306,10 @@ class JsonHttpAdminKernel extends Kernel
             return new PlainResponse($output);
         }
 
-        if ($action == "antispam_question_add" || $action == "antispam_question_edit") {
-            if (!get_privilages("manage_antispam_questions")) {
+        if ($action == 'antispam_question_add' || $action == 'antispam_question_edit') {
+            if (!get_privilages('manage_antispam_questions')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
@@ -324,27 +326,28 @@ class JsonHttpAdminKernel extends Kernel
             // Błędy
             if (!empty($warnings)) {
                 foreach ($warnings as $brick => $warning) {
-                    $warning = create_dom_element("div", implode("<br />", $warning), [
-                        'class' => "form_warning",
+                    $warning = create_dom_element('div', implode('<br />', $warning), [
+                        'class' => 'form_warning',
                     ]);
                     $data['warnings'][$brick] = $warning;
                 }
-                return new ApiResponse("warnings", $lang->translate('form_wrong_filled'), 0, $data);
+
+                return new ApiResponse('warnings', $lang->translate('form_wrong_filled'), 0, $data);
             }
 
-            if ($action == "antispam_question_add") {
+            if ($action == 'antispam_question_add') {
                 $db->query($db->prepare(
-                    "INSERT INTO `" . TABLE_PREFIX . "antispam_questions` ( question, answers ) " .
+                    'INSERT INTO `'.TABLE_PREFIX.'antispam_questions` ( question, answers ) '.
                     "VALUES ('%s','%s')",
                     [$_POST['question'], $_POST['answers']]));
 
                 return new ApiResponse('ok', $lang->translate('antispam_add'), 1);
             }
 
-            if ($action == "antispam_question_edit") {
+            if ($action == 'antispam_question_edit') {
                 $db->query($db->prepare(
-                    "UPDATE `" . TABLE_PREFIX . "antispam_questions` " .
-                    "SET `question` = '%s', `answers` = '%s' " .
+                    'UPDATE `'.TABLE_PREFIX.'antispam_questions` '.
+                    "SET `question` = '%s', `answers` = '%s' ".
                     "WHERE `id` = '%d'",
                     [$_POST['question'], $_POST['answers'], $_POST['id']]));
 
@@ -358,24 +361,25 @@ class JsonHttpAdminKernel extends Kernel
                             $_POST['id']
                         )
                     );
+
                     return new ApiResponse('ok', $lang->translate('antispam_edit'), 1);
                 }
 
-                return new ApiResponse("not_edited", $lang->translate('antispam_no_edit'), 0);
+                return new ApiResponse('not_edited', $lang->translate('antispam_no_edit'), 0);
             }
 
             throw new UnexpectedValueException();
         }
 
-        if ($action == "delete_antispam_question") {
-            if (!get_privilages("manage_antispam_questions")) {
+        if ($action == 'delete_antispam_question') {
+            if (!get_privilages('manage_antispam_questions')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
             $db->query($db->prepare(
-                "DELETE FROM `" . TABLE_PREFIX . "antispam_questions` " .
+                'DELETE FROM `'.TABLE_PREFIX.'antispam_questions` '.
                 "WHERE `id` = '%d'",
                 [$_POST['id']]
             ));
@@ -390,16 +394,17 @@ class JsonHttpAdminKernel extends Kernel
                         $_POST['id']
                     )
                 );
+
                 return new ApiResponse('ok', $lang->translate('delete_antispamq'), 1);
             }
 
-            return new ApiResponse("not_deleted", $lang->translate('no_delete_antispamq'), 0);
+            return new ApiResponse('not_deleted', $lang->translate('no_delete_antispamq'), 0);
         }
 
-        if ($action == "settings_edit") {
-            if (!get_privilages("manage_settings")) {
+        if ($action == 'settings_edit') {
+            if (!get_privilages('manage_settings')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
@@ -426,8 +431,8 @@ class JsonHttpAdminKernel extends Kernel
             // Serwis płatności SMS
             if (strlen($sms_service)) {
                 $result = $db->query($db->prepare(
-                    "SELECT id " .
-                    "FROM `" . TABLE_PREFIX . "transaction_services` " .
+                    'SELECT id '.
+                    'FROM `'.TABLE_PREFIX.'transaction_services` '.
                     "WHERE `id` = '%s' AND sms = '1'",
                     [$sms_service]
                 ));
@@ -439,8 +444,8 @@ class JsonHttpAdminKernel extends Kernel
             // Serwis płatności internetowej
             if (strlen($transfer_service)) {
                 $result = $db->query($db->prepare(
-                    "SELECT id " .
-                    "FROM `" . TABLE_PREFIX . "transaction_services` " .
+                    'SELECT id '.
+                    'FROM `'.TABLE_PREFIX.'transaction_services` '.
                     "WHERE `id` = '%s' AND transfer = '1'",
                     [$transfer_service]
                 ));
@@ -450,32 +455,32 @@ class JsonHttpAdminKernel extends Kernel
             }
 
             // Email dla automatu
-            if (strlen($sender_email) && $warning = check_for_warnings("email", $sender_email)) {
-                $warnings['sender_email'] = array_merge((array)$warnings['sender_email'], $warning);
+            if (strlen($sender_email) && $warning = check_for_warnings('email', $sender_email)) {
+                $warnings['sender_email'] = array_merge((array) $warnings['sender_email'], $warning);
             }
 
             // VAT
-            if ($warning = check_for_warnings("number", $vat)) {
-                $warnings['vat'] = array_merge((array)$warnings['vat'], $warning);
+            if ($warning = check_for_warnings('number', $vat)) {
+                $warnings['vat'] = array_merge((array) $warnings['vat'], $warning);
             }
 
             // Usuwanie logów
-            if ($warning = check_for_warnings("number", $delete_logs)) {
-                $warnings['delete_logs'] = array_merge((array)$warnings['delete_logs'], $warning);
+            if ($warning = check_for_warnings('number', $delete_logs)) {
+                $warnings['delete_logs'] = array_merge((array) $warnings['delete_logs'], $warning);
             }
 
             // Wierszy na stronę
-            if ($warning = check_for_warnings("number", $row_limit)) {
-                $warnings['row_limit'] = array_merge((array)$warnings['row_limit'], $warning);
+            if ($warning = check_for_warnings('number', $row_limit)) {
+                $warnings['row_limit'] = array_merge((array) $warnings['row_limit'], $warning);
             }
 
             // Cron
-            if (!in_array($cron, ["1", "0"])) {
+            if (!in_array($cron, ['1', '0'])) {
                 $warnings['cron'][] = $lang->translate('only_yes_no');
             }
 
             // Edytowanie usługi przez użytkownika
-            if (!in_array($_POST['user_edit_service'], ["1", "0"])) {
+            if (!in_array($_POST['user_edit_service'], ['1', '0'])) {
                 $warnings['user_edit_service'][] = $lang->translate('only_yes_no');
             }
 
@@ -491,12 +496,13 @@ class JsonHttpAdminKernel extends Kernel
 
             if (!empty($warnings)) {
                 foreach ($warnings as $brick => $warning) {
-                    $warning = create_dom_element("div", implode("<br />", $warning), [
-                        'class' => "form_warning",
+                    $warning = create_dom_element('div', implode('<br />', $warning), [
+                        'class' => 'form_warning',
                     ]);
                     $data['warnings'][$brick] = $warning;
                 }
-                return new ApiResponse("warnings", $lang->translate('form_wrong_filled'), 0, $data);
+
+                return new ApiResponse('warnings', $lang->translate('form_wrong_filled'), 0, $data);
             }
 
             if ($licenseToken) {
@@ -509,31 +515,31 @@ class JsonHttpAdminKernel extends Kernel
 
             // Edytuj ustawienia
             $db->query($db->prepare(
-                "UPDATE `" . TABLE_PREFIX . "settings` " .
-                "SET value = CASE `key` " .
-                "WHEN 'sms_service' THEN '%s' " .
-                "WHEN 'transfer_service' THEN '%s' " .
-                "WHEN 'currency' THEN '%s' " .
-                "WHEN 'shop_name' THEN '%s' " .
-                "WHEN 'shop_url' THEN '%s' " .
-                "WHEN 'sender_email' THEN '%s' " .
-                "WHEN 'sender_email_name' THEN '%s' " .
-                "WHEN 'signature' THEN '%s' " .
-                "WHEN 'vat' THEN '%.2f' " .
-                "WHEN 'contact' THEN '%s' " .
-                "WHEN 'row_limit' THEN '%s' " .
-                "WHEN 'cron_each_visit' THEN '%d' " .
-                "WHEN 'user_edit_service' THEN '%d' " .
-                "WHEN 'theme' THEN '%s' " .
-                "WHEN 'language' THEN '%s' " .
-                "WHEN 'date_format' THEN '%s' " .
-                "WHEN 'delete_logs' THEN '%d' " .
-                "WHEN 'google_analytics' THEN '%s' " .
-                "WHEN 'gadugadu' THEN '%s' " .
-                $setLicenseToken .
-                "END " .
-                "WHERE `key` IN ( 'sms_service','transfer_service','currency','shop_name','shop_url','sender_email','sender_email_name','signature','vat'," .
-                "'contact','row_limit','cron_each_visit','user_edit_service','theme','language','date_format','delete_logs'," .
+                'UPDATE `'.TABLE_PREFIX.'settings` '.
+                'SET value = CASE `key` '.
+                "WHEN 'sms_service' THEN '%s' ".
+                "WHEN 'transfer_service' THEN '%s' ".
+                "WHEN 'currency' THEN '%s' ".
+                "WHEN 'shop_name' THEN '%s' ".
+                "WHEN 'shop_url' THEN '%s' ".
+                "WHEN 'sender_email' THEN '%s' ".
+                "WHEN 'sender_email_name' THEN '%s' ".
+                "WHEN 'signature' THEN '%s' ".
+                "WHEN 'vat' THEN '%.2f' ".
+                "WHEN 'contact' THEN '%s' ".
+                "WHEN 'row_limit' THEN '%s' ".
+                "WHEN 'cron_each_visit' THEN '%d' ".
+                "WHEN 'user_edit_service' THEN '%d' ".
+                "WHEN 'theme' THEN '%s' ".
+                "WHEN 'language' THEN '%s' ".
+                "WHEN 'date_format' THEN '%s' ".
+                "WHEN 'delete_logs' THEN '%d' ".
+                "WHEN 'google_analytics' THEN '%s' ".
+                "WHEN 'gadugadu' THEN '%s' ".
+                $setLicenseToken.
+                'END '.
+                "WHERE `key` IN ( 'sms_service','transfer_service','currency','shop_name','shop_url','sender_email','sender_email_name','signature','vat',".
+                "'contact','row_limit','cron_each_visit','user_edit_service','theme','language','date_format','delete_logs',".
                 "'google_analytics','gadugadu'{$keyLicenseToken} )",
                 [
                     $sms_service,
@@ -571,20 +577,20 @@ class JsonHttpAdminKernel extends Kernel
                 return new ApiResponse('ok', $lang->translate('settings_edit'), 1);
             }
 
-            return new ApiResponse("not_edited", $lang->translate('settings_no_edit'), 0);
+            return new ApiResponse('not_edited', $lang->translate('settings_no_edit'), 0);
         }
 
-        if ($action == "transaction_service_edit") {
-            if (!get_privilages("manage_settings")) {
+        if ($action == 'transaction_service_edit') {
+            if (!get_privilages('manage_settings')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
             // Pobieranie danych
             $result = $db->query($db->prepare(
-                "SELECT data " .
-                "FROM `" . TABLE_PREFIX . "transaction_services` " .
+                'SELECT data '.
+                'FROM `'.TABLE_PREFIX.'transaction_services` '.
                 "WHERE `id` = '%s'",
                 [$_POST['id']]
             ));
@@ -595,8 +601,8 @@ class JsonHttpAdminKernel extends Kernel
             }
 
             $db->query($db->prepare(
-                "UPDATE `" . TABLE_PREFIX . "transaction_services` " .
-                "SET `data` = '%s' " .
+                'UPDATE `'.TABLE_PREFIX.'transaction_services` '.
+                "SET `data` = '%s' ".
                 "WHERE `id` = '%s'",
                 [json_encode($arr), $_POST['id']]));
 
@@ -615,13 +621,13 @@ class JsonHttpAdminKernel extends Kernel
                 return new ApiResponse('ok', $lang->translate('payment_edit'), 1);
             }
 
-            return new ApiResponse("not_edited", $lang->translate('payment_no_edit'), 0);
+            return new ApiResponse('not_edited', $lang->translate('payment_no_edit'), 0);
         }
 
-        if ($action == "service_add" || $action == "service_edit") {
-            if (!get_privilages("manage_services")) {
+        if ($action == 'service_add' || $action == 'service_edit') {
+            if (!get_privilages('manage_services')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
@@ -629,19 +635,19 @@ class JsonHttpAdminKernel extends Kernel
             if (!strlen($_POST['id'])) { // Nie podano id usługi
                 $warnings['id'][] = $lang->translate('no_service_id');
             } else {
-                if ($action == "service_add") {
+                if ($action == 'service_add') {
                     if (strlen($_POST['id']) > 16) {
                         $warnings['id'][] = $lang->translate('long_service_id');
                     }
                 }
             }
 
-            if (($action == "service_add" && !isset($warnings['id'])) || ($action == "service_edit" && $_POST['id'] !== $_POST['id2'])) {
+            if (($action == 'service_add' && !isset($warnings['id'])) || ($action == 'service_edit' && $_POST['id'] !== $_POST['id2'])) {
                 // Sprawdzanie czy usługa o takim ID już istnieje
-            {
+                {
                 if ($heart->get_service($_POST['id']) !== null) {
                     $warnings['id'][] = $lang->translate('id_exist');
-            }
+                }
                 }
             }
 
@@ -651,8 +657,8 @@ class JsonHttpAdminKernel extends Kernel
             }
 
             // Opis
-            if ($warning = check_for_warnings("service_description", $_POST['short_description'])) {
-                $warnings['short_description'] = array_merge((array)$warnings['short_description'],
+            if ($warning = check_for_warnings('service_description', $_POST['short_description'])) {
+                $warnings['short_description'] = array_merge((array) $warnings['short_description'],
                     $warning);
             }
 
@@ -670,7 +676,7 @@ class JsonHttpAdminKernel extends Kernel
             }
 
             // Moduł usługi
-            if ($action == "service_add") {
+            if ($action == 'service_add') {
                 if (($service_module = $heart->get_service_module_s($_POST['module'])) === null) {
                     $warnings['module'][] = $lang->translate('wrong_module');
                 }
@@ -680,25 +686,26 @@ class JsonHttpAdminKernel extends Kernel
 
             // Przed błędami
             if ($service_module !== null && object_implements($service_module,
-                    "IService_AdminManage")) {
+                    'IService_AdminManage')) {
                 $additional_warnings = $service_module->service_admin_manage_pre($_POST);
-                $warnings = array_merge((array)$warnings, (array)$additional_warnings);
+                $warnings = array_merge((array) $warnings, (array) $additional_warnings);
             }
 
             // Błędy
             if (!empty($warnings)) {
                 foreach ($warnings as $brick => $warning) {
-                    $warning = create_dom_element("div", implode("<br />", $warning), [
-                        'class' => "form_warning",
+                    $warning = create_dom_element('div', implode('<br />', $warning), [
+                        'class' => 'form_warning',
                     ]);
                     $data['warnings'][$brick] = $warning;
                 }
-                return new ApiResponse("warnings", $lang->translate('form_wrong_filled'), 0, $data);
+
+                return new ApiResponse('warnings', $lang->translate('form_wrong_filled'), 0, $data);
             }
 
             // Po błędach wywołujemy metodę modułu
             if ($service_module !== null && object_implements($service_module,
-                    "IService_AdminManage")) {
+                    'IService_AdminManage')) {
                 $module_data = $service_module->service_admin_manage_post($_POST);
 
                 // Tworzymy elementy SET zapytania
@@ -706,7 +713,7 @@ class JsonHttpAdminKernel extends Kernel
                     $set = '';
                     foreach ($module_data['query_set'] as $element) {
                         if (strlen($set)) {
-                            $set .= ", ";
+                            $set .= ', ';
                         }
 
                         $set .= $db->prepare("`%s` = '{$element['type']}'",
@@ -716,14 +723,14 @@ class JsonHttpAdminKernel extends Kernel
             }
 
             if (isset($set) && strlen($set)) {
-                $set = ", " . $set;
+                $set = ', '.$set;
             }
 
-            if ($action == "service_add") {
+            if ($action == 'service_add') {
                 $db->query($db->prepare(
-                    "INSERT INTO `" . TABLE_PREFIX . "services` " .
-                    "SET `id`='%s', `name`='%s', `short_description`='%s', `description`='%s', `tag`='%s', " .
-                    "`module`='%s', `groups`='%s', `order` = '%d' " . "{$set}",
+                    'INSERT INTO `'.TABLE_PREFIX.'services` '.
+                    "SET `id`='%s', `name`='%s', `short_description`='%s', `description`='%s', `tag`='%s', ".
+                    "`module`='%s', `groups`='%s', `order` = '%d' "."{$set}",
                     [
                         $_POST['id'],
                         $_POST['name'],
@@ -731,7 +738,7 @@ class JsonHttpAdminKernel extends Kernel
                         $_POST['description'],
                         $_POST['tag'],
                         $_POST['module'],
-                        implode(";", $_POST['groups']),
+                        implode(';', $_POST['groups']),
                         trim($_POST['order']),
                     ]
                 ));
@@ -744,16 +751,17 @@ class JsonHttpAdminKernel extends Kernel
                         $_POST['id']
                     )
                 );
+
                 return new ApiResponse(
                     'ok', $lang->translate('service_added'), 1, ['length' => 10000]
                 );
             }
 
-            if ($action == "service_edit") {
+            if ($action == 'service_edit') {
                 $db->query($db->prepare(
-                    "UPDATE `" . TABLE_PREFIX . "services` " .
-                    "SET `id` = '%s', `name` = '%s', `short_description` = '%s', `description` = '%s', " .
-                    "`tag` = '%s', `groups` = '%s', `order` = '%d' " . $set .
+                    'UPDATE `'.TABLE_PREFIX.'services` '.
+                    "SET `id` = '%s', `name` = '%s', `short_description` = '%s', `description` = '%s', ".
+                    "`tag` = '%s', `groups` = '%s', `order` = '%d' ".$set.
                     "WHERE `id` = '%s'",
                     [
                         $_POST['id'],
@@ -761,7 +769,7 @@ class JsonHttpAdminKernel extends Kernel
                         $_POST['short_description'],
                         $_POST['description'],
                         $_POST['tag'],
-                        implode(";", $_POST['groups']),
+                        implode(';', $_POST['groups']),
                         $_POST['order'],
                         $_POST['id2'],
                     ]
@@ -777,18 +785,20 @@ class JsonHttpAdminKernel extends Kernel
                             $_POST['id2']
                         )
                     );
+
                     return new ApiResponse('ok', $lang->translate('service_edit'), 1);
                 }
-                return new ApiResponse("not_edited", $lang->translate('service_no_edit'), 0);
+
+                return new ApiResponse('not_edited', $lang->translate('service_no_edit'), 0);
             }
 
             throw new UnexpectedValueException();
         }
 
-        if ($action == "delete_service") {
-            if (!get_privilages("manage_services")) {
+        if ($action == 'delete_service') {
+            if (!get_privilages('manage_services')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
@@ -800,16 +810,16 @@ class JsonHttpAdminKernel extends Kernel
 
             try {
                 $db->query($db->prepare(
-                    "DELETE FROM `" . TABLE_PREFIX . "services` " .
+                    'DELETE FROM `'.TABLE_PREFIX.'services` '.
                     "WHERE `id` = '%s'",
                     [$_POST['id']]
                 ));
             } catch (SqlQueryException $e) {
                 if ($e->getErrorno() == 1451) {
                     // Istnieją powiązania
-                {
+                    {
                     return new ApiResponse(
-                        "error", $lang->translate('delete_service_er_row_is_referenced_2'), 0
+                        'error', $lang->translate('delete_service_er_row_is_referenced_2'), 0
                     );
                 }
                 }
@@ -828,20 +838,21 @@ class JsonHttpAdminKernel extends Kernel
                         $_POST['id']
                     )
                 );
+
                 return new ApiResponse('ok', $lang->translate('delete_service'), 1);
             }
 
-            return new ApiResponse("not_deleted", $lang->translate('no_delete_service'), 0);
+            return new ApiResponse('not_deleted', $lang->translate('no_delete_service'), 0);
         }
 
-        if ($action == "get_service_module_extra_fields") {
-            if (!get_privilages("manage_user_services")) {
+        if ($action == 'get_service_module_extra_fields') {
+            if (!get_privilages('manage_user_services')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
-            $output = "";
+            $output = '';
             // Pobieramy moduł obecnie edytowanej usługi, jeżeli powróciliśmy do pierwotnego modułu
             // W przeciwnym razie pobieramy wybrany moduł
             if (is_null($service_module = $heart->get_service_module($_POST['service'])) || $service_module::MODULE_ID != $_POST['module']) {
@@ -849,17 +860,17 @@ class JsonHttpAdminKernel extends Kernel
             }
 
             if ($service_module !== null && object_implements($service_module,
-                    "IService_AdminManage")) {
+                    'IService_AdminManage')) {
                 $output = $service_module->service_admin_extra_fields_get();
             }
 
             return new PlainResponse($output);
         }
 
-        if ($action == "server_add" || $action == "server_edit") {
-            if (!get_privilages("manage_servers")) {
+        if ($action == 'server_add' || $action == 'server_edit') {
+            if (!get_privilages('manage_servers')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
@@ -883,8 +894,8 @@ class JsonHttpAdminKernel extends Kernel
             // Serwis płatności SMS
             if ($_POST['sms_service']) {
                 $result = $db->query($db->prepare(
-                    "SELECT id " .
-                    "FROM `" . TABLE_PREFIX . "transaction_services` " .
+                    'SELECT id '.
+                    'FROM `'.TABLE_PREFIX.'transaction_services` '.
                     "WHERE `id` = '%s' AND sms = '1'",
                     [$_POST['sms_service']]
                 ));
@@ -896,27 +907,28 @@ class JsonHttpAdminKernel extends Kernel
             // Błędy
             if (!empty($warnings)) {
                 foreach ($warnings as $brick => $warning) {
-                    $warning = create_dom_element("div", implode("<br />", $warning), [
-                        'class' => "form_warning",
+                    $warning = create_dom_element('div', implode('<br />', $warning), [
+                        'class' => 'form_warning',
                     ]);
                     $data['warnings'][$brick] = $warning;
                 }
+
                 return new ApiResponse(
-                    "warnings", $lang->translate('form_wrong_filled'), 0, $data
+                    'warnings', $lang->translate('form_wrong_filled'), 0, $data
                 );
             }
 
-            if ($action == "server_add") {
+            if ($action == 'server_add') {
                 /** @var ServerRepository $serverRepository */
                 $serverRepository = $this->app->make(ServerRepository::class);
                 $server = $serverRepository->create(
                     $_POST['name'], $_POST['ip'], $_POST['port'], $_POST['sms_service']
                 );
                 $server_id = $server->getId();
-            } elseif ($action == "server_edit") {
+            } elseif ($action == 'server_edit') {
                 $db->query($db->prepare(
-                    "UPDATE `" . TABLE_PREFIX . "servers` " .
-                    "SET `name` = '%s', `ip` = '%s', `port` = '%s', `sms_service` = '%s' " .
+                    'UPDATE `'.TABLE_PREFIX.'servers` '.
+                    "SET `name` = '%s', `ip` = '%s', `port` = '%s', `sms_service` = '%s' ".
                     "WHERE `id` = '%s'",
                     [
                         $_POST['name'],
@@ -936,21 +948,21 @@ class JsonHttpAdminKernel extends Kernel
                 foreach ($heart->get_services() as $service) {
                     // Dana usługa nie może być kupiona na serwerze
                     if (!is_null($service_module = $heart->get_service_module($service['id'])) && !object_implements($service_module,
-                            "IService_AvailableOnServers")) {
+                            'IService_AvailableOnServers')) {
                         continue;
                     }
 
                     $servers_services[] = [
                         'service' => $service['id'],
                         'server'  => $server_id,
-                        'status'  => (boolean)$_POST[$service['id']],
+                        'status'  => (bool) $_POST[$service['id']],
                     ];
                 }
 
                 update_servers_services($servers_services);
             }
 
-            if ($action == "server_add") {
+            if ($action == 'server_add') {
                 log_info(
                     $langShop->sprintf(
                         $langShop->translate('server_admin_add'),
@@ -959,10 +971,11 @@ class JsonHttpAdminKernel extends Kernel
                         $server_id
                     )
                 );
+
                 return new ApiResponse('ok', $lang->translate('server_added'), 1);
             }
 
-            if ($action == "server_edit") {
+            if ($action == 'server_edit') {
                 log_info(
                     $langShop->sprintf(
                         $langShop->translate('server_admin_edit'),
@@ -971,38 +984,38 @@ class JsonHttpAdminKernel extends Kernel
                         $server_id
                     )
                 );
+
                 return new ApiResponse('ok', $lang->translate('server_edit'), 1);
             }
 
             throw new UnexpectedValueException();
         }
 
-        if ($action == "delete_server") {
-            if (!get_privilages("manage_servers")) {
+        if ($action == 'delete_server') {
+            if (!get_privilages('manage_servers')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
             try {
                 $db->query($db->prepare(
-                    "DELETE FROM `" . TABLE_PREFIX . "servers` " .
+                    'DELETE FROM `'.TABLE_PREFIX.'servers` '.
                     "WHERE `id` = '%s'",
                     [$_POST['id']]
                 ));
             } catch (SqlQueryException $e) {
                 if ($e->getErrorno() == 1451) {
                     // Istnieją powiązania
-                {
+                    {
                     return new ApiResponse(
-                        "error", $lang->translate('delete_server_constraint_fails'), 0
+                        'error', $lang->translate('delete_server_constraint_fails'), 0
                     );
                 }
                 }
 
                 throw $e;
             }
-
 
             // Zwróć info o prawidłowym lub błędnym usunięciu
             if ($db->affected_rows()) {
@@ -1014,16 +1027,17 @@ class JsonHttpAdminKernel extends Kernel
                         $_POST['id']
                     )
                 );
+
                 return new ApiResponse('ok', $lang->translate('delete_server'), 1);
             }
 
-            return new ApiResponse("not_deleted", $lang->translate('no_delete_server'), 0);
+            return new ApiResponse('not_deleted', $lang->translate('no_delete_server'), 0);
         }
 
-        if ($action == "user_edit") {
-            if (!get_privilages("manage_users")) {
+        if ($action == 'user_edit') {
+            if (!get_privilages('manage_users')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
@@ -1031,12 +1045,12 @@ class JsonHttpAdminKernel extends Kernel
 
             // Nazwa użytkownika
             if ($user2->getUsername() != $_POST['username']) {
-                if ($warning = check_for_warnings("username", $_POST['username'])) {
-                    $warnings['username'] = array_merge((array)$warnings['username'], $warning);
+                if ($warning = check_for_warnings('username', $_POST['username'])) {
+                    $warnings['username'] = array_merge((array) $warnings['username'], $warning);
                 }
                 $result = $db->query($db->prepare(
-                    "SELECT `uid` " .
-                    "FROM `" . TABLE_PREFIX . "users` " .
+                    'SELECT `uid` '.
+                    'FROM `'.TABLE_PREFIX.'users` '.
                     "WHERE username = '%s'",
                     [$_POST['username']]
                 ));
@@ -1047,12 +1061,12 @@ class JsonHttpAdminKernel extends Kernel
 
             // E-mail
             if ($user2->getEmail() != $_POST['email']) {
-                if ($warning = check_for_warnings("email", $_POST['email'])) {
-                    $warnings['email'] = array_merge((array)$warnings['email'], $warning);
+                if ($warning = check_for_warnings('email', $_POST['email'])) {
+                    $warnings['email'] = array_merge((array) $warnings['email'], $warning);
                 }
                 $result = $db->query($db->prepare(
-                    "SELECT `uid` " .
-                    "FROM `" . TABLE_PREFIX . "users` " .
+                    'SELECT `uid` '.
+                    'FROM `'.TABLE_PREFIX.'users` '.
                     "WHERE email = '%s'",
                     [$_POST['email']]
                 ));
@@ -1070,33 +1084,34 @@ class JsonHttpAdminKernel extends Kernel
             }
 
             // Portfel
-            if ($warning = check_for_warnings("number", $_POST['wallet'])) {
-                $warnings['wallet'] = array_merge((array)$warnings['wallet'], $warning);
+            if ($warning = check_for_warnings('number', $_POST['wallet'])) {
+                $warnings['wallet'] = array_merge((array) $warnings['wallet'], $warning);
             }
 
             // Błędy
             if (!empty($warnings)) {
                 foreach ($warnings as $brick => $warning) {
-                    $warning = create_dom_element("div", implode("<br />", $warning), [
-                        'class' => "form_warning",
+                    $warning = create_dom_element('div', implode('<br />', $warning), [
+                        'class' => 'form_warning',
                     ]);
                     $data['warnings'][$brick] = $warning;
                 }
+
                 return new ApiResponse(
-                    "warnings", $lang->translate('form_wrong_filled'), 0, $data
+                    'warnings', $lang->translate('form_wrong_filled'), 0, $data
                 );
             }
 
             $db->query($db->prepare(
-                "UPDATE `" . TABLE_PREFIX . "users` " .
-                "SET `username` = '%s', `forename` = '%s', `surname` = '%s', `email` = '%s', `groups` = '%s', `wallet` = '%d' " .
+                'UPDATE `'.TABLE_PREFIX.'users` '.
+                "SET `username` = '%s', `forename` = '%s', `surname` = '%s', `email` = '%s', `groups` = '%s', `wallet` = '%d' ".
                 "WHERE `uid` = '%d'",
                 [
                     $_POST['username'],
                     $_POST['forename'],
                     $_POST['surname'],
                     $_POST['email'],
-                    implode(";", $_POST['groups']),
+                    implode(';', $_POST['groups']),
                     ceil($_POST['wallet'] * 100),
                     $_POST['uid'],
                 ]
@@ -1113,20 +1128,22 @@ class JsonHttpAdminKernel extends Kernel
                         $_POST['uid']
                     )
                 );
+
                 return new ApiResponse('ok', $lang->translate('user_edit'), 1);
             }
-            return new ApiResponse("not_edited", $lang->translate('user_no_edit'), 0);
+
+            return new ApiResponse('not_edited', $lang->translate('user_no_edit'), 0);
         }
 
-        if ($action == "delete_user") {
-            if (!get_privilages("manage_users")) {
+        if ($action == 'delete_user') {
+            if (!get_privilages('manage_users')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
             $db->query($db->prepare(
-                "DELETE FROM `" . TABLE_PREFIX . "users` " .
+                'DELETE FROM `'.TABLE_PREFIX.'users` '.
                 "WHERE `uid` = '%d'",
                 [$_POST['uid']]
             ));
@@ -1141,31 +1158,32 @@ class JsonHttpAdminKernel extends Kernel
                         $_POST['uid']
                     )
                 );
+
                 return new ApiResponse('ok', $lang->translate('delete_user'), 1);
             }
 
-            return new ApiResponse("not_deleted", $lang->translate('no_delete_user'), 0);
+            return new ApiResponse('not_deleted', $lang->translate('no_delete_user'), 0);
         }
 
-        if ($action == "group_add" || $action == "group_edit") {
-            if (!get_privilages("manage_groups")) {
-                return new ApiResponse("not_logged_in", $lang->translate('not_logged_or_no_perm'),
+        if ($action == 'group_add' || $action == 'group_edit') {
+            if (!get_privilages('manage_groups')) {
+                return new ApiResponse('not_logged_in', $lang->translate('not_logged_or_no_perm'),
                     0);
             }
 
-            $set = "";
-            $result = $db->query("DESCRIBE " . TABLE_PREFIX . "groups");
+            $set = '';
+            $result = $db->query('DESCRIBE '.TABLE_PREFIX.'groups');
             while ($row = $db->fetch_array_assoc($result)) {
-                if (in_array($row['Field'], ["id", "name"])) {
+                if (in_array($row['Field'], ['id', 'name'])) {
                     continue;
                 }
 
                 $set .= $db->prepare(", `%s`='%d'", [$row['Field'], $_POST[$row['Field']]]);
             }
 
-            if ($action == "group_add") {
+            if ($action == 'group_add') {
                 $db->query($db->prepare(
-                    "INSERT INTO `" . TABLE_PREFIX . "groups` " .
+                    'INSERT INTO `'.TABLE_PREFIX.'groups` '.
                     "SET `name` = '%s'{$set}",
                     [$_POST['name']]
                 ));
@@ -1182,10 +1200,10 @@ class JsonHttpAdminKernel extends Kernel
                 return new ApiResponse('ok', $lang->translate('group_add'), 1);
             }
 
-            if ($action == "group_edit") {
+            if ($action == 'group_edit') {
                 $db->query($db->prepare(
-                    "UPDATE `" . TABLE_PREFIX . "groups` " .
-                    "SET `name` = '%s'{$set} " .
+                    'UPDATE `'.TABLE_PREFIX.'groups` '.
+                    "SET `name` = '%s'{$set} ".
                     "WHERE `id` = '%d'",
                     [$_POST['name'], $_POST['id']]
                 ));
@@ -1201,23 +1219,24 @@ class JsonHttpAdminKernel extends Kernel
                             $_POST['id']
                         )
                     );
+
                     return new ApiResponse('ok', $lang->translate('group_edit'), 1);
                 }
 
-                return new ApiResponse("not_edited", $lang->translate('group_no_edit'), 0);
+                return new ApiResponse('not_edited', $lang->translate('group_no_edit'), 0);
             }
 
             throw new UnexpectedValueException();
         }
 
-        if ($action == "delete_group") {
-            if (!get_privilages("manage_groups")) {
-                return new ApiResponse("not_logged_in", $lang->translate('not_logged_or_no_perm'),
+        if ($action == 'delete_group') {
+            if (!get_privilages('manage_groups')) {
+                return new ApiResponse('not_logged_in', $lang->translate('not_logged_or_no_perm'),
                     0);
             }
 
             $db->query($db->prepare(
-                "DELETE FROM `" . TABLE_PREFIX . "groups` " .
+                'DELETE FROM `'.TABLE_PREFIX.'groups` '.
                 "WHERE `id` = '%d'",
                 [$_POST['id']]
             ));
@@ -1232,47 +1251,49 @@ class JsonHttpAdminKernel extends Kernel
                         $_POST['id']
                     )
                 );
+
                 return new ApiResponse('ok', $lang->translate('delete_group'), 1);
             }
 
-            return new ApiResponse("not_deleted", $lang->translate('no_delete_group'), 0);
+            return new ApiResponse('not_deleted', $lang->translate('no_delete_group'), 0);
         }
 
-        if ($action == "tariff_add") {
-            if (!get_privilages("manage_settings")) {
+        if ($action == 'tariff_add') {
+            if (!get_privilages('manage_settings')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
             // Taryfa
-            if ($warning = check_for_warnings("number", $_POST['id'])) {
-                $warnings['id'] = array_merge((array)$warnings['id'], $warning);
+            if ($warning = check_for_warnings('number', $_POST['id'])) {
+                $warnings['id'] = array_merge((array) $warnings['id'], $warning);
             }
             if (($heart->getTariff($_POST['id'])) !== null) {
                 $warnings['id'][] = $lang->translate('tariff_exist');
             }
 
             // Prowizja
-            if ($warning = check_for_warnings("number", $_POST['provision'])) {
-                $warnings['provision'] = array_merge((array)$warnings['provision'], $warning);
+            if ($warning = check_for_warnings('number', $_POST['provision'])) {
+                $warnings['provision'] = array_merge((array) $warnings['provision'], $warning);
             }
 
             // Błędy
             if (!empty($warnings)) {
                 foreach ($warnings as $brick => $warning) {
-                    $warning = create_dom_element("div", implode("<br />", $warning), [
-                        'class' => "form_warning",
+                    $warning = create_dom_element('div', implode('<br />', $warning), [
+                        'class' => 'form_warning',
                     ]);
                     $data['warnings'][$brick] = $warning;
                 }
+
                 return new ApiResponse(
-                    "warnings", $lang->translate('form_wrong_filled'), 0, $data
+                    'warnings', $lang->translate('form_wrong_filled'), 0, $data
                 );
             }
 
             $db->query($db->prepare(
-                "INSERT INTO `" . TABLE_PREFIX . "tariffs` " .
+                'INSERT INTO `'.TABLE_PREFIX.'tariffs` '.
                 "SET `id` = '%d', `provision` = '%d'",
                 [$_POST['id'], $_POST['provision'] * 100]
             ));
@@ -1289,34 +1310,35 @@ class JsonHttpAdminKernel extends Kernel
             return new ApiResponse('ok', $lang->translate('tariff_add'), 1);
         }
 
-        if ($action == "tariff_edit") {
-            if (!get_privilages("manage_settings")) {
+        if ($action == 'tariff_edit') {
+            if (!get_privilages('manage_settings')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
             // Prowizja
-            if ($warning = check_for_warnings("number", $_POST['provision'])) {
-                $warnings['provision'] = array_merge((array)$warnings['provision'], $warning);
+            if ($warning = check_for_warnings('number', $_POST['provision'])) {
+                $warnings['provision'] = array_merge((array) $warnings['provision'], $warning);
             }
 
             // Błędy
             if (!empty($warnings)) {
                 foreach ($warnings as $brick => $warning) {
-                    $warning = create_dom_element("div", implode("<br />", $warning), [
-                        'class' => "form_warning",
+                    $warning = create_dom_element('div', implode('<br />', $warning), [
+                        'class' => 'form_warning',
                     ]);
                     $data['warnings'][$brick] = $warning;
                 }
+
                 return new ApiResponse(
-                    "warnings", $lang->translate('form_wrong_filled'), 0, $data
+                    'warnings', $lang->translate('form_wrong_filled'), 0, $data
                 );
             }
 
             $db->query($db->prepare(
-                "UPDATE `" . TABLE_PREFIX . "tariffs` " .
-                "SET `provision` = '%d' " .
+                'UPDATE `'.TABLE_PREFIX.'tariffs` '.
+                "SET `provision` = '%d' ".
                 "WHERE `id` = '%d'",
                 [$_POST['provision'] * 100, $_POST['id']]
             ));
@@ -1331,21 +1353,22 @@ class JsonHttpAdminKernel extends Kernel
                         $_POST['id']
                     )
                 );
+
                 return new ApiResponse('ok', $lang->translate('tariff_edit'), 1);
             }
 
-            return new ApiResponse("not_edited", $lang->translate('tariff_no_edit'), 0);
+            return new ApiResponse('not_edited', $lang->translate('tariff_no_edit'), 0);
         }
 
-        if ($action == "delete_tariff") {
-            if (!get_privilages("manage_settings")) {
+        if ($action == 'delete_tariff') {
+            if (!get_privilages('manage_settings')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
             $db->query($db->prepare(
-                "DELETE FROM `" . TABLE_PREFIX . "tariffs` " .
+                'DELETE FROM `'.TABLE_PREFIX.'tariffs` '.
                 "WHERE `id` = '%d' AND `predefined` = '0'",
                 [$_POST['id']]
             ));
@@ -1360,16 +1383,17 @@ class JsonHttpAdminKernel extends Kernel
                         $_POST['id']
                     )
                 );
+
                 return new ApiResponse('ok', $lang->translate('delete_tariff'), 1);
             }
 
-            return new ApiResponse("not_deleted", $lang->translate('no_delete_tariff'), 0);
+            return new ApiResponse('not_deleted', $lang->translate('no_delete_tariff'), 0);
         }
 
-        if ($action == "price_add" || $action == "price_edit") {
-            if (!get_privilages("manage_settings")) {
+        if ($action == 'price_add' || $action == 'price_edit') {
+            if (!get_privilages('manage_settings')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
@@ -1389,39 +1413,40 @@ class JsonHttpAdminKernel extends Kernel
             }
 
             // Ilość
-            if ($warning = check_for_warnings("number", $_POST['amount'])) {
-                $warnings['amount'] = array_merge((array)$warnings['amount'], $warning);
+            if ($warning = check_for_warnings('number', $_POST['amount'])) {
+                $warnings['amount'] = array_merge((array) $warnings['amount'], $warning);
             }
 
             // Błędy
             if (!empty($warnings)) {
                 foreach ($warnings as $brick => $warning) {
-                    $warning = create_dom_element("div", implode("<br />", $warning), [
-                        'class' => "form_warning",
+                    $warning = create_dom_element('div', implode('<br />', $warning), [
+                        'class' => 'form_warning',
                     ]);
                     $data['warnings'][$brick] = $warning;
                 }
+
                 return new ApiResponse(
-                    "warnings", $lang->translate('form_wrong_filled'), 0, $data
+                    'warnings', $lang->translate('form_wrong_filled'), 0, $data
                 );
             }
 
-            if ($action == "price_add") {
+            if ($action == 'price_add') {
                 /** @var PricelistRepository $pricelistRepository */
                 $pricelistRepository = $this->app->make(PricelistRepository::class);
                 $pricelistRepository->create($_POST['service'], $_POST['tariff'], $_POST['amount'],
                     $_POST['server']);
 
-                log_info("Admin {$user->getUsername()}({$user->getUid()}) dodał cenę. ID: " . $db->last_id());
+                log_info("Admin {$user->getUsername()}({$user->getUid()}) dodał cenę. ID: ".$db->last_id());
 
                 // Zwróć info o prawidłowym dodaniu
                 return new ApiResponse('ok', $lang->translate('price_add'), 1);
             }
 
-            if ($action == "price_edit") {
+            if ($action == 'price_edit') {
                 $db->query($db->prepare(
-                    "UPDATE `" . TABLE_PREFIX . "pricelist` " .
-                    "SET `service` = '%s', `tariff` = '%d', `amount` = '%d', `server` = '%d' " .
+                    'UPDATE `'.TABLE_PREFIX.'pricelist` '.
+                    "SET `service` = '%s', `tariff` = '%d', `amount` = '%d', `server` = '%d' ".
                     "WHERE `id` = '%d'",
                     [
                         $_POST['service'],
@@ -1442,24 +1467,25 @@ class JsonHttpAdminKernel extends Kernel
                             $_POST['id']
                         )
                     );
+
                     return new ApiResponse('ok', $lang->translate('price_edit'), 1);
                 }
 
-                return new ApiResponse("not_edited", $lang->translate('price_no_edit'), 0);
+                return new ApiResponse('not_edited', $lang->translate('price_no_edit'), 0);
             }
 
             throw new UnexpectedValueException();
         }
 
-        if ($action == "delete_price") {
-            if (!get_privilages("manage_settings")) {
+        if ($action == 'delete_price') {
+            if (!get_privilages('manage_settings')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
             $db->query($db->prepare(
-                "DELETE FROM `" . TABLE_PREFIX . "pricelist` " .
+                'DELETE FROM `'.TABLE_PREFIX.'pricelist` '.
                 "WHERE `id` = '%d'",
                 [$_POST['id']]
             ));
@@ -1474,44 +1500,46 @@ class JsonHttpAdminKernel extends Kernel
                         $_POST['id']
                     )
                 );
+
                 return new ApiResponse('ok', $lang->translate('delete_price'), 1);
             }
 
-            return new ApiResponse("not_deleted", $lang->translate('no_delete_price'), 0);
+            return new ApiResponse('not_deleted', $lang->translate('no_delete_price'), 0);
         }
 
-        if ($action == "sms_code_add") {
-            if (!get_privilages("manage_sms_codes")) {
+        if ($action == 'sms_code_add') {
+            if (!get_privilages('manage_sms_codes')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
             // Taryfa
-            if ($warning = check_for_warnings("number", $_POST['tariff'])) {
-                $warnings['tariff'] = array_merge((array)$warnings['tariff'], $warning);
+            if ($warning = check_for_warnings('number', $_POST['tariff'])) {
+                $warnings['tariff'] = array_merge((array) $warnings['tariff'], $warning);
             }
 
             // Kod SMS
-            if ($warning = check_for_warnings("sms_code", $_POST['code'])) {
-                $warnings['code'] = array_merge((array)$warnings['code'], $warning);
+            if ($warning = check_for_warnings('sms_code', $_POST['code'])) {
+                $warnings['code'] = array_merge((array) $warnings['code'], $warning);
             }
 
             // Błędy
             if (!empty($warnings)) {
                 foreach ($warnings as $brick => $warning) {
-                    $warning = create_dom_element("div", implode("<br />", $warning), [
-                        'class' => "form_warning",
+                    $warning = create_dom_element('div', implode('<br />', $warning), [
+                        'class' => 'form_warning',
                     ]);
                     $data['warnings'][$brick] = $warning;
                 }
+
                 return new ApiResponse(
-                    "warnings", $lang->translate('form_wrong_filled'), 0, $data
+                    'warnings', $lang->translate('form_wrong_filled'), 0, $data
                 );
             }
 
             $db->query($db->prepare(
-                "INSERT INTO `" . TABLE_PREFIX . "sms_codes` (`code`, `tariff`) " .
+                'INSERT INTO `'.TABLE_PREFIX.'sms_codes` (`code`, `tariff`) '.
                 "VALUES( '%s', '%d' )",
                 [$lang->strtoupper($_POST['code']), $_POST['tariff']]
             ));
@@ -1529,15 +1557,15 @@ class JsonHttpAdminKernel extends Kernel
             return new ApiResponse('ok', $lang->translate('sms_code_add'), 1);
         }
 
-        if ($action == "delete_sms_code") {
-            if (!get_privilages("manage_sms_codes")) {
+        if ($action == 'delete_sms_code') {
+            if (!get_privilages('manage_sms_codes')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
             $result = $db->query($db->prepare(
-                "DELETE FROM `" . TABLE_PREFIX . "sms_codes` " .
+                'DELETE FROM `'.TABLE_PREFIX.'sms_codes` '.
                 "WHERE `id` = '%d'",
                 [$_POST['id']]
             ));
@@ -1552,31 +1580,32 @@ class JsonHttpAdminKernel extends Kernel
                         $_POST['id']
                     )
                 );
+
                 return new ApiResponse('ok', $lang->translate('delete_sms_code'), 1);
             }
 
-            return new ApiResponse("not_deleted", $lang->translate('no_delete_sms_code'), 0);
+            return new ApiResponse('not_deleted', $lang->translate('no_delete_sms_code'), 0);
         }
 
-        if ($action == "service_code_add") {
-            if (!get_privilages("manage_service_codes")) {
+        if ($action == 'service_code_add') {
+            if (!get_privilages('manage_service_codes')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
             // Brak usługi
             if (!strlen($_POST['service'])) {
-                return new ApiResponse("no_service", $lang->translate('no_service_chosen'), 0);
+                return new ApiResponse('no_service', $lang->translate('no_service_chosen'), 0);
             }
 
             if (($service_module = $heart->get_service_module($_POST['service'])) === null) {
-                return new ApiResponse("wrong_module", $lang->translate('bad_module'), 0);
+                return new ApiResponse('wrong_module', $lang->translate('bad_module'), 0);
             }
 
             // Id użytkownika
-            if (strlen($_POST['uid']) && ($warning = check_for_warnings("uid", $_POST['uid']))) {
-                $warnings['uid'] = array_merge((array)$warnings['uid'], $warning);
+            if (strlen($_POST['uid']) && ($warning = check_for_warnings('uid', $_POST['uid']))) {
+                $warnings['uid'] = array_merge((array) $warnings['uid'], $warning);
             }
 
             // Kod
@@ -1590,26 +1619,27 @@ class JsonHttpAdminKernel extends Kernel
 
             // Łączymy zwrócone błędy
             $warnings = array_merge(
-                (array)$warnings,
-                (array)$service_module->service_code_admin_add_validate($_POST)
+                (array) $warnings,
+                (array) $service_module->service_code_admin_add_validate($_POST)
             );
 
             // Przerabiamy ostrzeżenia, aby lepiej wyglądały
             if (!empty($warnings)) {
                 foreach ($warnings as $brick => $warning) {
-                    $warning = create_dom_element("div", implode("<br />", $warning), [
-                        'class' => "form_warning",
+                    $warning = create_dom_element('div', implode('<br />', $warning), [
+                        'class' => 'form_warning',
                     ]);
                     $data['warnings'][$brick] = $warning;
                 }
-                return new ApiResponse("warnings", $lang->translate('form_wrong_filled'), 0, $data);
+
+                return new ApiResponse('warnings', $lang->translate('form_wrong_filled'), 0, $data);
             }
 
             // Pozyskujemy dane kodu do dodania
             $code_data = $service_module->service_code_admin_add_insert($_POST);
 
             $db->query($db->prepare(
-                "INSERT INTO `" . TABLE_PREFIX . "service_codes` " .
+                'INSERT INTO `'.TABLE_PREFIX.'service_codes` '.
                 "SET `code` = '%s', `service` = '%s', `uid` = '%d', `server` = '%d', `amount` = '%d', `tariff` = '%d', `data` = '%s'",
                 [
                     $_POST['code'],
@@ -1635,15 +1665,15 @@ class JsonHttpAdminKernel extends Kernel
             return new ApiResponse('ok', $lang->translate('code_added'), 1);
         }
 
-        if ($action == "delete_service_code") {
-            if (!get_privilages("manage_service_codes")) {
+        if ($action == 'delete_service_code') {
+            if (!get_privilages('manage_service_codes')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
             $result = $db->query($db->prepare(
-                "DELETE FROM `" . TABLE_PREFIX . "service_codes` " .
+                'DELETE FROM `'.TABLE_PREFIX.'service_codes` '.
                 "WHERE `id` = '%d'",
                 [$_POST['id']]
             ));
@@ -1658,22 +1688,23 @@ class JsonHttpAdminKernel extends Kernel
                         $_POST['id']
                     )
                 );
+
                 return new ApiResponse('ok', $lang->translate('code_deleted'), 1);
             }
 
-            return new ApiResponse("not_deleted", $lang->translate('code_not_deleted'), 0);
+            return new ApiResponse('not_deleted', $lang->translate('code_not_deleted'), 0);
         }
 
-        if ($action == "service_code_add_form_get") {
-            if (!get_privilages("manage_service_codes")) {
+        if ($action == 'service_code_add_form_get') {
+            if (!get_privilages('manage_service_codes')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
-            $output = "";
+            $output = '';
             if (($service_module = $heart->get_service_module($_POST['service'])) !== null &&
-                object_implements($service_module, "IService_ServiceCodeAdminManage")
+                object_implements($service_module, 'IService_ServiceCodeAdminManage')
             ) {
                 $output = $service_module->service_code_admin_add_form_get();
             }
@@ -1681,15 +1712,15 @@ class JsonHttpAdminKernel extends Kernel
             return new PlainResponse($output);
         }
 
-        if ($action == "delete_log") {
-            if (!get_privilages("manage_logs")) {
+        if ($action == 'delete_log') {
+            if (!get_privilages('manage_logs')) {
                 return new ApiResponse(
-                    "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                    'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                 );
             }
 
             $db->query($db->prepare(
-                "DELETE FROM `" . TABLE_PREFIX . "logs` " .
+                'DELETE FROM `'.TABLE_PREFIX.'logs` '.
                 "WHERE `id` = '%d'",
                 [$_POST['id']]
             ));
@@ -1699,12 +1730,12 @@ class JsonHttpAdminKernel extends Kernel
                 return new ApiResponse('ok', $lang->translate('delete_log'), 1);
             }
 
-            return new ApiResponse("not_deleted", $lang->translate('no_delete_log'), 0);
+            return new ApiResponse('not_deleted', $lang->translate('no_delete_log'), 0);
         }
 
-        if ($action == "refresh_blocks") {
+        if ($action == 'refresh_blocks') {
             if (isset($_POST['bricks'])) {
-                $bricks = explode(";", $_POST['bricks']);
+                $bricks = explode(';', $_POST['bricks']);
             }
 
             foreach ($bricks as $brick) {
@@ -1717,25 +1748,25 @@ class JsonHttpAdminKernel extends Kernel
                 if ($data[$block->get_content_id()]['content'] !== null) {
                     $data[$block->get_content_id()]['class'] = $block->get_content_class();
                 } else {
-                    $data[$block->get_content_id()]['class'] = "";
+                    $data[$block->get_content_id()]['class'] = '';
                 }
             }
 
             return new PlainResponse(json_encode($data));
         }
 
-        if ($action == "get_action_box") {
+        if ($action == 'get_action_box') {
             if (!isset($_POST['page_id']) || !isset($_POST['box_id'])) {
-                return new ApiResponse("no_data", $lang->translate('not_all_data'), 0);
+                return new ApiResponse('no_data', $lang->translate('not_all_data'), 0);
             }
 
-            if (($page = $heart->get_page($_POST['page_id'], "admin")) === null) {
-                return new ApiResponse("wrong_page", $lang->translate('wrong_page_id'), 0);
+            if (($page = $heart->get_page($_POST['page_id'], 'admin')) === null) {
+                return new ApiResponse('wrong_page', $lang->translate('wrong_page_id'), 0);
             }
 
-            if (!object_implements($page, "IPageAdmin_ActionBox")) {
+            if (!object_implements($page, 'IPageAdmin_ActionBox')) {
                 return new ApiResponse(
-                    "page_no_action_box", $lang->translate('no_action_box_support'), 0
+                    'page_no_action_box', $lang->translate('no_action_box_support'), 0
                 );
             }
 
@@ -1744,17 +1775,17 @@ class JsonHttpAdminKernel extends Kernel
             actionbox_output($action_box['status'], $action_box['text'], $action_box['template']);
         }
 
-        if ($action == "get_template") {
+        if ($action == 'get_template') {
             $template = $_POST['template'];
             // Zabezpieczanie wszystkich wartości post
             foreach ($_POST as $key => $value) {
                 $_POST[$key] = htmlspecialchars($value);
             }
 
-            if ($template == "admin_user_wallet") {
-                if (!get_privilages("manage_users")) {
+            if ($template == 'admin_user_wallet') {
+                if (!get_privilages('manage_users')) {
                     return new ApiResponse(
-                        "not_logged_in", $lang->translate('not_logged_or_no_perm'), 0
+                        'not_logged_in', $lang->translate('not_logged_or_no_perm'), 0
                     );
                 }
 
@@ -1762,15 +1793,15 @@ class JsonHttpAdminKernel extends Kernel
             }
 
             if (!isset($data['template'])) {
-                $data['template'] = $templates->render("jsonhttp/" . $template, compact('user2'));
+                $data['template'] = $templates->render('jsonhttp/'.$template, compact('user2'));
             }
 
             return new PlainResponse(json_encode($data));
         }
 
-        if ($action == "service_action_execute") {
+        if ($action == 'service_action_execute') {
             if (($service_module = $heart->get_service_module($_POST['service'])) === null
-                || !object_implements($service_module, "IService_ActionExecute")
+                || !object_implements($service_module, 'IService_ActionExecute')
             ) {
                 return new PlainResponse($lang->translate('bad_module'));
             }
@@ -1780,6 +1811,6 @@ class JsonHttpAdminKernel extends Kernel
             );
         }
 
-        return new ApiResponse("script_error", "An error occured: no action.");
+        return new ApiResponse('script_error', 'An error occured: no action.');
     }
 }

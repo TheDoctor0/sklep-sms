@@ -33,13 +33,13 @@ class PageAdminSmsCodes extends PageAdmin implements IPageAdmin_ActionBox
         $table->addHeadCell(new Cell($this->lang->translate('tariff')));
 
         $result = $this->db->query(
-            "SELECT SQL_CALC_FOUND_ROWS * " .
-            "FROM `" . TABLE_PREFIX . "sms_codes` " .
-            "WHERE `free` = '1' " .
-            "LIMIT " . get_row_limit($this->currentPage->getPageNumber())
+            'SELECT SQL_CALC_FOUND_ROWS * '.
+            'FROM `'.TABLE_PREFIX.'sms_codes` '.
+            "WHERE `free` = '1' ".
+            'LIMIT '.get_row_limit($this->currentPage->getPageNumber())
         );
 
-        $table->setDbRowsAmount($this->db->get_column("SELECT FOUND_ROWS()", "FOUND_ROWS()"));
+        $table->setDbRowsAmount($this->db->get_column('SELECT FOUND_ROWS()', 'FOUND_ROWS()'));
 
         while ($row = $this->db->fetch_array_assoc($result)) {
             $body_row = new BodyRow();
@@ -70,23 +70,23 @@ class PageAdminSmsCodes extends PageAdmin implements IPageAdmin_ActionBox
 
     public function get_action_box($box_id, $data)
     {
-        if (!get_privilages("manage_sms_codes")) {
+        if (!get_privilages('manage_sms_codes')) {
             return [
-                'status' => "not_logged_in",
+                'status' => 'not_logged_in',
                 'text'   => $this->lang->translate('not_logged_or_no_perm'),
             ];
         }
 
         switch ($box_id) {
-            case "sms_code_add":
-                $tariffs = "";
+            case 'sms_code_add':
+                $tariffs = '';
                 foreach ($this->heart->getTariffs() as $tariff) {
-                    $tariffs .= create_dom_element("option", $tariff->getId(), [
+                    $tariffs .= create_dom_element('option', $tariff->getId(), [
                         'value' => $tariff->getId(),
                     ]);
                 }
 
-                $output = $this->template->render("admin/action_boxes/sms_code_add", compact('tariffs'));
+                $output = $this->template->render('admin/action_boxes/sms_code_add', compact('tariffs'));
                 break;
 
             default:

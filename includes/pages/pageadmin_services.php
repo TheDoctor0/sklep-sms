@@ -69,67 +69,67 @@ class PageAdminServices extends PageAdmin implements IPageAdmin_ActionBox
 
     public function get_action_box($box_id, $data)
     {
-        if (!get_privilages("manage_services")) {
+        if (!get_privilages('manage_services')) {
             return [
-                'status' => "not_logged_in",
+                'status' => 'not_logged_in',
                 'text'   => $this->lang->translate('not_logged_or_no_perm'),
             ];
         }
 
-        if ($box_id == "service_edit") {
+        if ($box_id == 'service_edit') {
             $service = $this->heart->get_service($data['id']);
             $service['tag'] = htmlspecialchars($service['tag']);
 
             // Pobieramy pola danego modułu
             if (strlen($service['module'])) {
                 if (($service_module = $this->heart->get_service_module($service['id'])) !== null
-                    && object_implements($service_module, "IService_AdminManage")
+                    && object_implements($service_module, 'IService_AdminManage')
                 ) {
-                    $extra_fields = create_dom_element("tbody", $service_module->service_admin_extra_fields_get(), [
+                    $extra_fields = create_dom_element('tbody', $service_module->service_admin_extra_fields_get(), [
                         'class' => 'extra_fields',
                     ]);
                 }
             }
         } // Pobranie dostępnych modułów usług
-        elseif ($box_id == "service_add") {
-            $services_modules = "";
+        elseif ($box_id == 'service_add') {
+            $services_modules = '';
             foreach ($this->heart->get_services_modules() as $module) {
                 // Sprawdzamy czy dany moduł zezwala na tworzenie nowych usług, które będzie obsługiwał
                 if (($service_module = $this->heart->get_service_module_s($module['id'])) === null
-                    || !object_implements($service_module, "IService_Create")
+                    || !object_implements($service_module, 'IService_Create')
                 ) {
                     continue;
                 }
 
-                $services_modules .= create_dom_element("option", $module['name'], [
+                $services_modules .= create_dom_element('option', $module['name'], [
                     'value'    => $module['id'],
-                    'selected' => isset($service['module']) && $service['module'] == $module['id'] ? "selected" : "",
+                    'selected' => isset($service['module']) && $service['module'] == $module['id'] ? 'selected' : '',
                 ]);
             }
         }
 
         // Grupy
-        $groups = "";
+        $groups = '';
         foreach ($this->heart->get_groups() as $group) {
-            $groups .= create_dom_element("option", "{$group['name']} ( {$group['id']} )", [
+            $groups .= create_dom_element('option', "{$group['name']} ( {$group['id']} )", [
                 'value'    => $group['id'],
-                'selected' => isset($service['groups']) && in_array($group['id'], $service['groups']) ? "selected" : "",
+                'selected' => isset($service['groups']) && in_array($group['id'], $service['groups']) ? 'selected' : '',
             ]);
         }
 
         switch ($box_id) {
-            case "service_add":
+            case 'service_add':
                 $output = $this->template->render(
-                    "admin/action_boxes/service_add",
+                    'admin/action_boxes/service_add',
                     compact('groups', 'services_modules')
                 );
                 break;
 
-            case "service_edit":
+            case 'service_edit':
                 $service_module_name = $this->heart->get_service_module_name($service['module']);
 
                 $output = $this->template->render(
-                    "admin/action_boxes/service_edit",
+                    'admin/action_boxes/service_edit',
                     compact('service', 'groups', 'service_module_name', 'extra_fields')
                 );
                 break;

@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use PHPMailer\PHPMailer\Exception;
@@ -40,7 +41,7 @@ class Mailer
         $sender_name = $this->settings['sender_email_name'];
 
         if (!strlen($email)) {
-            return "wrong_email";
+            return 'wrong_email';
         }
 
         $mail = new PHPMailer(true);
@@ -69,9 +70,9 @@ class Mailer
 
             log_info($this->langShop->sprintf($this->langShop->translate('email_was_sent'), $email, $text));
 
-            return "sent";
+            return 'sent';
         } catch (Exception $e) {
-            return "not_sent";
+            return 'not_sent';
         }
     }
 
@@ -87,7 +88,7 @@ class Mailer
         $sender_name = $settings['sender_email_name'];
 
         if (!strlen($email)) {
-            return "wrong_email";
+            return 'wrong_email';
         }
 
         $header = "MIME-Version: 1.0\r\n";
@@ -95,19 +96,19 @@ class Mailer
         $header .= "From: {$sender_name} < {$sender_email} >\n";
         $header .= "To: {$name} < {$email} >\n";
         $header .= "X-Sender: {$sender_name} < {$sender_email} >\n";
-        $header .= 'X-Mailer: PHP/' . phpversion();
+        $header .= 'X-Mailer: PHP/'.phpversion();
         $header .= "X-Priority: 1 (Highest)\n";
         $header .= "X-MSMail-Priority: High\n";
         $header .= "Importance: High\n";
         $header .= "Return-Path: {$sender_email}\n"; // Return path for errors
 
         if (!mail($email, $subject, $text, $header)) {
-            return "not_sent";
+            return 'not_sent';
         }
 
         log_info($this->langShop->sprintf($this->langShop->translate('email_was_sent'), $email, $text));
 
-        return "sent";
+        return 'sent';
     }
 
     protected function shouldUseSignedSend()

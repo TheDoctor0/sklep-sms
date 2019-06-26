@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Verification\Exceptions;
 
 use Exception;

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Verification;
 
 use App\Verification\Abstracts\PaymentModule;
@@ -12,7 +13,7 @@ use App\Verification\Results\SmsSuccessResult;
 
 class Simpay extends PaymentModule implements SupportSms
 {
-    protected $id = "simpay";
+    protected $id = 'simpay';
 
     public function verifySms($sms_code, $sms_number)
     {
@@ -35,7 +36,7 @@ class Simpay extends PaymentModule implements SupportSms
         $content = $response->json();
 
         if (isset($content['respond']['status']) && $content['respond']['status'] == 'OK') {
-            return new SmsSuccessResult(!!$content['respond']['test']);
+            return new SmsSuccessResult((bool) $content['respond']['test']);
         }
 
         if (isset($content['error'][0]) && is_array($content['error'][0])) {
@@ -43,7 +44,6 @@ class Simpay extends PaymentModule implements SupportSms
                 case 103:
                 case 104:
                     throw new WrongCredentialsException();
-
                 case 404:
                 case 405:
                     throw new BadCodeException();

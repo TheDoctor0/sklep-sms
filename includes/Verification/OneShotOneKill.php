@@ -1,20 +1,21 @@
 <?php
+
 namespace App\Verification;
 
 use App\Verification\Abstracts\PaymentModule;
 use App\Verification\Abstracts\SupportSms;
 use App\Verification\Exceptions\BadCodeException;
 use App\Verification\Exceptions\BadNumberException;
-use App\Verification\Exceptions\ServerErrorException;
-use App\Verification\Exceptions\NoConnectionException;
 use App\Verification\Exceptions\ExternalErrorException;
+use App\Verification\Exceptions\NoConnectionException;
+use App\Verification\Exceptions\ServerErrorException;
 use App\Verification\Exceptions\UnknownErrorException;
 use App\Verification\Exceptions\WrongCredentialsException;
 use App\Verification\Results\SmsSuccessResult;
 
 class OneShotOneKill extends PaymentModule implements SupportSms
 {
-    protected $id = "1s1k";
+    protected $id = '1s1k';
 
     private $rates = [
         '0.65'  => '7136',
@@ -62,22 +63,18 @@ class OneShotOneKill extends PaymentModule implements SupportSms
                 }
 
                 throw new BadNumberException($this->getTariffByNumber($responseNumber)->getId());
-
             case 'fail':
                 throw new BadCodeException();
-
             case 'error':
                 switch ($content['desc']) {
                     case 'internal api error':
                         throw new ExternalErrorException();
-
                     case 'wrong api type':
                     case 'wrong api key':
                         throw new WrongCredentialsException();
                 }
 
                 throw new UnknownErrorException($content['desc']);
-
             default:
                 throw new UnknownErrorException();
         }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Kernels;
 
 use App\Middlewares\RequireNotInstalledOrNotUpdated;
@@ -33,7 +34,7 @@ class InstallKernel extends Kernel
             return $this->update();
         }
 
-        return new Response("Sklep nie wymaga aktualizacji. Przejdź na stronę sklepu usuwająć z paska adresu /install");
+        return new Response('Sklep nie wymaga aktualizacji. Przejdź na stronę sklepu usuwająć z paska adresu /install');
     }
 
     protected function full()
@@ -52,14 +53,14 @@ class InstallKernel extends Kernel
 
         $files_privilages = '';
         foreach ($files_priv as $file) {
-            if ($file == "") {
+            if ($file == '') {
                 continue;
             }
 
             if (is_writable($this->app->path($file))) {
-                $privilage = "ok";
+                $privilage = 'ok';
             } else {
-                $privilage = "bad";
+                $privilage = 'bad';
             }
 
             $files_privilages .= $template->install_full_render('file_privilages', compact('file', 'privilage'));
@@ -68,11 +69,11 @@ class InstallKernel extends Kernel
         $server_modules = '';
         foreach ($modules as $module) {
             if ($module['value']) {
-                $status = "correct";
-                $title = "Prawidłowo";
+                $status = 'correct';
+                $title = 'Prawidłowo';
             } else {
-                $status = "incorrect";
-                $title = "Nieprawidłowo";
+                $status = 'incorrect';
+                $title = 'Nieprawidłowo';
             }
 
             $server_modules .= $template->install_full_render('module', compact('module', 'status', 'title'));
@@ -105,7 +106,7 @@ class InstallKernel extends Kernel
         $everything_ok = true;
         // Pobieramy informacje o plikach ktore sa git i te ktore sa be
         $filesModulesStatus = $updateInfo->updateInfo($everything_ok, $files_priv, $files_del, $modules);
-        $class = $everything_ok ? "ok" : "bad";
+        $class = $everything_ok ? 'ok' : 'bad';
 
         $notifyHttpServer = $this->generateHttpServerNotification();
 
@@ -120,7 +121,7 @@ class InstallKernel extends Kernel
         /** @var Template $template */
         $template = $this->app->make(Template::class);
 
-        if (str_contains(strtolower($_SERVER["SERVER_SOFTWARE"]), 'apache')) {
+        if (str_contains(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache')) {
             return '';
         }
 

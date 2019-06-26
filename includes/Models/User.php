@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use App\Database;
@@ -10,7 +11,7 @@ class User
     const TEST = 1;
 
     /**
-     * @var integer
+     * @var int
      */
     private $uid;
 
@@ -60,7 +61,7 @@ class User
     private $lastactiv;
 
     /**
-     * @var integer
+     * @var int
      */
     private $wallet;
 
@@ -115,8 +116,8 @@ class User
         }
 
         $result = $this->db->query($this->db->prepare(
-            "SELECT * FROM `" . TABLE_PREFIX . "users` " .
-            "WHERE `uid` = '%d' " .
+            'SELECT * FROM `'.TABLE_PREFIX.'users` '.
+            "WHERE `uid` = '%d' ".
             "OR ((`username` = '%s' OR `email` = '%s') AND `password` = md5(CONCAT(md5('%s'), md5(`salt`))))",
             [$uid, $username, $username, $password]
         ));
@@ -156,8 +157,8 @@ class User
         }
 
         $this->db->query($this->db->prepare(
-            "UPDATE `" . TABLE_PREFIX . "users` " .
-            "SET `lastactiv` = NOW(), `lastip` = '%s' " .
+            'UPDATE `'.TABLE_PREFIX.'users` '.
+            "SET `lastactiv` = NOW(), `lastip` = '%s' ".
             "WHERE `uid` = '%d'",
             [$this->getLastip(), $this->getUid()]
         ));
@@ -343,7 +344,7 @@ class User
     }
 
     /**
-     * Removes all privilages
+     * Removes all privilages.
      */
     public function removePrivilages()
     {

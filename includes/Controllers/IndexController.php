@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\CurrentPage;
@@ -22,28 +23,28 @@ class IndexController
         }
 
         // Pobranie miejsca logowania
-        $logged_info = get_content("logged_info", $request);
+        $logged_info = get_content('logged_info', $request);
 
         // Pobranie portfela
-        $wallet = get_content("wallet", $request);
+        $wallet = get_content('wallet', $request);
 
         // Pobranie zawartości
-        $content = get_content("content", $request);
+        $content = get_content('content', $request);
 
         // Pobranie przycisków usług
-        $services_buttons = get_content("services_buttons", $request);
+        $services_buttons = get_content('services_buttons', $request);
 
         // Pobranie przycisków użytkownika
-        $user_buttons = get_content("user_buttons", $request);
+        $user_buttons = get_content('user_buttons', $request);
 
         // Pobranie headera
-        $header = $template->render("header", compact('heart', 'license'));
+        $header = $template->render('header', compact('heart', 'license'));
 
         // Pobranie ostatecznego szablonu
         $output = $template->render(
-            "index",
-            compact("header", "heart", "logged_info", "wallet", "services_buttons", "content",
-                "user_buttons")
+            'index',
+            compact('header', 'heart', 'logged_info', 'wallet', 'services_buttons', 'content',
+                'user_buttons')
         );
 
         return new Response($output);
@@ -58,6 +59,7 @@ class IndexController
         Template $template
     ) {
         $currentPage->setPid($pageId);
+
         return $this->oldGet($request, $heart, $license, $currentPage, $template);
     }
 }

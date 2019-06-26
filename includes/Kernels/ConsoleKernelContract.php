@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Kernels;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -9,8 +10,9 @@ interface ConsoleKernelContract
     /**
      * Handle an incoming console command.
      *
-     * @param  InputInterface $input
-     * @param  OutputInterface $output
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
      * @return int
      */
     public function handle(InputInterface $input, OutputInterface $output = null);

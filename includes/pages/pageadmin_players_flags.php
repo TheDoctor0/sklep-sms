@@ -37,12 +37,12 @@ class PageAdminPlayersFlags extends PageAdmin
         }
 
         $result = $this->db->query(
-            "SELECT SQL_CALC_FOUND_ROWS * FROM `" . TABLE_PREFIX . "players_flags` " .
-            "ORDER BY `id` DESC " .
-            "LIMIT " . get_row_limit($this->currentPage->getPageNumber())
+            'SELECT SQL_CALC_FOUND_ROWS * FROM `'.TABLE_PREFIX.'players_flags` '.
+            'ORDER BY `id` DESC '.
+            'LIMIT '.get_row_limit($this->currentPage->getPageNumber())
         );
 
-        $table->setDbRowsAmount($this->db->get_column("SELECT FOUND_ROWS()", "FOUND_ROWS()"));
+        $table->setDbRowsAmount($this->db->get_column('SELECT FOUND_ROWS()', 'FOUND_ROWS()'));
 
         while ($row = $this->db->fetch_array_assoc($result)) {
             $body_row = new BodyRow();

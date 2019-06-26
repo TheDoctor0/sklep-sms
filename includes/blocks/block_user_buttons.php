@@ -9,12 +9,12 @@ class BlockUserButtons extends Block
 {
     public function get_content_class()
     {
-        return is_logged() ? "user_buttons" : "loginarea";
+        return is_logged() ? 'user_buttons' : 'loginarea';
     }
 
     public function get_content_id()
     {
-        return "user_buttons";
+        return 'user_buttons';
     }
 
     protected function content($get, $post)
@@ -34,24 +34,24 @@ class BlockUserButtons extends Block
         $heart = app()->make(Heart::class);
 
         if (!$auth->check()) {
-            return $template->render("loginarea");
+            return $template->render('loginarea');
         }
 
         // Panel Admina
-        if (get_privilages("acp", $user)) {
-            $acp_button = create_dom_element("li", create_dom_element("a", $lang->translate('acp'), [
-                'href' => "admin.php",
+        if (get_privilages('acp', $user)) {
+            $acp_button = create_dom_element('li', create_dom_element('a', $lang->translate('acp'), [
+                'href' => 'admin.php',
             ]));
         }
 
         // Doładowanie portfela
-        if ($heart->user_can_use_service($user->getUid(), $heart->get_service("charge_wallet"))) {
-            $charge_wallet_button = create_dom_element("li",
-                create_dom_element("a", $lang->translate('charge_wallet'), [
-                    'href' => "index.php?pid=purchase&service=charge_wallet",
+        if ($heart->user_can_use_service($user->getUid(), $heart->get_service('charge_wallet'))) {
+            $charge_wallet_button = create_dom_element('li',
+                create_dom_element('a', $lang->translate('charge_wallet'), [
+                    'href' => 'index.php?pid=purchase&service=charge_wallet',
                 ]));
         }
 
-        return $template->render("user_buttons", compact('acp_button', 'charge_wallet_button'));
+        return $template->render('user_buttons', compact('acp_button', 'charge_wallet_button'));
     }
 }

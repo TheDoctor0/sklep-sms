@@ -4,12 +4,12 @@ use App\Models\Purchase;
 
 /**
  * Obsługa płatności za pomocą kodu na usługę
- * Interface IService_ServiceCode
+ * Interface IService_ServiceCode.
  */
 interface IService_ServiceCode
 {
     /**
-     * Sprawdza czy dany zakup może być zrealizowany ( opłacony ) przez dany kod na usługę
+     * Sprawdza czy dany zakup może być zrealizowany ( opłacony ) przez dany kod na usługę.
      *
      * @param Purchase $purchase_data
      * @param array    $code

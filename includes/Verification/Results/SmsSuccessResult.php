@@ -1,8 +1,9 @@
 <?php
+
 namespace App\Verification\Results;
 
-
-class SmsSuccessResult {
+class SmsSuccessResult
+{
     /** @var bool */
     public $free;
 

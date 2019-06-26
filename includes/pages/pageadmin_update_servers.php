@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Models\Server;
 use App\Requesting\Requester;
 use App\Version;
@@ -30,7 +29,7 @@ class PageAdminUpdateServers extends PageAdmin
         $newestAmxxVersion = $this->version->getNewestAmxmodx();
         $newestSmVersion = $this->version->getNewestSourcemod();
 
-        $versionBricks = "";
+        $versionBricks = '';
         foreach ($this->heart->get_servers() as $server) {
             if ($server['type'] === Server::TYPE_AMXMODX) {
                 $newestVersion = $newestAmxxVersion;
@@ -47,32 +46,33 @@ class PageAdminUpdateServers extends PageAdmin
             }
 
             $versionBricks .= $this->template->render(
-                "admin/update_version_block",
+                'admin/update_version_block',
                 [
-                    'name' => htmlspecialchars($server['name']),
+                    'name'           => htmlspecialchars($server['name']),
                     'currentVersion' => $server['version'],
-                    'newestVersion' => $newestVersion,
-                    'link' => $link,
+                    'newestVersion'  => $newestVersion,
+                    'link'           => $link,
                 ]
             );
         }
 
         if (!strlen($versionBricks)) {
-            $output = $this->template->render("admin/no_update");
+            $output = $this->template->render('admin/no_update');
 
             return $output;
         }
 
         return $this->template->render(
-            "admin/update_server",
+            'admin/update_server',
             compact('versionBricks') + ['title' => $this->title]
         );
     }
 
     /**
-     * @param array $server
+     * @param array  $server
      * @param string $newestAmxxVersion
      * @param string $newestSmVersion
+     *
      * @return bool
      */
     private function isServerNewest($server, $newestAmxxVersion, $newestSmVersion)

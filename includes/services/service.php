@@ -4,7 +4,7 @@ use App\Application;
 use App\Database;
 use App\Template;
 
-abstract class Service
+abstract class service
 {
     const MODULE_ID = '';
     const USER_SERVICE_TABLE = '';
@@ -27,6 +27,7 @@ abstract class Service
 
         if (!is_array($service)) { // Podano błędne dane usługi
             $this->service = null;
+
             return;
         }
 
@@ -36,7 +37,7 @@ abstract class Service
     /**
      * Metoda wywoływana, gdy usługa jest usuwana.
      *
-     * @param integer $service_id ID usługi
+     * @param int $service_id ID usługi
      */
     public function service_delete($service_id)
     {
@@ -46,7 +47,7 @@ abstract class Service
      * Metoda wywoływana przy usuwaniu usługi użytkownika.
      *
      * @param array  $user_service Dane o usłudze z bazy danych
-     * @param string $who Kto wywołał akcję ( admin, task )
+     * @param string $who          Kto wywołał akcję ( admin, task )
      *
      * @return bool
      */
@@ -79,13 +80,14 @@ abstract class Service
     /**
      * Super krotki opis to 28 znakow, przeznaczony jest tylko na serwery
      * Krotki opis, to 'description', krótki na strone WEB
-     * Pełny opis, to plik z opisem całej usługi
+     * Pełny opis, to plik z opisem całej usługi.
      *
-     * @return string    Description
+     * @return string Description
      */
     public function description_full_get()
     {
-        $file = "services/" . escape_filename($this->service['id']) . "_desc";
+        $file = 'services/'.escape_filename($this->service['id']).'_desc';
+
         return $this->template->render($file, [], true, false);
     }
 
@@ -100,9 +102,9 @@ abstract class Service
     }
 
     /**
-     * Aktualizuje usługę gracza
+     * Aktualizuje usługę gracza.
      *
-     * @param array  $set (column, value, data)
+     * @param array  $set    (column, value, data)
      * @param string $where1 Where dla update na tabeli user_service
      * @param string $where2 Where dla update na tabeli modułu
      *
@@ -149,8 +151,8 @@ abstract class Service
         $affected = 0;
         if (!empty($set_data1)) {
             $this->db->query(
-                "UPDATE `" . TABLE_PREFIX . "user_service` " .
-                "SET " . implode(', ', $set_data1) . " " .
+                'UPDATE `'.TABLE_PREFIX.'user_service` '.
+                'SET '.implode(', ', $set_data1).' '.
                 $where1
             );
             $affected = max($affected, $this->db->affected_rows());
@@ -158,8 +160,8 @@ abstract class Service
 
         if (!empty($set_data2)) {
             $this->db->query(
-                "UPDATE `" . TABLE_PREFIX . $this::USER_SERVICE_TABLE . "` " .
-                "SET " . implode(', ', $set_data2) . " " .
+                'UPDATE `'.TABLE_PREFIX.$this::USER_SERVICE_TABLE.'` '.
+                'SET '.implode(', ', $set_data2).' '.
                 $where2
             );
             $affected = max($affected, $this->db->affected_rows());

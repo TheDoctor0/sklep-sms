@@ -36,8 +36,8 @@ class ChangeCssettiNumbers extends Migration
             return;
         }
 
-        $data = json_decode($transactionService["data"], true);
-        $data["sms_text"] = "SKLEP";
+        $data = json_decode($transactionService['data'], true);
+        $data['sms_text'] = 'SKLEP';
 
         $this->db->query($this->db->prepare(
             "UPDATE `ss_transaction_services` SET `data` = '%s' WHERE `id` = 'cssetti';",

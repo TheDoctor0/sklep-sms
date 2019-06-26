@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 class Translator
@@ -7,21 +8,21 @@ class Translator
     protected $app;
 
     /**
-     * Current language
+     * Current language.
      *
      * @var string
      */
     protected $language;
 
     /**
-     * Language of loaded translations
+     * Language of loaded translations.
      *
      * @var string
      */
     protected $loadedLanguage;
 
     /**
-     * Array of language => language short
+     * Array of language => language short.
      *
      * @var array
      */
@@ -31,7 +32,7 @@ class Translator
     ];
 
     /**
-     * Array of translations
+     * Array of translations.
      *
      * @var array
      */
@@ -54,7 +55,7 @@ class Translator
     }
 
     /**
-     * Returns full language name by its shortcut
+     * Returns full language name by its shortcut.
      *
      * @param string $short
      *
@@ -66,7 +67,7 @@ class Translator
     }
 
     /**
-     * Sets current language
+     * Sets current language.
      *
      * @param string $language Full language name
      */
@@ -78,7 +79,7 @@ class Translator
             !strlen($language) ||
             !isset($this->langList[$language]) ||
             $this->getCurrentLanguage() == $language ||
-            !is_dir($this->app->path("includes/languages/" . $language))
+            !is_dir($this->app->path('includes/languages/'.$language))
         ) {
             return;
         }
@@ -87,7 +88,7 @@ class Translator
     }
 
     /**
-     * Translate key to text
+     * Translate key to text.
      *
      * @param string $key
      *
@@ -111,14 +112,14 @@ class Translator
         $num_args = count($arg_list);
 
         for ($i = 1; $i < $num_args; $i++) {
-            $string = str_replace('{' . $i . '}', $arg_list[$i], $string);
+            $string = str_replace('{'.$i.'}', $arg_list[$i], $string);
         }
 
         return $string;
     }
 
     /**
-     * Strtoupper function
+     * Strtoupper function.
      *
      * @param $string
      *
@@ -126,7 +127,7 @@ class Translator
      */
     public function strtoupper($string)
     {
-        return mb_convert_case($string, MB_CASE_UPPER, "UTF-8");
+        return mb_convert_case($string, MB_CASE_UPPER, 'UTF-8');
     }
 
     protected function load($language)
@@ -138,11 +139,11 @@ class Translator
         $filesToInclude = [];
 
         // Ładujemy ogólną bibliotekę językową
-        $filesToInclude[] = $this->app->path("includes/languages/general.php");
+        $filesToInclude[] = $this->app->path('includes/languages/general.php');
 
         // Ładujemy ogólne biblioteki językowe języka
         foreach (scandir($this->app->path("includes/languages/{$language}")) as $file) {
-            if (ends_at($file, ".php")) {
+            if (ends_at($file, '.php')) {
                 $filesToInclude[] = $this->app->path("includes/languages/{$language}/{$file}");
             }
         }
@@ -150,13 +151,13 @@ class Translator
         // Ładujemy bilioteki dla PA
         if (admin_session()) {
             foreach (scandir($this->app->path("includes/languages/{$language}/admin")) as $file) {
-                if (ends_at($file, ".php")) {
+                if (ends_at($file, '.php')) {
                     $filesToInclude[] = $this->app->path("includes/languages/{$language}/admin/{$file}");
                 }
             }
         } else {
             foreach (scandir($this->app->path("includes/languages/{$language}/user")) as $file) {
-                if (ends_at($file, ".php")) {
+                if (ends_at($file, '.php')) {
                     $filesToInclude[] = $this->app->path("includes/languages/{$language}/user/{$file}");
                 }
             }

@@ -1,7 +1,7 @@
 <?php
 
 $app = new App\Application(
-    realpath(__DIR__ . '/../')
+    realpath(__DIR__.'/../')
 );
 
 $app->singleton(

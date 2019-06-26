@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use App\Settings;
@@ -19,7 +20,7 @@ class Tariff
 
     public function __toString() // Potrzebne do funkcji array_unique
     {
-        return $this->getId() . '|' . $this->getNumber() . '|' . $this->getProvision();
+        return $this->getId().'|'.$this->getNumber().'|'.$this->getProvision();
     }
 
     /**
@@ -30,10 +31,10 @@ class Tariff
      */
     public function __construct($id, $provision, $predefined, $number = null)
     {
-        $this->id = (int)$id;
-        $this->provision = (int)$provision;
-        $this->predefined = (bool)$predefined;
-        $this->number = isset($number) ? (string)$number : null;
+        $this->id = (int) $id;
+        $this->provision = (int) $provision;
+        $this->predefined = (bool) $predefined;
+        $this->number = isset($number) ? (string) $number : null;
     }
 
     /**
@@ -57,7 +58,7 @@ class Tariff
      */
     public function setNumber($number)
     {
-        $this->number = (string)$number;
+        $this->number = (string) $number;
     }
 
     /**
@@ -69,7 +70,7 @@ class Tariff
     }
 
     /**
-     * Zwraca koszt brutto sms
+     * Zwraca koszt brutto sms.
      *
      * @return float
      */
@@ -78,11 +79,11 @@ class Tariff
         /** @var Settings $settings */
         $settings = app()->make(Settings::class);
 
-        return (float)number_format(get_sms_cost($this->getNumber()) * $settings['vat'] / 100.0, 2);
+        return (float) number_format(get_sms_cost($this->getNumber()) * $settings['vat'] / 100.0, 2);
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPredefined()
     {

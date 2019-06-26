@@ -25,7 +25,5 @@ class SetLanguage implements MiddlewareContract
 
         $translationManager->user()->setLanguage($locale);
         $translationManager->shop()->setLanguage($settings['language']);
-
-        return null;
     }
 }

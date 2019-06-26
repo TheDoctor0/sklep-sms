@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use App\Exceptions\SqlQueryException;
@@ -29,7 +30,7 @@ class Database
         $this->name = $name;
     }
 
-    function __destruct()
+    public function __destruct()
     {
         $this->close();
     }
@@ -52,22 +53,23 @@ class Database
         if (!$this->link) {
             $this->error = mysqli_connect_error();
             $this->errno = mysqli_connect_errno();
-            throw $this->exception("no_server_connection");
+
+            throw $this->exception('no_server_connection');
         }
 
-        $this->query("SET NAMES utf8");
+        $this->query('SET NAMES utf8');
     }
-
 
     /**
      * @param string $name
+     *
      * @throws SqlQueryException
      */
     public function selectDb($name)
     {
         $result = mysqli_select_db($this->link, $name);
         if (!$result) {
-            throw $this->exception("no_db_connection");
+            throw $this->exception('no_db_connection');
         }
     }
 
@@ -94,8 +96,10 @@ class Database
 
     /**
      * @param $query
-     * @return \mysqli_result
+     *
      * @throws SqlQueryException
+     *
+     * @return \mysqli_result
      */
     public function query($query)
     {
@@ -110,13 +114,15 @@ class Database
             return $this->result;
         }
 
-        throw $this->exception("query_error");
+        throw $this->exception('query_error');
     }
 
     /**
      * @param string $query
-     * @return bool
+     *
      * @throws SqlQueryException
+     *
+     * @return bool
      */
     public function multi_query($query)
     {
@@ -129,14 +135,16 @@ class Database
             return $this->result;
         }
 
-        throw $this->exception("query_error");
+        throw $this->exception('query_error');
     }
 
     /**
      * @param string $query
      * @param string $column
-     * @return mixed|null
+     *
      * @throws SqlQueryException
+     *
+     * @return mixed|null
      */
     public function get_column($query, $column)
     {
@@ -144,12 +152,12 @@ class Database
         $result = $this->query($query);
 
         if (!$this->num_rows($result)) {
-            return null;
+            return;
         }
 
         $row = $this->fetch_array_assoc($result);
         if (!isset($row[$column])) {
-            return null;
+            return;
         }
 
         return $row[$column];
@@ -157,13 +165,15 @@ class Database
 
     /**
      * @param \mysqli_result $result
-     * @return int
+     *
      * @throws SqlQueryException
+     *
+     * @return int
      */
     public function num_rows($result)
     {
         if (empty($result)) {
-            throw $this->exception("no_query_num_rows");
+            throw $this->exception('no_query_num_rows');
         }
 
         return mysqli_num_rows($result);
@@ -171,13 +181,15 @@ class Database
 
     /**
      * @param \mysqli_result $result
-     * @return array|null
+     *
      * @throws SqlQueryException
+     *
+     * @return array|null
      */
     public function fetch_array_assoc($result)
     {
         if (empty($result)) {
-            throw $this->exception("no_query_fetch_array_assoc");
+            throw $this->exception('no_query_fetch_array_assoc');
         }
 
         return mysqli_fetch_assoc($result);
@@ -185,13 +197,15 @@ class Database
 
     /**
      * @param \mysqli_result $result
-     * @return array|null
+     *
      * @throws SqlQueryException
+     *
+     * @return array|null
      */
     public function fetch_array($result)
     {
         if (empty($result)) {
-            throw $this->exception("no_query_fetch_array");
+            throw $this->exception('no_query_fetch_array');
         }
 
         return mysqli_fetch_array($result);
@@ -236,7 +250,7 @@ class Database
         }
 
         $this->disableForeignKeyConstraints();
-        $this->query('drop table ' . implode(',', $tables));
+        $this->query('drop table '.implode(',', $tables));
         $this->enableForeignKeyConstraints();
     }
 
@@ -246,7 +260,7 @@ class Database
         $result = $this->query('SHOW FULL TABLES WHERE table_type = \'BASE TABLE\'');
 
         while ($row = $this->fetch_array_assoc($result)) {
-            $row = (array)$row;
+            $row = (array) $row;
             $tables[] = reset($row);
         }
 
@@ -270,6 +284,7 @@ class Database
 
     /**
      * @param string $messageId
+     *
      * @return SqlQueryException
      */
     private function exception($messageId)
@@ -284,6 +299,6 @@ class Database
 
     public function isConnected()
     {
-        return !!$this->link;
+        return (bool) $this->link;
     }
 }

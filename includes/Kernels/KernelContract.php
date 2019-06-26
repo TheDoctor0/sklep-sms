@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Kernels;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -9,7 +10,8 @@ interface KernelContract
     /**
      * Handle an incoming HTTP request.
      *
-     * @param  Request $request
+     * @param Request $request
+     *
      * @return Response
      */
     public function handle(Request $request);
@@ -17,8 +19,9 @@ interface KernelContract
     /**
      * Perform any final actions for the request lifecycle.
      *
-     * @param  Request  $request
-     * @param  Response $response
+     * @param Request  $request
+     * @param Response $response
+     *
      * @return void
      */
     public function terminate(Request $request, Response $response);

@@ -37,17 +37,17 @@ class PageAdminPaymentWallet extends PageAdmin
 
         $table->addHeadCell(new Cell($this->lang->translate('date')));
 
-        $where = "";
+        $where = '';
         if (isset($get['payid'])) {
             $where .= $this->db->prepare(" AND `payment_id` = '%d' ", [$get['payid']]);
         }
 
         $result = $this->db->query(
-            "SELECT SQL_CALC_FOUND_ROWS * " .
-            "FROM ({$this->settings['transactions_query']}) as t " .
-            "WHERE t.payment = 'wallet' " . $where .
-            "ORDER BY t.timestamp DESC " .
-            "LIMIT " . get_row_limit($this->currentPage->getPageNumber())
+            'SELECT SQL_CALC_FOUND_ROWS * '.
+            "FROM ({$this->settings['transactions_query']}) as t ".
+            "WHERE t.payment = 'wallet' ".$where.
+            'ORDER BY t.timestamp DESC '.
+            'LIMIT '.get_row_limit($this->currentPage->getPageNumber())
         );
 
         $table->setDbRowsAmount($this->db->get_column('SELECT FOUND_ROWS()', 'FOUND_ROWS()'));
@@ -59,7 +59,7 @@ class PageAdminPaymentWallet extends PageAdmin
                 $body_row->setParam('class', 'highlighted');
             }
 
-            $cost = $row['cost'] ? number_format($row['cost'] / 100.0, 2) . " " . $this->settings['currency'] : "";
+            $cost = $row['cost'] ? number_format($row['cost'] / 100.0, 2).' '.$this->settings['currency'] : '';
 
             $body_row->setDbId($row['payment_id']);
             $body_row->addCell(new Cell($cost));

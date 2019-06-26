@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Psr4\TestCases;
 
 use App\Kernels\KernelContract;

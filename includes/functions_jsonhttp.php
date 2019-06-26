@@ -3,7 +3,7 @@
 use App\TranslationManager;
 
 /**
- * Sprawdza czy podane dane są prawidłowe dla danego typu
+ * Sprawdza czy podane dane są prawidłowe dla danego typu.
  *
  * @param string $type
  * @param        $data
@@ -18,7 +18,7 @@ function check_for_warnings($type, $data)
 
     $warnings = [];
     switch ($type) {
-        case "username":
+        case 'username':
             if (strlen($data) < 2) {
                 $warnings[] = $lang->sprintf($lang->translate('field_length_min_warn'), 2);
             }
@@ -28,7 +28,7 @@ function check_for_warnings($type, $data)
 
             break;
 
-        case "nick":
+        case 'nick':
             if (strlen($data) < 2) {
                 $warnings[] = $lang->sprintf($lang->translate('field_length_min_warn'), 2);
             } else {
@@ -39,35 +39,35 @@ function check_for_warnings($type, $data)
 
             break;
 
-        case "password":
+        case 'password':
             if (strlen($data) < 6) {
                 $warnings[] = $lang->sprintf($lang->translate('field_length_min_warn'), 6);
             }
 
             break;
 
-        case "email":
+        case 'email':
             if (!filter_var($data, FILTER_VALIDATE_EMAIL)) {
                 $warnings[] = $lang->translate('wrong_email');
             }
 
             break;
 
-        case "ip":
+        case 'ip':
             if (!filter_var($data, FILTER_VALIDATE_IP)) {
                 $warnings[] = $lang->translate('wrong_ip');
             }
 
             break;
 
-        case "sid":
+        case 'sid':
             if (!valid_steam($data) || strlen($data) > 32) {
                 $warnings[] = $lang->translate('wrong_sid');
             }
 
             break;
 
-        case "uid":
+        case 'uid':
             if (!strlen($data)) {
                 $warnings[] = $lang->translate('field_no_empty');
             } else {
@@ -78,14 +78,14 @@ function check_for_warnings($type, $data)
 
             break;
 
-        case "service_description":
+        case 'service_description':
             if (strlen($data) > 28) {
                 $warnings[] = $lang->sprintf($lang->translate('field_length_max_warn'), 28);
             }
 
             break;
 
-        case "sms_code":
+        case 'sms_code':
             if (!strlen($data)) {
                 $warnings[] = $lang->translate('field_no_empty');
             } else {
@@ -96,7 +96,7 @@ function check_for_warnings($type, $data)
 
             break;
 
-        case "number":
+        case 'number':
             if (!strlen($data)) {
                 $warnings[] = $lang->translate('field_no_empty');
             } else {
@@ -117,7 +117,7 @@ function check_for_warnings($type, $data)
  * @param bool   $positive
  * @param array  $data
  */
-function json_output($id, $text = "", $positive = false, $data = [])
+function json_output($id, $text = '', $positive = false, $data = [])
 {
     $output['return_id'] = $id;
     $output['text'] = $text;
@@ -135,7 +135,7 @@ function json_output($id, $text = "", $positive = false, $data = [])
  * @param string $text
  * @param string $template
  */
-function actionbox_output($id, $text = "", $template = "")
+function actionbox_output($id, $text = '', $template = '')
 {
     $output['return_id'] = $id;
     $output['text'] = $text;

@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -6,14 +7,14 @@ use Symfony\Component\HttpFoundation\Request;
 class CurrentPage
 {
     /**
-     * Page number
+     * Page number.
      *
      * @var int
      */
     protected $pageNumber;
 
     /**
-     * Page ID
+     * Page ID.
      *
      * @var string
      */

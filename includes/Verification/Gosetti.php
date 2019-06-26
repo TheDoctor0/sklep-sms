@@ -1,6 +1,6 @@
 <?php
-namespace App\Verification;
 
+namespace App\Verification;
 
 use App\Verification\Abstracts\PaymentModule;
 use App\Verification\Abstracts\SupportSms;
@@ -15,9 +15,9 @@ use App\Verification\Results\SmsSuccessResult;
 
 class Gosetti extends PaymentModule implements SupportSms
 {
-    protected $id = "gosetti";
+    protected $id = 'gosetti';
 
-    /** @var  string */
+    /** @var string */
     private $smsCode;
 
     /** @var array */

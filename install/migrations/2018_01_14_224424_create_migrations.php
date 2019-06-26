@@ -6,9 +6,9 @@ class CreateMigrations extends Migration
 {
     public function up()
     {
-        $this->db->query("DROP TABLE IF EXISTS `ss_migrations`;");
+        $this->db->query('DROP TABLE IF EXISTS `ss_migrations`;');
         $this->db->query(
-            <<<EOF
+            <<<'EOF'
 CREATE TABLE IF NOT EXISTS `ss_migrations` (
   `id`         INT(11)      NOT NULL AUTO_INCREMENT,
   `name`       VARCHAR(255) NOT NULL,

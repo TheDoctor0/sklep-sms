@@ -1,4 +1,5 @@
 <?php
+
 namespace Install;
 
 use App\Application;
@@ -24,11 +25,11 @@ class UpdateInfo
         $server_modules = '';
         foreach ($modules as $module) {
             if ($module['value']) {
-                $status = "correct";
-                $title = "Prawidłowo";
+                $status = 'correct';
+                $title = 'Prawidłowo';
             } else {
-                $status = "incorrect";
-                $title = "Nieprawidłowo";
+                $status = 'incorrect';
+                $title = 'Nieprawidłowo';
             }
 
             $server_modules .= $this->template->install_update_render('module', compact('module', 'status', 'title'));
@@ -38,7 +39,7 @@ class UpdateInfo
             }
         }
         if (strlen($server_modules)) {
-            $text = "Moduły na serwerze";
+            $text = 'Moduły na serwerze';
             $data = $server_modules;
             $server_modules = $this->template->install_update_render('update_info_brick', compact('text', 'data'));
         }
@@ -50,16 +51,16 @@ class UpdateInfo
             }
 
             if (is_writable($this->app->path($file))) {
-                $status = "ok";
+                $status = 'ok';
             } else {
-                $status = "bad";
+                $status = 'bad';
                 $everything_ok = false;
             }
 
             $files_privilages .= $this->template->install_update_render('file', compact('file', 'status'));
         }
         if (strlen($files_privilages)) {
-            $text = "Uprawnienia do zapisu";
+            $text = 'Uprawnienia do zapisu';
             $data = $files_privilages;
             $files_privilages = $this->template->install_update_render('update_info_brick', compact('text', 'data'));
         }
@@ -71,16 +72,16 @@ class UpdateInfo
             }
 
             if (!file_exists($this->app->path($file))) {
-                $status = "ok";
+                $status = 'ok';
             } else {
-                $status = "bad";
+                $status = 'bad';
                 $everything_ok = false;
             }
 
             $files_delete .= $this->template->install_update_render('file', compact('file', 'status'));
         }
         if (strlen($files_delete)) {
-            $text = "Pliki do usunięcia";
+            $text = 'Pliki do usunięcia';
             $data = $files_delete;
             $files_delete = $this->template->install_update_render('update_info_brick', compact('text', 'data'));
         }

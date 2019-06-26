@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Psr4\TestCases;
 
 use App\Application;
@@ -24,7 +25,7 @@ class TestCase extends BaseTestCase
     /** @var array */
     protected $afterApplicationCreatedCallbacks = [];
 
-    /** @var boolean */
+    /** @var bool */
     protected $mockLocale = true;
 
     protected function setUp()
@@ -84,7 +85,7 @@ class TestCase extends BaseTestCase
 
     protected function createApplication()
     {
-        return require __DIR__ . '/../../../bootstrap/app.php';
+        return require __DIR__.'/../../../bootstrap/app.php';
     }
 
     public function afterApplicationCreated(callable $callback)

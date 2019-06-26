@@ -8,12 +8,12 @@ class BlockServicesButtons extends Block
 {
     public function get_content_class()
     {
-        return "services_buttons";
+        return 'services_buttons';
     }
 
     public function get_content_id()
     {
-        return "services_buttons";
+        return 'services_buttons';
     }
 
     protected function content($get, $post)
@@ -28,7 +28,7 @@ class BlockServicesButtons extends Block
         /** @var Heart $heart */
         $heart = app()->make(Heart::class);
 
-        $services = "";
+        $services = '';
         foreach ($heart->get_services() as $service) {
             if (($service_module = $heart->get_service_module($service['id'])) === null || !$service_module->show_on_web()) {
                 continue;
@@ -38,11 +38,11 @@ class BlockServicesButtons extends Block
                 continue;
             }
 
-            $services .= create_dom_element("li", create_dom_element("a", $service['name'], [
-                'href' => "index.php?pid=purchase&service=" . urlencode($service['id']),
+            $services .= create_dom_element('li', create_dom_element('a', $service['name'], [
+                'href' => 'index.php?pid=purchase&service='.urlencode($service['id']),
             ]));
         }
 
-        return $template->render("services_buttons", compact('services'));
+        return $template->render('services_buttons', compact('services'));
     }
 }

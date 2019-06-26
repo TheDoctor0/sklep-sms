@@ -1,4 +1,5 @@
 <?php
+
 namespace Admin\Table;
 
 use App\CurrentPage;
@@ -9,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 interface I_ToHtml
 {
     /**
-     * Tworzy kod html elementu
+     * Tworzy kod html elementu.
      *
      * @return string
      */
@@ -18,7 +19,7 @@ interface I_ToHtml
 
 class SimpleText implements I_ToHtml
 {
-    /** @var  string */
+    /** @var string */
     private $text;
 
     /**
@@ -30,7 +31,7 @@ class SimpleText implements I_ToHtml
     }
 
     /**
-     * Tworzy kod html elementu
+     * Tworzy kod html elementu.
      *
      * @return string
      */
@@ -42,13 +43,13 @@ class SimpleText implements I_ToHtml
 
 class DOMElement implements I_ToHtml
 {
-    /** @var  string */
+    /** @var string */
     protected $name;
 
-    /** @var  I_ToHtml[] */
+    /** @var I_ToHtml[] */
     protected $contents = [];
 
-    /** @var  array */
+    /** @var array */
     protected $params;
 
     /**
@@ -68,12 +69,12 @@ class DOMElement implements I_ToHtml
         $old_params = $this->params;
 
         $style = [];
-        foreach ((array)$this->getParam('style') as $key => $value) {
+        foreach ((array) $this->getParam('style') as $key => $value) {
             if (!strlen($value)) {
                 continue;
             }
 
-            $style[] = htmlspecialchars($key) . ': ' . htmlspecialchars($value);
+            $style[] = htmlspecialchars($key).': '.htmlspecialchars($value);
         }
         if (!empty($style)) {
             $this->setParam('style', implode('; ', $style));
@@ -85,7 +86,7 @@ class DOMElement implements I_ToHtml
                 continue;
             }
 
-            $params[] = htmlspecialchars($key) . '="' . htmlspecialchars($value) . '"';
+            $params[] = htmlspecialchars($key).'="'.htmlspecialchars($value).'"';
         }
         $params = implode(' ', $params);
 
@@ -283,18 +284,18 @@ class BodyRow extends Row
         if ($this->button_edit) {
             $button = new DOMElement();
             $button->setName('img');
-            $button->setParam('class', "edit_row");
+            $button->setParam('class', 'edit_row');
             $button->setParam('src', 'images/edit.png');
-            $button->setParam('title', $lang->translate('edit') . ' ' . $this->db_id);
+            $button->setParam('title', $lang->translate('edit').' '.$this->db_id);
             $actions->addContent($button);
         }
 
         if ($this->button_delete) {
             $button = new DOMElement();
             $button->setName('img');
-            $button->setParam('class', "delete_row");
+            $button->setParam('class', 'delete_row');
             $button->setParam('src', 'images/bin.png');
-            $button->setParam('title', $lang->translate('delete') . ' ' . $this->db_id);
+            $button->setParam('title', $lang->translate('delete').' '.$this->db_id);
             $actions->addContent($button);
         }
 
@@ -317,19 +318,19 @@ class BodyRow extends Row
     }
 
     /**
-     * @param boolean $button_edit
+     * @param bool $button_edit
      */
     public function setButtonEdit($button_edit = true)
     {
-        $this->button_edit = (bool)$button_edit;
+        $this->button_edit = (bool) $button_edit;
     }
 
     /**
-     * @param boolean $button_delete
+     * @param bool $button_delete
      */
     public function setButtonDelete($button_delete = true)
     {
-        $this->button_delete = (bool)$button_delete;
+        $this->button_delete = (bool) $button_delete;
     }
 
     /**
@@ -374,7 +375,7 @@ class Structure extends DOMElement
 
     /**
      * Ilość elementów w bazie danych
-     * potrzebne do stworzenia paginacji
+     * potrzebne do stworzenia paginacji.
      *
      * @var int
      */
@@ -476,7 +477,7 @@ class Structure extends DOMElement
         $pageNumber = $currentPage->getPageNumber();
         $this->db_rows_amount = intval($amount);
 
-        $pagination_txt = get_pagination($this->db_rows_amount, $pageNumber, "admin.php", $_GET);
+        $pagination_txt = get_pagination($this->db_rows_amount, $pageNumber, 'admin.php', $_GET);
         if (strlen($pagination_txt)) {
             $this->foot = new DOMElement();
             $this->foot->setName('tfoot');
@@ -495,13 +496,13 @@ class Structure extends DOMElement
 
 class Wrapper extends Div
 {
-    /** @var  Structure */
+    /** @var Structure */
     protected $table;
 
-    /** @var  string */
+    /** @var string */
     protected $title;
 
-    /** @var  DOMElement[] */
+    /** @var DOMElement[] */
     protected $buttons = [];
 
     /** @var bool */
@@ -531,7 +532,7 @@ class Wrapper extends Div
         if ($this->search) {
             $search_text = $request->get('search');
             $buttons->addContent(new SimpleText(
-                $template->render("admin/form_search", compact('search_text'))
+                $template->render('admin/form_search', compact('search_text'))
             ));
         }
 

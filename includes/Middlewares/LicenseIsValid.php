@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Middlewares;
 
 use App\Application;
@@ -51,40 +52,39 @@ class LicenseIsValid implements MiddlewareContract
         } catch (InvalidResponse $e) {
             $this->limitPrivileges();
 
-            if (SCRIPT_NAME == "index") {
+            if (SCRIPT_NAME == 'index') {
                 $message = $this->getMessageFromInvalidResponse($e->response);
+
                 return $this->renderErrorPage($message);
             }
 
-            if (in_array(SCRIPT_NAME, ["jsonhttp", "servers_stuff", "extra_stuff"])) {
+            if (in_array(SCRIPT_NAME, ['jsonhttp', 'servers_stuff', 'extra_stuff'])) {
                 return new Response();
             }
 
             // We want to continue because e.g. we want user to be able
             // to change license credentials via admin panel
-            return null;
+            return;
         }
 
         // Let's pass some additional info to sentry logger
         // so that it would be easier for us to debug any potential exceptions
-        if (getenv('LICENSE') !== "false" && $this->app->bound(Raven_Client::class)) {
+        if (getenv('LICENSE') !== 'false' && $this->app->bound(Raven_Client::class)) {
             $this->app->make(Raven_Client::class)->tags_context([
                 'license_id' => $license->getExternalId(),
             ]);
         }
-
-        return null;
     }
 
     private function limitPrivileges()
     {
         $user = $this->auth->user();
 
-        if (get_privilages("manage_settings", $user)) {
+        if (get_privilages('manage_settings', $user)) {
             $user->removePrivilages();
             $user->setPrivilages([
-                "acp"             => true,
-                "manage_settings" => true,
+                'acp'             => true,
+                'manage_settings' => true,
             ]);
         }
     }
@@ -104,6 +104,6 @@ class LicenseIsValid implements MiddlewareContract
 
     private function renderErrorPage($message)
     {
-        return new Response($this->template->render("license/error", compact('message')));
+        return new Response($this->template->render('license/error', compact('message')));
     }
 }

@@ -36,22 +36,22 @@ class PageAdminLogs extends PageAdmin
         // Wyszukujemy dane ktore spelniaja kryteria
         $where = '';
         if (isset($get['search'])) {
-            searchWhere(["`id`", "`text`", "CAST(`timestamp` as CHAR)"], $get['search'], $where);
+            searchWhere(['`id`', '`text`', 'CAST(`timestamp` as CHAR)'], $get['search'], $where);
         }
 
         // Jezeli jest jakis where, to dodajemy WHERE
         if (strlen($where)) {
-            $where = "WHERE " . $where . " ";
+            $where = 'WHERE '.$where.' ';
         }
 
         $result = $this->db->query(
-            "SELECT SQL_CALC_FOUND_ROWS * FROM `" . TABLE_PREFIX . "logs` " .
-            $where .
-            "ORDER BY `id` DESC " .
-            "LIMIT " . get_row_limit($this->currentPage->getPageNumber())
+            'SELECT SQL_CALC_FOUND_ROWS * FROM `'.TABLE_PREFIX.'logs` '.
+            $where.
+            'ORDER BY `id` DESC '.
+            'LIMIT '.get_row_limit($this->currentPage->getPageNumber())
         );
 
-        $table->setDbRowsAmount($this->db->get_column("SELECT FOUND_ROWS()", "FOUND_ROWS()"));
+        $table->setDbRowsAmount($this->db->get_column('SELECT FOUND_ROWS()', 'FOUND_ROWS()'));
 
         while ($row = $this->db->fetch_array_assoc($result)) {
             $body_row = new BodyRow();
@@ -68,7 +68,7 @@ class PageAdminLogs extends PageAdmin
             $cell->setParam('headers', 'date');
             $body_row->addCell($cell);
 
-            if (get_privilages("manage_logs")) {
+            if (get_privilages('manage_logs')) {
                 $body_row->setButtonDelete(true);
             }
 

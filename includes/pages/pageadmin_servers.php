@@ -30,7 +30,7 @@ class PageAdminServers extends PageAdmin implements IPageAdmin_ActionBox
         $table->addHeadCell($cell);
 
         $table->addHeadCell(new Cell($this->lang->translate('name')));
-        $table->addHeadCell(new Cell($this->lang->translate('ip') . ':' . $this->lang->translate('port')));
+        $table->addHeadCell(new Cell($this->lang->translate('ip').':'.$this->lang->translate('port')));
         $table->addHeadCell(new Cell($this->lang->translate('version')));
 
         foreach ($this->heart->get_servers() as $row) {
@@ -38,10 +38,10 @@ class PageAdminServers extends PageAdmin implements IPageAdmin_ActionBox
 
             $body_row->setDbId($row['id']);
             $body_row->addCell(new Cell(htmlspecialchars($row['name'])));
-            $body_row->addCell(new Cell(htmlspecialchars($row['ip'] . ':' . $row['port'])));
+            $body_row->addCell(new Cell(htmlspecialchars($row['ip'].':'.$row['port'])));
             $body_row->addCell(new Cell(htmlspecialchars($row['version'])));
 
-            if (get_privilages("manage_servers")) {
+            if (get_privilages('manage_servers')) {
                 $body_row->setButtonDelete(true);
                 $body_row->setButtonEdit(true);
             }
@@ -51,7 +51,7 @@ class PageAdminServers extends PageAdmin implements IPageAdmin_ActionBox
 
         $wrapper->setTable($table);
 
-        if (get_privilages("manage_servers")) {
+        if (get_privilages('manage_servers')) {
             $button = new Input();
             $button->setParam('id', 'server_button_add');
             $button->setParam('type', 'button');
@@ -64,14 +64,14 @@ class PageAdminServers extends PageAdmin implements IPageAdmin_ActionBox
 
     public function get_action_box($box_id, $data)
     {
-        if (!get_privilages("manage_servers")) {
+        if (!get_privilages('manage_servers')) {
             return [
-                'status' => "not_logged_in",
+                'status' => 'not_logged_in',
                 'text'   => $this->lang->translate('not_logged_or_no_perm'),
             ];
         }
 
-        if ($box_id == "server_edit") {
+        if ($box_id == 'server_edit') {
             $server = $this->heart->get_server($data['id']);
             $server['ip'] = htmlspecialchars($server['ip']);
             $server['port'] = htmlspecialchars($server['port']);
@@ -79,54 +79,54 @@ class PageAdminServers extends PageAdmin implements IPageAdmin_ActionBox
 
         // Pobranie listy serwisów transakcyjnych
         $result = $this->db->query(
-            "SELECT `id`, `name`, `sms` " .
-            "FROM `" . TABLE_PREFIX . "transaction_services`"
+            'SELECT `id`, `name`, `sms` '.
+            'FROM `'.TABLE_PREFIX.'transaction_services`'
         );
-        $sms_services = "";
+        $sms_services = '';
         while ($row = $this->db->fetch_array_assoc($result)) {
             if (!$row['sms']) {
                 continue;
             }
 
-            $sms_services .= create_dom_element("option", $row['name'], [
+            $sms_services .= create_dom_element('option', $row['name'], [
                 'value'    => $row['id'],
-                'selected' => $row['id'] == $server['sms_service'] ? "selected" : "",
+                'selected' => $row['id'] == $server['sms_service'] ? 'selected' : '',
             ]);
         }
 
-        $services = "";
+        $services = '';
         foreach ($this->heart->get_services() as $service) {
             // Dana usługa nie może być kupiona na serwerze
             if (($service_module = $this->heart->get_service_module($service['id'])) === null || !object_implements($service_module,
-                    "IService_AvailableOnServers")) {
+                    'IService_AvailableOnServers')) {
                 continue;
             }
 
-            $values = create_dom_element("option", $this->lang->strtoupper($this->lang->translate('no')), [
+            $values = create_dom_element('option', $this->lang->strtoupper($this->lang->translate('no')), [
                 'value'    => 0,
-                'selected' => $this->heart->server_service_linked($server['id'], $service['id']) ? "" : "selected",
+                'selected' => $this->heart->server_service_linked($server['id'], $service['id']) ? '' : 'selected',
             ]);
 
-            $values .= create_dom_element("option", $this->lang->strtoupper($this->lang->translate('yes')), [
+            $values .= create_dom_element('option', $this->lang->strtoupper($this->lang->translate('yes')), [
                 'value'    => 1,
-                'selected' => $this->heart->server_service_linked($server['id'], $service['id']) ? "selected" : "",
+                'selected' => $this->heart->server_service_linked($server['id'], $service['id']) ? 'selected' : '',
             ]);
 
             $name = htmlspecialchars($service['id']);
             $text = htmlspecialchars("{$service['name']} ( {$service['id']} )");
 
-            $services .= $this->template->render("tr_text_select", compact('name', 'text', 'values'));
+            $services .= $this->template->render('tr_text_select', compact('name', 'text', 'values'));
         }
 
         switch ($box_id) {
-            case "server_add":
-                $output = $this->template->render("admin/action_boxes/server_add",
+            case 'server_add':
+                $output = $this->template->render('admin/action_boxes/server_add',
                     compact('sms_services', 'services'));
                 break;
 
-            case "server_edit":
+            case 'server_edit':
                 $output = $this->template->render(
-                    "admin/action_boxes/server_edit",
+                    'admin/action_boxes/server_edit',
                     compact('server', 'sms_services', 'services')
                 );
                 break;
@@ -140,5 +140,4 @@ class PageAdminServers extends PageAdmin implements IPageAdmin_ActionBox
             'template' => $output,
         ];
     }
-
 }

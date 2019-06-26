@@ -8,7 +8,7 @@ class AddShopName extends Migration
     {
         $this->db->query("INSERT INTO `ss_settings` (`key`, `value`) VALUES ('shop_name', '');");
         $this->db->query(
-            <<<EOF
+            <<<'EOF'
 UPDATE `ss_settings`
 SET `value` =(
     CASE

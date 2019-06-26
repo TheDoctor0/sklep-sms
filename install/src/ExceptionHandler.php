@@ -1,4 +1,5 @@
 <?php
+
 namespace Install;
 
 use App\Application;
@@ -43,10 +44,10 @@ class ExceptionHandler implements ExceptionHandlerContract
         }
 
         $data = [
-            "Message: " . $e->getMessage(),
-            "File: " . $e->getFile(),
-            "Line: " . $e->getLine(),
-            "Stack:\n" . $e->getTraceAsString(),
+            'Message: '.$e->getMessage(),
+            'File: '.$e->getFile(),
+            'Line: '.$e->getLine(),
+            "Stack:\n".$e->getTraceAsString(),
         ];
 
         return $this->logError(implode("\n", $data));
@@ -55,9 +56,9 @@ class ExceptionHandler implements ExceptionHandlerContract
     public function handleSqlException(SqlQueryException $e)
     {
         $input = [
-            "Message: " . $this->lang->translate('mysqli_' . $e->getMessage()),
-            "Error: " . $e->getError(),
-            "Query: " . $e->getQuery(false),
+            'Message: '.$this->lang->translate('mysqli_'.$e->getMessage()),
+            'Error: '.$e->getError(),
+            'Query: '.$e->getQuery(false),
         ];
 
         $this->logError(implode("\n", $input));

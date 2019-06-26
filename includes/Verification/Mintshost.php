@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Verification;
 
 use App\Verification\Abstracts\PaymentModule;
@@ -12,7 +13,7 @@ use App\Verification\Results\SmsSuccessResult;
 
 class Mintshost extends PaymentModule implements SupportSms
 {
-    protected $id = "mintshost";
+    protected $id = 'mintshost';
 
     public function verifySms($returnCode, $number)
     {
@@ -28,19 +29,19 @@ class Mintshost extends PaymentModule implements SupportSms
 
         $status = $response->getBody();
 
-        if ($status === "1") {
+        if ($status === '1') {
             return new SmsSuccessResult();
         }
 
-        if ($status === "0") {
+        if ($status === '0') {
             throw new BadCodeException();
         }
 
-        if ($status === "2") {
+        if ($status === '2') {
             throw new WrongCredentialsException();
         }
 
-        if ($status === "3") {
+        if ($status === '3') {
             throw new InsufficientDataException();
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Verification;
 
 use App\Verification\Abstracts\PaymentModule;
@@ -11,7 +12,7 @@ use App\Verification\Results\SmsSuccessResult;
 
 class Hostplay extends PaymentModule implements SupportSms
 {
-    protected $id = "hostplay";
+    protected $id = 'hostplay';
 
     /** @var array */
     protected $ratesNumber = [
@@ -53,23 +54,24 @@ class Hostplay extends PaymentModule implements SupportSms
             }
 
             $tariffId = $this->getTariffByNumber($responseNumber)->getId();
+
             throw new BadNumberException($tariffId);
         }
 
         if (strtoupper($content['status']) === 'FAIL') {
-            if (strtoupper($content['error']) === "BAD_CODE") {
+            if (strtoupper($content['error']) === 'BAD_CODE') {
                 throw new BadCodeException();
             }
 
-            if (strtoupper($content['error']) === "BAD_CODE[1]") {
+            if (strtoupper($content['error']) === 'BAD_CODE[1]') {
                 throw new BadCodeException();
             }
 
-            if (strtoupper($content['error']) === "BAD_AMOUNT") {
+            if (strtoupper($content['error']) === 'BAD_AMOUNT') {
                 throw new BadNumberException(null);
             }
 
-            if (strtoupper($content['error']) === "BAD_AMOUNT2") {
+            if (strtoupper($content['error']) === 'BAD_AMOUNT2') {
                 throw new BadNumberException(null);
             }
         }

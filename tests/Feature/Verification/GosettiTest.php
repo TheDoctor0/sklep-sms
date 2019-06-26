@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Feature\Verification;
 
 use App\Requesting\Response;
@@ -24,7 +25,7 @@ class GosettiTest extends ServerTestCase
         $this->mockRequester();
         $this->gosetti = $this->app->make(Gosetti::class);
 
-        $smsDataResponse = $this->loadFixture("gosetti_sms_api_v2_get_data");
+        $smsDataResponse = $this->loadFixture('gosetti_sms_api_v2_get_data');
         $this->requesterMock
             ->shouldReceive('get')
             ->withArgs(['https://gosetti.pl/Api/SmsApiV2GetData.php'])
@@ -38,10 +39,10 @@ class GosettiTest extends ServerTestCase
         $this->requesterMock
             ->shouldReceive('get')
             ->withArgs(['https://gosetti.pl/Api/SmsApiV2CheckCode.php', Mockery::any()])
-            ->andReturn(new Response(200, "1.23"));
+            ->andReturn(new Response(200, '1.23'));
 
         // when
-        $result = $this->gosetti->verifySms("foobar", "72480");
+        $result = $this->gosetti->verifySms('foobar', '72480');
 
         // then
         $this->assertInstanceOf(SmsSuccessResult::class, $result);
@@ -58,10 +59,10 @@ class GosettiTest extends ServerTestCase
         $this->requesterMock
             ->shouldReceive('get')
             ->withArgs(['https://gosetti.pl/Api/SmsApiV2CheckCode.php', Mockery::any()])
-            ->andReturn(new Response(200, "0"));
+            ->andReturn(new Response(200, '0'));
 
         // when
-        $this->gosetti->verifySms("foobar", "72480");
+        $this->gosetti->verifySms('foobar', '72480');
     }
 
     /**
@@ -74,10 +75,10 @@ class GosettiTest extends ServerTestCase
         $this->requesterMock
             ->shouldReceive('get')
             ->withArgs(['https://gosetti.pl/Api/SmsApiV2CheckCode.php', Mockery::any()])
-            ->andReturn(new Response(200, "-1"));
+            ->andReturn(new Response(200, '-1'));
 
         // when
-        $this->gosetti->verifySms("foobar", "72480");
+        $this->gosetti->verifySms('foobar', '72480');
     }
 
     /**
@@ -90,13 +91,11 @@ class GosettiTest extends ServerTestCase
         $this->requesterMock
             ->shouldReceive('get')
             ->withArgs(['https://gosetti.pl/Api/SmsApiV2CheckCode.php', Mockery::any()])
-            ->andReturn(new Response(200, "foo"));
+            ->andReturn(new Response(200, 'foo'));
 
         // when
-        $this->gosetti->verifySms("foobar", "72480");
+        $this->gosetti->verifySms('foobar', '72480');
     }
-
-
 
     /**
      * @test
@@ -108,10 +107,10 @@ class GosettiTest extends ServerTestCase
         $this->requesterMock
             ->shouldReceive('get')
             ->withArgs(['https://gosetti.pl/Api/SmsApiV2CheckCode.php', Mockery::any()])
-            ->andReturn(new Response(200, "5"));
+            ->andReturn(new Response(200, '5'));
 
         // when
-        $this->gosetti->verifySms("foobar", "72480");
+        $this->gosetti->verifySms('foobar', '72480');
     }
 
     /**
@@ -124,10 +123,10 @@ class GosettiTest extends ServerTestCase
         $this->requesterMock
             ->shouldReceive('get')
             ->withArgs(['https://gosetti.pl/Api/SmsApiV2CheckCode.php', Mockery::any()])
-            ->andReturn(new Response(200, "3.08"));
+            ->andReturn(new Response(200, '3.08'));
 
         // when
-        $this->gosetti->verifySms("foobar", "72480");
+        $this->gosetti->verifySms('foobar', '72480');
     }
 
     /** @test */
@@ -137,6 +136,6 @@ class GosettiTest extends ServerTestCase
         $smsCode = $this->gosetti->getSmsCode();
 
         // then
-        $this->assertEquals("CSGO", $smsCode);
+        $this->assertEquals('CSGO', $smsCode);
     }
 }

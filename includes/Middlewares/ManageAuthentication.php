@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Middlewares;
 
 use App\Application;
@@ -16,7 +17,5 @@ class ManageAuthentication implements MiddlewareContract
         if (!$auth->check() && isset($_SESSION['uid'])) {
             $auth->loginUserUsingId($_SESSION['uid']);
         }
-
-        return null;
     }
 }

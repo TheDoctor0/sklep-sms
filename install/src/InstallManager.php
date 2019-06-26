@@ -1,4 +1,5 @@
 <?php
+
 namespace Install;
 
 use App\Application;
@@ -35,7 +36,7 @@ class InstallManager
 
     private function putInProgress()
     {
-        file_put_contents($this->app->path('install/progress'), "");
+        file_put_contents($this->app->path('install/progress'), '');
     }
 
     public function removeInProgress()

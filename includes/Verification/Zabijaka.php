@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Verification;
 
 use App\Verification\Abstracts\PaymentModule;
@@ -11,16 +12,16 @@ use App\Verification\Results\SmsSuccessResult;
 
 class Zabijaka extends PaymentModule implements SupportSms
 {
-    protected $id = "zabijaka";
+    protected $id = 'zabijaka';
 
     public function verifySms($returnCode, $number)
     {
         $xml = simplexml_load_file(
-            'http://api.zabijaka.pl/1.1' .
-            '/' . urlencode($this->getApi()) .
-            '/sms' .
-            '/' . round(get_sms_cost($number) / 100) .
-            '/' . urlencode($returnCode) .
+            'http://api.zabijaka.pl/1.1'.
+            '/'.urlencode($this->getApi()).
+            '/sms'.
+            '/'.round(get_sms_cost($number) / 100).
+            '/'.urlencode($returnCode).
             '/sms.xml/add'
         );
 

@@ -9,9 +9,9 @@ ini_set('display_errors', 1);
 session_name('user');
 session_start();
 
-require __DIR__ . '/bootstrap/autoload.php';
+require __DIR__.'/bootstrap/autoload.php';
 
-$app = require __DIR__ . '/bootstrap/app.php';
+$app = require __DIR__.'/bootstrap/app.php';
 
 $app->singleton(
     App\Kernels\KernelContract::class,

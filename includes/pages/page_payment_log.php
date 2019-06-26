@@ -35,22 +35,22 @@ class PagePaymentLog extends Page implements I_BeLoggedMust
         $db = $this->app->make(Database::class);
 
         $result = $db->query($db->prepare(
-            "SELECT SQL_CALC_FOUND_ROWS * FROM ({$settings['transactions_query']}) as t " .
-            "WHERE t.uid = '%d' " .
-            "ORDER BY t.timestamp DESC " .
-            "LIMIT " . get_row_limit($this->currentPage->getPageNumber(), 10),
+            "SELECT SQL_CALC_FOUND_ROWS * FROM ({$settings['transactions_query']}) as t ".
+            "WHERE t.uid = '%d' ".
+            'ORDER BY t.timestamp DESC '.
+            'LIMIT '.get_row_limit($this->currentPage->getPageNumber(), 10),
             [$user->getUid()]
         ));
-        $rows_count = $db->get_column("SELECT FOUND_ROWS()", "FOUND_ROWS()");
+        $rows_count = $db->get_column('SELECT FOUND_ROWS()', 'FOUND_ROWS()');
 
-        $payment_logs = "";
+        $payment_logs = '';
         while ($row = $db->fetch_array_assoc($result)) {
             $date = htmlspecialchars($row['timestamp']);
-            $cost = number_format($row['cost'] / 100.0, 2) . " " . $settings['currency'];
+            $cost = number_format($row['cost'] / 100.0, 2).' '.$settings['currency'];
 
             if (($service_module = $heart->get_service_module($row['service'])) !== null && object_implements($service_module,
-                    "IService_PurchaseWeb")) {
-                $log_info = $service_module->purchase_info("payment_log", $row);
+                    'IService_PurchaseWeb')) {
+                $log_info = $service_module->purchase_info('payment_log', $row);
                 $desc = $log_info['text'];
                 $class = $log_info['class'];
             } else {
@@ -58,7 +58,7 @@ class PagePaymentLog extends Page implements I_BeLoggedMust
                 $temp_server = $heart->get_server($row['server']);
                 $desc = $lang->sprintf($lang->translate('service_was_bought'), $temp_service['name'],
                     $temp_server['name']);
-                $class = "outcome";
+                $class = 'outcome';
                 unset($temp_service);
                 unset($temp_server);
             }
@@ -66,15 +66,15 @@ class PagePaymentLog extends Page implements I_BeLoggedMust
             $row['auth_data'] = htmlspecialchars($row['auth_data']);
             $row['email'] = htmlspecialchars($row['email']);
 
-            $payment_log_brick = $template->render("payment_log_brick", compact('date', 'cost', 'desc'));
-            $payment_logs .= create_dom_element("div", $payment_log_brick, $data = [
-                'class' => "brick " . $class,
+            $payment_log_brick = $template->render('payment_log_brick', compact('date', 'cost', 'desc'));
+            $payment_logs .= create_dom_element('div', $payment_log_brick, $data = [
+                'class' => 'brick '.$class,
             ]);
         }
 
-        $pagination = get_pagination($rows_count, $this->currentPage->getPageNumber(), "index.php", $get, 10);
-        $pagination_class = strlen($pagination) ? "" : "display_none";
+        $pagination = get_pagination($rows_count, $this->currentPage->getPageNumber(), 'index.php', $get, 10);
+        $pagination_class = strlen($pagination) ? '' : 'display_none';
 
-        return $template->render("payment_log", compact('payment_logs', 'pagination_class', 'pagination'));
+        return $template->render('payment_log', compact('payment_logs', 'pagination_class', 'pagination'));
     }
 }

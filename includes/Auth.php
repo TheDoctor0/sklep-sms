@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use App\Models\User;
@@ -47,10 +48,10 @@ class Auth
     {
         $user = $this->heart->get_user(0, $username, $password);
 
-        if ($user->isLogged() && get_privilages("acp", $user)) {
+        if ($user->isLogged() && get_privilages('acp', $user)) {
             $_SESSION['uid'] = $user->getUid();
         } else {
-            $_SESSION['info'] = "wrong_data";
+            $_SESSION['info'] = 'wrong_data';
         }
 
         $this->user = $user;
@@ -63,16 +64,16 @@ class Auth
 
         // If it's desired to kill the session, also delete the session cookie.
         // Note: This will destroy the session, and not just the session data!
-        if (ini_get("session.use_cookies")) {
+        if (ini_get('session.use_cookies')) {
             $params = session_get_cookie_params();
             setcookie(
                 session_name(),
                 '',
                 time() - 42000,
-                $params["path"],
-                $params["domain"],
-                $params["secure"],
-                $params["httponly"]
+                $params['path'],
+                $params['domain'],
+                $params['secure'],
+                $params['httponly']
             );
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Verification;
 
 use App\Verification\Abstracts\PaymentModule;
@@ -13,7 +14,7 @@ use App\Verification\Results\SmsSuccessResult;
 
 class Pukawka extends PaymentModule implements SupportSms
 {
-    protected $id = "pukawka";
+    protected $id = 'pukawka';
     private $stawki = [];
 
     public function verifySms($returnCode, $number)
@@ -34,7 +35,7 @@ class Pukawka extends PaymentModule implements SupportSms
 
         if (!empty($get)) {
             if ($get['error']) {
-                if ($get['error'] === "wrong_api_key") {
+                if ($get['error'] === 'wrong_api_key') {
                     throw new WrongCredentialsException();
                 }
 

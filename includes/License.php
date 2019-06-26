@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use App\Cache\CacheEnum;
@@ -51,7 +52,7 @@ class License
      */
     public function validate()
     {
-        if (getenv('LICENSE') !== "false") {
+        if (getenv('LICENSE') !== 'false') {
             $response = $this->loadLicense();
 
             $this->externalLicenseId = array_get($response, 'id');
@@ -62,7 +63,7 @@ class License
 
     public function isValid()
     {
-        if (getenv('LICENSE') === "false") {
+        if (getenv('LICENSE') === 'false') {
             return true;
         }
 
@@ -94,21 +95,23 @@ class License
     }
 
     /**
-     * @return array
      * @throws InvalidResponse
      * @throws RequestException
+     *
+     * @return array
      */
     protected function loadLicense()
     {
-        return $this->cachingRequester->load(CacheEnum::LICENSE, static::CACHE_TTL, function() {
+        return $this->cachingRequester->load(CacheEnum::LICENSE, static::CACHE_TTL, function () {
             return $this->request();
         });
     }
 
     /**
-     * @return array
      * @throws InvalidResponse
      * @throws RequestException
+     *
+     * @return array
      */
     protected function request()
     {

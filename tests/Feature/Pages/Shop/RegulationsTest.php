@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Feature\Pages\Shop;
 
 use Tests\Psr4\TestCases\IndexTestCase;

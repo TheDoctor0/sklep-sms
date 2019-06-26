@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Feature\Verification;
 
 use App\Requesting\Response;
@@ -24,7 +25,7 @@ class CssettiTest extends ServerTestCase
         $this->mockRequester();
         $this->cssetti = $this->app->make(Cssetti::class);
 
-        $smsDataResponse = $this->loadFixture("cssetti_sms_api_v2_get_data");
+        $smsDataResponse = $this->loadFixture('cssetti_sms_api_v2_get_data');
         $this->requesterMock
             ->shouldReceive('get')
             ->withArgs(['https://cssetti.pl/Api/SmsApiV2GetData.php'])
@@ -38,10 +39,10 @@ class CssettiTest extends ServerTestCase
         $this->requesterMock
             ->shouldReceive('get')
             ->withArgs(['https://cssetti.pl/Api/SmsApiV2CheckCode.php', Mockery::any()])
-            ->andReturn(new Response(200, "1"));
+            ->andReturn(new Response(200, '1'));
 
         // when
-        $result = $this->cssetti->verifySms("foobar", "72480");
+        $result = $this->cssetti->verifySms('foobar', '72480');
 
         // then
         $this->assertInstanceOf(SmsSuccessResult::class, $result);
@@ -58,10 +59,10 @@ class CssettiTest extends ServerTestCase
         $this->requesterMock
             ->shouldReceive('get')
             ->withArgs(['https://cssetti.pl/Api/SmsApiV2CheckCode.php', Mockery::any()])
-            ->andReturn(new Response(200, "0"));
+            ->andReturn(new Response(200, '0'));
 
         // when
-        $this->cssetti->verifySms("foobar", "72480");
+        $this->cssetti->verifySms('foobar', '72480');
     }
 
     /**
@@ -74,10 +75,10 @@ class CssettiTest extends ServerTestCase
         $this->requesterMock
             ->shouldReceive('get')
             ->withArgs(['https://cssetti.pl/Api/SmsApiV2CheckCode.php', Mockery::any()])
-            ->andReturn(new Response(200, "-1"));
+            ->andReturn(new Response(200, '-1'));
 
         // when
-        $this->cssetti->verifySms("foobar", "72480");
+        $this->cssetti->verifySms('foobar', '72480');
     }
 
     /**
@@ -90,10 +91,10 @@ class CssettiTest extends ServerTestCase
         $this->requesterMock
             ->shouldReceive('get')
             ->withArgs(['https://cssetti.pl/Api/SmsApiV2CheckCode.php', Mockery::any()])
-            ->andReturn(new Response(200, "foo"));
+            ->andReturn(new Response(200, 'foo'));
 
         // when
-        $this->cssetti->verifySms("foobar", "72480");
+        $this->cssetti->verifySms('foobar', '72480');
     }
 
     /**
@@ -106,10 +107,10 @@ class CssettiTest extends ServerTestCase
         $this->requesterMock
             ->shouldReceive('get')
             ->withArgs(['https://cssetti.pl/Api/SmsApiV2CheckCode.php', Mockery::any()])
-            ->andReturn(new Response(200, "5"));
+            ->andReturn(new Response(200, '5'));
 
         // when
-        $this->cssetti->verifySms("foobar", "72480");
+        $this->cssetti->verifySms('foobar', '72480');
     }
 
     /**
@@ -122,10 +123,10 @@ class CssettiTest extends ServerTestCase
         $this->requesterMock
             ->shouldReceive('get')
             ->withArgs(['https://cssetti.pl/Api/SmsApiV2CheckCode.php', Mockery::any()])
-            ->andReturn(new Response(200, "3"));
+            ->andReturn(new Response(200, '3'));
 
         // when
-        $this->cssetti->verifySms("foobar", "72480");
+        $this->cssetti->verifySms('foobar', '72480');
     }
 
     /** @test */
@@ -135,6 +136,6 @@ class CssettiTest extends ServerTestCase
         $smsCode = $this->cssetti->getSmsCode();
 
         // then
-        $this->assertEquals("SKLEP", $smsCode);
+        $this->assertEquals('SKLEP', $smsCode);
     }
 }

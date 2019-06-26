@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Psr4\Concerns;
 
 use App\Requesting\Requester;

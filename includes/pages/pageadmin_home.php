@@ -7,7 +7,7 @@ use App\Version;
 
 class PageAdminMain extends PageAdmin
 {
-    const PAGE_ID = "home";
+    const PAGE_ID = 'home';
     const EXPIRE_THRESHOLD = 4 * 24 * 60 * 60;
 
     /** @var Version */
@@ -34,11 +34,11 @@ class PageAdminMain extends PageAdmin
         //
         // Ogloszenia
 
-        $notes = "";
+        $notes = '';
 
         // Info o braku licki
         if (!$this->license->isValid()) {
-            $this->add_note($this->lang->translate('license_error'), "negative", $notes);
+            $this->add_note($this->lang->translate('license_error'), 'negative', $notes);
         }
 
         $expireSeconds = strtotime($this->license->getExpires()) - time();
@@ -48,7 +48,7 @@ class PageAdminMain extends PageAdmin
                     $this->lang->translate('license_soon_expire'),
                     secondsToTime(strtotime($this->license->getExpires()) - time())
                 ),
-                "negative",
+                'negative',
                 $notes
             );
         }
@@ -63,7 +63,7 @@ class PageAdminMain extends PageAdmin
                     $this->lang->translate('update_available'),
                     htmlspecialchars($newestVersion)
                 ),
-                "positive",
+                'positive',
                 $notes
             );
         }
@@ -83,7 +83,7 @@ class PageAdminMain extends PageAdmin
                     $this->heart->get_servers_amount(),
                     htmlspecialchars($newestVersion)
                 ),
-                "positive",
+                'positive',
                 $notes
             );
         }
@@ -91,7 +91,7 @@ class PageAdminMain extends PageAdmin
         //
         // Cegielki informacyjne
 
-        $bricks = "";
+        $bricks = '';
 
         // Info o serwerach
         $bricks .= create_brick(
@@ -99,48 +99,49 @@ class PageAdminMain extends PageAdmin
                 $this->lang->translate('amount_of_servers'),
                 $this->heart->get_servers_amount()
             ),
-            "brick_pa_main"
+            'brick_pa_main'
         );
 
         // Info o użytkownikach
         $bricks .= create_brick(
             $this->lang->sprintf(
                 $this->lang->translate('amount_of_users'),
-                $this->db->get_column("SELECT COUNT(*) FROM `" . TABLE_PREFIX . "users`", "COUNT(*)")
+                $this->db->get_column('SELECT COUNT(*) FROM `'.TABLE_PREFIX.'users`', 'COUNT(*)')
             ),
-            "brick_pa_main"
+            'brick_pa_main'
         );
 
         // Info o kupionych usługach
         $amount = $this->db->get_column(
-            "SELECT COUNT(*) " .
+            'SELECT COUNT(*) '.
             "FROM ({$this->settings['transactions_query']}) AS t",
-            "COUNT(*)"
+            'COUNT(*)'
         );
         $bricks .= create_brick(
             $this->lang->sprintf($this->lang->translate('amount_of_bought_services'), $amount),
-            "brick_pa_main"
+            'brick_pa_main'
         );
 
         // Info o wysłanych smsach
         $amount = $this->db->get_column(
-            "SELECT COUNT(*) AS `amount` " .
-            "FROM ({$this->settings['transactions_query']}) as t " .
+            'SELECT COUNT(*) AS `amount` '.
+            "FROM ({$this->settings['transactions_query']}) as t ".
             "WHERE t.payment = 'sms' AND t.free='0'",
-            "amount"
+            'amount'
         );
         $bricks .= create_brick(
             $this->lang->sprintf($this->lang->translate('amount_of_sent_smses'), $amount),
-            "brick_pa_main"
+            'brick_pa_main'
         );
 
-        return $this->template->render("admin/home", compact('notes', 'bricks'));
+        return $this->template->render('admin/home', compact('notes', 'bricks'));
     }
 
     /**
-     * @param array $server
+     * @param array  $server
      * @param string $newestAmxxVersion
      * @param string $newestSmVersion
+     *
      * @return bool
      */
     private function isServerNewest($server, $newestAmxxVersion, $newestSmVersion)
@@ -158,8 +159,8 @@ class PageAdminMain extends PageAdmin
 
     private function add_note($text, $class, &$notes)
     {
-        $notes .= create_dom_element("div", $text, [
-            'class' => "note " . $class,
+        $notes .= create_dom_element('div', $text, [
+            'class' => 'note '.$class,
         ]);
     }
 }

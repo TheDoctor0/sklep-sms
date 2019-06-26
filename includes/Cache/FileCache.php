@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Cache;
 
 use App\Filesystem;
@@ -37,7 +38,7 @@ class FileCache implements CacheInterface
         $expiration = time() + $ttl;
 
         $this->files->put(
-            $path, $expiration . serialize(new CacheEntity($value)), true
+            $path, $expiration.serialize(new CacheEntity($value)), true
         );
     }
 
@@ -78,7 +79,8 @@ class FileCache implements CacheInterface
     /**
      * Create the file cache directory if necessary.
      *
-     * @param  string $path
+     * @param string $path
+     *
      * @return void
      */
     protected function ensureCacheDirectoryExists($path)
@@ -91,7 +93,8 @@ class FileCache implements CacheInterface
     /**
      * Retrieve an item and expiry time from the cache by key.
      *
-     * @param  string $key
+     * @param string $key
+     *
      * @return array|null
      */
     protected function getPayload($key)
@@ -106,7 +109,7 @@ class FileCache implements CacheInterface
                 $contents = $this->files->get($path, true), 0, 10
             );
         } catch (Exception $e) {
-            return null;
+            return;
         }
 
         // If the current time is greater than expiration timestamps we will delete
@@ -114,7 +117,8 @@ class FileCache implements CacheInterface
         // this directory much cleaner for us as old files aren't hanging out.
         if (time() >= $expire) {
             $this->delete($key);
-            return null;
+
+            return;
         }
 
         $data = unserialize(substr($contents, 10));
@@ -136,6 +140,6 @@ class FileCache implements CacheInterface
     {
         $parts = array_slice(str_split($hash = sha1($key), 2), 0, 2);
 
-        return $this->directory . '/' . implode('/', $parts) . '/' . $hash;
+        return $this->directory.'/'.implode('/', $parts).'/'.$hash;
     }
 }

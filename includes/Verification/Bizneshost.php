@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Verification;
 
 use App\Verification\Abstracts\PaymentModule;
@@ -12,7 +13,7 @@ use App\Verification\Results\SmsSuccessResult;
 
 class Bizneshost extends PaymentModule implements SupportSms
 {
-    protected $id = "bizneshost";
+    protected $id = 'bizneshost';
 
     public function verifySms($returnCode, $number)
     {
@@ -22,9 +23,9 @@ class Bizneshost extends PaymentModule implements SupportSms
             throw new InsufficientDataException();
         }
 
-        $response = $this->requester->get("http://biznes-host.pl/api/sprawdzkod_v2.php", [
-            "uid" => $uid,
-            "kod" => $returnCode,
+        $response = $this->requester->get('http://biznes-host.pl/api/sprawdzkod_v2.php', [
+            'uid' => $uid,
+            'kod' => $returnCode,
         ]);
 
         if ($response === false) {

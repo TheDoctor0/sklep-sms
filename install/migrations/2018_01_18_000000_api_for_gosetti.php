@@ -7,14 +7,14 @@ class ApiForGosetti extends Migration
     public function up()
     {
         $this->db->query(
-            <<<EOF
+            <<<'EOF'
 INSERT INTO `ss_transaction_services` (`id`, `name`, `data`, `data_hidden`, `sms`, `transfer`) VALUES
   ('gosetti', 'GOSetti.pl', '{"account_id":"","sms_text":"CSGO"}', '', 1, 0);
 EOF
         );
 
         $this->db->query(
-            <<<EOF
+            <<<'EOF'
 INSERT INTO `ss_sms_numbers` (`number`, `tariff`, `service`) VALUES
   ('71480', 1, 'gosetti'),
   ('72480', 2, 'gosetti'),

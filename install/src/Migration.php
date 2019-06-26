@@ -1,4 +1,5 @@
 <?php
+
 namespace Install;
 
 use App\Database;
@@ -50,7 +51,7 @@ abstract class Migration
         while (feof($path) === false) {
             $query[] = fgets($path);
 
-            if (preg_match('~' . preg_quote($delimiter, '~') . '\s*$~iS', end($query)) === 1) {
+            if (preg_match('~'.preg_quote($delimiter, '~').'\s*$~iS', end($query)) === 1) {
                 $query = trim(implode('', $query));
                 $queries[] = $query;
             }
@@ -62,7 +63,7 @@ abstract class Migration
 
         fclose($path);
 
-        return array_filter($queries, function($query) {
+        return array_filter($queries, function ($query) {
             return strlen($query);
         });
     }

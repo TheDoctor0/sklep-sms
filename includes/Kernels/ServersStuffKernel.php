@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Kernels;
 
 use App\Heart;
@@ -43,13 +44,13 @@ class ServersStuffKernel extends Kernel
 
         $action = $request->get('action');
 
-        if ($action == "purchase_service") {
+        if ($action == 'purchase_service') {
             if (($service_module = $heart->get_service_module($request->get('service'))) === null) {
-                return $this->xmlOutput("bad_module", $lang->translate('bad_module'), 0);
+                return $this->xmlOutput('bad_module', $lang->translate('bad_module'), 0);
             }
 
-            if (!object_implements($service_module, "IService_PurchaseOutside")) {
-                return $this->xmlOutput("bad_module", $lang->translate('bad_module'), 0);
+            if (!object_implements($service_module, 'IService_PurchaseOutside')) {
+                return $this->xmlOutput('bad_module', $lang->translate('bad_module'), 0);
             }
 
             // Sprawdzamy dane zakupu
@@ -78,12 +79,12 @@ class ServersStuffKernel extends Kernel
             $returnValidation = $service_module->purchase_data_validate($purchaseData);
 
             // Są jakieś błędy przy sprawdzaniu danych
-            if ($returnValidation['status'] != "ok") {
+            if ($returnValidation['status'] != 'ok') {
                 $extraData = '';
                 if (!empty($returnValidation['data']['warnings'])) {
                     $warnings = '';
                     foreach ($returnValidation['data']['warnings'] as $what => $warning) {
-                        $warnings .= "<strong>{$what}</strong><br />" . implode("<br />", $warning) . "<br />";
+                        $warnings .= "<strong>{$what}</strong><br />".implode('<br />', $warning).'<br />';
                     }
 
                     if (strlen($warnings)) {
@@ -105,14 +106,14 @@ class ServersStuffKernel extends Kernel
             ]);
             $returnPayment = validate_payment($purchaseData);
 
-            $extraData = "";
+            $extraData = '';
 
             if (isset($returnPayment['data']['bsid'])) {
                 $extraData .= "<bsid>{$returnPayment['data']['bsid']}</bsid>";
             }
 
             if (isset($returnPayment['data']['warnings'])) {
-                $warnings = "";
+                $warnings = '';
                 foreach ($returnPayment['data']['warnings'] as $what => $text) {
                     $warnings .= "<strong>{$what}</strong><br />{$text}<br />";
                 }
@@ -127,10 +128,10 @@ class ServersStuffKernel extends Kernel
             );
         }
 
-        return $this->xmlOutput("script_error", "An error occured: no action.", false);
+        return $this->xmlOutput('script_error', 'An error occured: no action.', false);
     }
 
-    protected function xmlOutput($return_value, $text, $positive, $extra_data = "")
+    protected function xmlOutput($return_value, $text, $positive, $extra_data = '')
     {
         $output = "<return_value>{$return_value}</return_value>";
         $output .= "<text>{$text}</text>";
