@@ -407,13 +407,15 @@ class ServiceExtraFlags extends ServiceExtraFlagsSimple implements IService_Purc
                 [$this->service['id'], $purchase_data->getTariff(), $server['id']]
             ));
 
-            if (!$this->db->num_rows($result)) // Brak takiej opcji w bazie ( ktoś coś edytował w htmlu strony )
+            if (!$this->db->num_rows($result)) {
+                // Brak takiej opcji w bazie ( ktoś coś edytował w htmlu strony )
             {
                 return [
                     'status'   => "no_option",
                     'text'     => $this->lang->translate('service_not_affordable'),
                     'positive' => false,
                 ];
+            }
             }
 
             $price = $this->db->fetch_array_assoc($result);
@@ -465,10 +467,12 @@ class ServiceExtraFlags extends ServiceExtraFlagsSimple implements IService_Purc
                     }
 
                     // Sprawdzanie czy istnieje już taka usługa
-                    if ($temp_password = $this->db->get_column($query, 'password')) // TODO: Usunąć md5 w przyszłości
+                    if ($temp_password = $this->db->get_column($query, 'password')) {
+                        // TODO: Usunąć md5 w przyszłości
                     {
                         if ($temp_password != $purchase_data->getOrder('password') && $temp_password != md5($purchase_data->getOrder('password'))) {
                             $warnings['password'][] = $this->lang->translate('existing_service_has_different_password');
+                    }
                         }
                     }
 

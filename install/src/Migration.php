@@ -62,7 +62,7 @@ abstract class Migration
 
         fclose($path);
 
-        return array_filter($queries, function ($query) {
+        return array_filter($queries, function($query) {
             return strlen($query);
         });
     }

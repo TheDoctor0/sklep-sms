@@ -122,7 +122,7 @@ class RoutesManager
 
     private function createDispatcher()
     {
-        return \FastRoute\simpleDispatcher(function (RouteCollector $r) {
+        return \FastRoute\simpleDispatcher(function(RouteCollector $r) {
             $this->defineRoutes($r);
         });
     }

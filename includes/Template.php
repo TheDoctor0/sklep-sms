@@ -31,7 +31,7 @@ class Template
 
     public function install_render($template, array $data = [])
     {
-        $__content = $this->get_install_template($template, function ($filename) {
+        $__content = $this->get_install_template($template, function($filename) {
             return $this->app->path("install/templates/{$filename}.html");
         });
 
@@ -43,7 +43,7 @@ class Template
 
     public function install_full_render($template, array $data = [])
     {
-        $__content = $this->get_install_template($template, function ($filename) {
+        $__content = $this->get_install_template($template, function($filename) {
             return $this->app->path("install/templates/full/{$filename}.html");
         });
 
@@ -55,7 +55,7 @@ class Template
 
     public function install_update_render($template, array $data = [])
     {
-        $__content = $this->get_install_template($template, function ($filename) {
+        $__content = $this->get_install_template($template, function($filename) {
             return $this->app->path("install/templates/update/{$filename}.html");
         });
 
