@@ -121,7 +121,7 @@ class InstallKernel extends Kernel
         /** @var Template $template */
         $template = $this->app->make(Template::class);
 
-        if (str_contains(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache')) {
+        if (str_contains('apache', strtolower($_SERVER['SERVER_SOFTWARE']))) {
             return '';
         }
 
