@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Exceptions;
 
 use App\Requesting\Response;

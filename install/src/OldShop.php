@@ -1,4 +1,5 @@
 <?php
+
 namespace Install;
 
 use App\Application;

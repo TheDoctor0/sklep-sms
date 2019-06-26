@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Verification;
 
 use App\Verification\Abstracts\PaymentModule;
@@ -10,7 +11,7 @@ use App\Verification\Results\SmsSuccessResult;
 
 class Profitsms extends PaymentModule implements SupportSms
 {
-    protected $id = "profitsms";
+    protected $id = 'profitsms';
 
     public function verifySms($returnCode, $number)
     {

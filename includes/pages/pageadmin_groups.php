@@ -32,8 +32,8 @@ class PageAdminGroups extends PageAdmin implements IPageAdmin_ActionBox
         $table->addHeadCell(new Cell($this->lang->translate('name')));
 
         $result = $this->db->query(
-            "SELECT SQL_CALC_FOUND_ROWS * FROM `" . TABLE_PREFIX . "groups` " .
-            "LIMIT " . get_row_limit($this->currentPage->getPageNumber())
+            'SELECT SQL_CALC_FOUND_ROWS * FROM `'.TABLE_PREFIX.'groups` '.
+            'LIMIT '.get_row_limit($this->currentPage->getPageNumber())
         );
 
         $table->setDbRowsAmount($this->db->get_column('SELECT FOUND_ROWS()', 'FOUND_ROWS()'));
@@ -67,26 +67,26 @@ class PageAdminGroups extends PageAdmin implements IPageAdmin_ActionBox
 
     public function get_action_box($box_id, $data)
     {
-        if (!get_privilages("manage_groups")) {
+        if (!get_privilages('manage_groups')) {
             return [
-                'status' => "not_logged_in",
+                'status' => 'not_logged_in',
                 'text'   => $this->lang->translate('not_logged_or_no_perm'),
             ];
         }
 
-        if ($box_id == "group_edit") {
+        if ($box_id == 'group_edit') {
             $result = $this->db->query($this->db->prepare(
-                "SELECT * FROM `" . TABLE_PREFIX . "groups` " .
+                'SELECT * FROM `'.TABLE_PREFIX.'groups` '.
                 "WHERE `id` = '%d'",
                 [$data['id']]
             ));
 
             if (!$this->db->num_rows($result)) {
-                $data['template'] = create_dom_element("form", $this->lang->translate('no_such_group'), [
+                $data['template'] = create_dom_element('form', $this->lang->translate('no_such_group'), [
                     'class' => 'action_box',
                     'style' => [
-                        'padding' => "20px",
-                        'color'   => "white",
+                        'padding' => '20px',
+                        'color'   => 'white',
                     ],
                 ]);
             } else {
@@ -95,36 +95,36 @@ class PageAdminGroups extends PageAdmin implements IPageAdmin_ActionBox
             }
         }
 
-        $privilages = "";
-        $result = $this->db->query("DESCRIBE " . TABLE_PREFIX . "groups");
+        $privilages = '';
+        $result = $this->db->query('DESCRIBE '.TABLE_PREFIX.'groups');
         while ($row = $this->db->fetch_array_assoc($result)) {
-            if (in_array($row['Field'], ["id", "name"])) {
+            if (in_array($row['Field'], ['id', 'name'])) {
                 continue;
             }
 
-            $values = create_dom_element("option", $this->lang->strtoupper($this->lang->translate('no')), [
+            $values = create_dom_element('option', $this->lang->strtoupper($this->lang->translate('no')), [
                 'value'    => 0,
-                'selected' => $group[$row['Field']] ? "" : "selected",
+                'selected' => $group[$row['Field']] ? '' : 'selected',
             ]);
 
-            $values .= create_dom_element("option", $this->lang->strtoupper($this->lang->translate('yes')), [
+            $values .= create_dom_element('option', $this->lang->strtoupper($this->lang->translate('yes')), [
                 'value'    => 1,
-                'selected' => $group[$row['Field']] ? "selected" : "",
+                'selected' => $group[$row['Field']] ? 'selected' : '',
             ]);
 
             $name = htmlspecialchars($row['Field']);
-            $text = $this->lang->translate('privilage_' . $row['Field']);
+            $text = $this->lang->translate('privilage_'.$row['Field']);
 
-            $privilages .= $this->template->render("tr_text_select", compact('name', 'text', 'values'));
+            $privilages .= $this->template->render('tr_text_select', compact('name', 'text', 'values'));
         }
 
         switch ($box_id) {
-            case "group_add":
-                $output = $this->template->render("admin/action_boxes/group_add", compact('privilages'));
+            case 'group_add':
+                $output = $this->template->render('admin/action_boxes/group_add', compact('privilages'));
                 break;
 
-            case "group_edit":
-                $output = $this->template->render("admin/action_boxes/group_edit", compact('privilages', 'group'));
+            case 'group_edit':
+                $output = $this->template->render('admin/action_boxes/group_edit', compact('privilages', 'group'));
                 break;
 
             default:

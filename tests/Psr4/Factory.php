@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Psr4;
 
 use App\Repositories\PricelistRepository;

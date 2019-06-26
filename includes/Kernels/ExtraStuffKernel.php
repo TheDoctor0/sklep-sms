@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Kernels;
 
 use App\Heart;
@@ -48,14 +49,14 @@ class ExtraStuffKernel extends Kernel
         if ($_GET['popup']) {
             // Usuwamy napis popup z linku
             $url = preg_replace(
-                '/' . preg_quote("&popup={$_GET['popup']}", '/') . '$/',
+                '/'.preg_quote("&popup={$_GET['popup']}", '/').'$/',
                 '',
                 $request->server->get('REQUEST_URI')
             );
 
-            $output = create_dom_element("script",
-                'window.open("' . str_replace('"', '\"', $url) . '", "", "height=720,width=1280");', [
-                    'type' => "text/javascript",
+            $output = create_dom_element('script',
+                'window.open("'.str_replace('"', '\"', $url).'", "", "height=720,width=1280");', [
+                    'type' => 'text/javascript',
                 ]);
 
             return new Response($output);
@@ -64,22 +65,22 @@ class ExtraStuffKernel extends Kernel
         $action = $_GET['action'];
 
         switch ($action) {
-            case "service_long_description":
-                $output = "";
+            case 'service_long_description':
+                $output = '';
 
                 if (($service_module = $heart->get_service_module($_GET['service'])) !== null) {
                     $output = $service_module->description_full_get();
                 }
 
-                $heart->page_title = $lang->translate('description') . ": " . $service_module->service['name'];
+                $heart->page_title = $lang->translate('description').': '.$service_module->service['name'];
 
                 $heart->style_add(
-                    $settings['shop_url_slash'] . "styles/extra_stuff/long_desc.css?version=" . $this->app->version()
+                    $settings['shop_url_slash'].'styles/extra_stuff/long_desc.css?version='.$this->app->version()
                 );
-                $header = $template->render("header", compact('heart', 'license'));
+                $header = $template->render('header', compact('heart', 'license'));
 
                 $output = create_dom_element(
-                    "html", create_dom_element("head", $header) . create_dom_element("body", $output)
+                    'html', create_dom_element('head', $header).create_dom_element('body', $output)
                 );
 
                 return new Response($output);

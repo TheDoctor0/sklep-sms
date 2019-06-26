@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Cache;
 
 use App\Exceptions\RequestException;
@@ -18,12 +19,14 @@ class CachingRequester
     }
 
     /**
-     * @param string $cacheKey
-     * @param int $ttl
+     * @param string  $cacheKey
+     * @param int     $ttl
      * @param Closure $requestCaller
-     * @return mixed
+     *
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws RequestException
+     *
+     * @return mixed
      */
     public function load($cacheKey, $ttl, $requestCaller)
     {
@@ -46,28 +49,33 @@ class CachingRequester
     }
 
     /**
-     * @param string $cacheKey
+     * @param string   $cacheKey
      * @param callable $requestCaller
-     * @return mixed
+     *
      * @throws RequestException
      * @throws \Psr\SimpleCache\InvalidArgumentException
+     *
+     * @return mixed
      */
     protected function fetchAndCache($cacheKey, $requestCaller)
     {
         $response = $this->fetch($requestCaller);
         $this->cache->set($cacheKey, $response, static::HARD_TTL);
+
         return $response;
     }
 
     /**
      * @param callable $requestCaller
-     * @return mixed
+     *
      * @throws RequestException
+     *
+     * @return mixed
      */
     protected function fetch($requestCaller)
     {
         if (!getenv('LICENSE')) {
-            return null;
+            return;
         }
 
         $response = call_user_func($requestCaller);

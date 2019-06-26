@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Verification\Exceptions;
 
 /**
- * Not all required data was given (api, token etc.)
+ * Not all required data was given (api, token etc.).
  */
 class InsufficientDataException extends SmsPaymentException
 {
-    protected $errorCode = "insufficient_data";
+    protected $errorCode = 'insufficient_data';
 }

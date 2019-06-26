@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Middlewares;
 
 use App\Application;
@@ -15,7 +16,5 @@ class UpdateUserActivity implements MiddlewareContract
         $user = $auth->user();
         $user->setLastip(get_ip());
         $user->updateActivity();
-
-        return null;
     }
 }

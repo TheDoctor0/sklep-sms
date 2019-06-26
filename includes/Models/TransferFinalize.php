@@ -1,61 +1,62 @@
 <?php
+
 namespace App\Models;
 
 // TODO Use marking transfer as a test
 class TransferFinalize
 {
     /**
-     * Status płatności, czy wszystkie dane są prawidłowe
+     * Status płatności, czy wszystkie dane są prawidłowe.
      *
      * @var bool
      */
     private $status = false;
 
     /**
-     * ID płatności
+     * ID płatności.
      *
      * @var string
      */
     private $orderid = '';
 
     /**
-     * Kwota płatności
+     * Kwota płatności.
      *
-     * @var double
+     * @var float
      */
     private $amount = 0.0;
 
     /**
      * Nazwa pliku z danymi zakupu
-     * ( parametr $data_filename z metody prepareTransfer )
+     * ( parametr $data_filename z metody prepareTransfer ).
      *
      * @var string
      */
     private $data_filename = '';
 
     /**
-     * Id usługi w danym serwisie
+     * Id usługi w danym serwisie.
      *
      * @var string
      */
     private $transfer_service = '';
 
     /**
-     * Co ma zostać wyświetlone na stronie
+     * Co ma zostać wyświetlone na stronie.
      *
      * @var string
      */
     private $output = '';
 
     /**
-     * Czy to płatność testowa
+     * Czy to płatność testowa.
      *
-     * @var boolean
+     * @var bool
      */
     private $test = false;
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getStatus()
     {
@@ -63,11 +64,11 @@ class TransferFinalize
     }
 
     /**
-     * @param boolean $status
+     * @param bool $status
      */
     public function setStatus($status)
     {
-        $this->status = (bool)$status;
+        $this->status = (bool) $status;
     }
 
     /**
@@ -83,7 +84,7 @@ class TransferFinalize
      */
     public function setOrderid($orderid)
     {
-        $this->orderid = (string)$orderid;
+        $this->orderid = (string) $orderid;
     }
 
     /**
@@ -99,7 +100,7 @@ class TransferFinalize
      */
     public function setAmount($amount)
     {
-        $this->amount = (double)$amount;
+        $this->amount = (float) $amount;
     }
 
     /**
@@ -115,7 +116,7 @@ class TransferFinalize
      */
     public function setDataFilename($data_filename)
     {
-        $this->data_filename = (string)$data_filename;
+        $this->data_filename = (string) $data_filename;
     }
 
     /**
@@ -131,7 +132,7 @@ class TransferFinalize
      */
     public function setTransferService($transfer_service)
     {
-        $this->transfer_service = (string)$transfer_service;
+        $this->transfer_service = (string) $transfer_service;
     }
 
     /**
@@ -147,7 +148,7 @@ class TransferFinalize
      */
     public function setOutput($output)
     {
-        $this->output = (string)$output;
+        $this->output = (string) $output;
     }
 
     public function markAsTest()

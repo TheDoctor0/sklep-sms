@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Routes;
 
 use App\Application;
@@ -32,7 +33,7 @@ class RoutesManager
                     UpdateUserActivity::class,
                     RunCron::class,
                 ],
-                'uses'        => IndexController::class . '@oldGet',
+                'uses'        => IndexController::class.'@oldGet',
             ]
         );
 
@@ -43,49 +44,51 @@ class RoutesManager
                     UpdateUserActivity::class,
                     RunCron::class,
                 ],
-                'uses'        => IndexController::class . '@oldGet',
+                'uses'        => IndexController::class.'@oldGet',
             ]
         );
 
         $r->addRoute(
             'GET', '/js.php',
             [
-                'uses' => JsController::class . '@get',
+                'uses' => JsController::class.'@get',
             ]
         );
 
         $r->addRoute(
             ['GET', 'POST'], '/transfer_finalize.php',
             [
-                'uses' => TransferController::class . '@oldAction',
+                'uses' => TransferController::class.'@oldAction',
             ]
         );
 
         $r->addRoute(
             ['GET', 'POST'], '/transfer/{transferService}',
             [
-                'uses' => TransferController::class . '@action',
+                'uses' => TransferController::class.'@action',
             ]
         );
 
         $r->addRoute(
             'GET', '/page/{pageId}',
             [
-                'uses' => IndexController::class . '@get',
+                'uses' => IndexController::class.'@get',
             ]
         );
     }
 
     /**
      * @param Request $request
+     *
      * @return Response
      */
     public function dispatch(Request $request)
     {
         $method = $request->getMethod();
-        $uri = '/' . trim($request->getPathInfo(), '/');
+        $uri = '/'.trim($request->getPathInfo(), '/');
 
         $routeInfo = $this->createDispatcher()->dispatch($method, $uri);
+
         return $this->handleDispatcherResponse($routeInfo, $request);
     }
 
@@ -122,7 +125,7 @@ class RoutesManager
 
     private function createDispatcher()
     {
-        return \FastRoute\simpleDispatcher(function(RouteCollector $r) {
+        return \FastRoute\simpleDispatcher(function (RouteCollector $r) {
             $this->defineRoutes($r);
         });
     }

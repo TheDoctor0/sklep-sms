@@ -1,10 +1,11 @@
 <?php
+
 namespace Tests\Feature\Pages\Admin;
 
 use Tests\Psr4\Concerns\AuthConcern;
 use Tests\Psr4\TestCases\AdminTestCase;
 
-class ExtraFlagsTest extends AdminTestCase
+class PlayersFlagsTest extends AdminTestCase
 {
     use AuthConcern;
 

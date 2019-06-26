@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Middlewares;
 
 use App\Application;
@@ -20,7 +21,5 @@ class IsUpToDate implements MiddlewareContract
         if (!$shopState->isUpToDate()) {
             return new RedirectResponse('/install/');
         }
-
-        return null;
     }
 }

@@ -33,12 +33,12 @@ class PageAdminAntispamQuestions extends PageAdmin implements IPageAdmin_ActionB
         $table->addHeadCell(new Cell($this->lang->translate('answers')));
 
         $result = $this->db->query(
-            "SELECT SQL_CALC_FOUND_ROWS * " .
-            "FROM `" . TABLE_PREFIX . "antispam_questions` " .
-            "LIMIT " . get_row_limit($this->currentPage->getPageNumber())
+            'SELECT SQL_CALC_FOUND_ROWS * '.
+            'FROM `'.TABLE_PREFIX.'antispam_questions` '.
+            'LIMIT '.get_row_limit($this->currentPage->getPageNumber())
         );
 
-        $table->setDbRowsAmount($this->db->get_column("SELECT FOUND_ROWS()", "FOUND_ROWS()"));
+        $table->setDbRowsAmount($this->db->get_column('SELECT FOUND_ROWS()', 'FOUND_ROWS()'));
 
         while ($row = $this->db->fetch_array_assoc($result)) {
             $body_row = new BodyRow();
@@ -46,7 +46,7 @@ class PageAdminAntispamQuestions extends PageAdmin implements IPageAdmin_ActionB
             $body_row->setDbId($row['id']);
             $body_row->addCell(new Cell($row['question']));
             $body_row->addCell(new Cell($row['answers']));
-            if (get_privilages("manage_antispam_questions")) {
+            if (get_privilages('manage_antispam_questions')) {
                 $body_row->setButtonDelete(true);
                 $body_row->setButtonEdit(true);
             }
@@ -56,7 +56,7 @@ class PageAdminAntispamQuestions extends PageAdmin implements IPageAdmin_ActionB
 
         $wrapper->setTable($table);
 
-        if (get_privilages("manage_antispam_questions")) {
+        if (get_privilages('manage_antispam_questions')) {
             $button = new Input();
             $button->setParam('id', 'antispam_question_button_add');
             $button->setParam('type', 'button');
@@ -69,28 +69,28 @@ class PageAdminAntispamQuestions extends PageAdmin implements IPageAdmin_ActionB
 
     public function get_action_box($box_id, $data)
     {
-        if (!get_privilages("manage_antispam_questions")) {
+        if (!get_privilages('manage_antispam_questions')) {
             return [
-                'status' => "not_logged_in",
+                'status' => 'not_logged_in',
                 'text'   => $this->lang->translate('not_logged_or_no_perm'),
             ];
         }
 
         switch ($box_id) {
-            case "antispam_question_add":
-                $output = $this->template->render("admin/action_boxes/antispam_question_add");
+            case 'antispam_question_add':
+                $output = $this->template->render('admin/action_boxes/antispam_question_add');
                 break;
 
-            case "antispam_question_edit":
+            case 'antispam_question_edit':
                 $row = $this->db->fetch_array_assoc($this->db->query($this->db->prepare(
-                    "SELECT * FROM `" . TABLE_PREFIX . "antispam_questions` " .
+                    'SELECT * FROM `'.TABLE_PREFIX.'antispam_questions` '.
                     "WHERE `id` = '%d'",
                     [$data['id']]
                 )));
                 $row['question'] = htmlspecialchars($row['question']);
                 $row['answers'] = htmlspecialchars($row['answers']);
 
-                $output = $this->template->render("admin/action_boxes/antispam_question_edit", compact('row'));
+                $output = $this->template->render('admin/action_boxes/antispam_question_edit', compact('row'));
                 break;
 
             default:

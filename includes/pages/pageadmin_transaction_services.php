@@ -33,11 +33,11 @@ class PageAdminTransactionServices extends PageAdmin implements IPageAdmin_Actio
         $table->addHeadCell(new Cell($this->lang->translate('transfer_service')));
 
         $result = $this->db->query(
-            "SELECT SQL_CALC_FOUND_ROWS * FROM `" . TABLE_PREFIX . "transaction_services` " .
-            "LIMIT " . get_row_limit($this->currentPage->getPageNumber())
+            'SELECT SQL_CALC_FOUND_ROWS * FROM `'.TABLE_PREFIX.'transaction_services` '.
+            'LIMIT '.get_row_limit($this->currentPage->getPageNumber())
         );
 
-        $table->setDbRowsAmount($this->db->get_column("SELECT FOUND_ROWS()", "FOUND_ROWS()"));
+        $table->setDbRowsAmount($this->db->get_column('SELECT FOUND_ROWS()', 'FOUND_ROWS()'));
 
         while ($row = $this->db->fetch_array_assoc($result)) {
             $body_row = new BodyRow();
@@ -62,18 +62,18 @@ class PageAdminTransactionServices extends PageAdmin implements IPageAdmin_Actio
 
     public function get_action_box($box_id, $data)
     {
-        if (!get_privilages("manage_settings")) {
+        if (!get_privilages('manage_settings')) {
             return [
-                'status' => "not_logged_in",
+                'status' => 'not_logged_in',
                 'text'   => $this->lang->translate('not_logged_or_no_perm'),
             ];
         }
 
         switch ($box_id) {
-            case "transaction_service_edit":
+            case 'transaction_service_edit':
                 // Pobranie danych o metodzie płatności
                 $result = $this->db->query($this->db->prepare(
-                    "SELECT * FROM `" . TABLE_PREFIX . "transaction_services` " .
+                    'SELECT * FROM `'.TABLE_PREFIX.'transaction_services` '.
                     "WHERE `id` = '%s'",
                     [$data['id']]
                 ));
@@ -83,7 +83,7 @@ class PageAdminTransactionServices extends PageAdmin implements IPageAdmin_Actio
                 $transaction_service['name'] = htmlspecialchars($transaction_service['name']);
                 $transaction_service['data'] = json_decode($transaction_service['data']);
 
-                $data_values = "";
+                $data_values = '';
                 foreach ($transaction_service['data'] as $name => $value) {
                     switch ($name) {
                         case 'sms_text':
@@ -96,11 +96,11 @@ class PageAdminTransactionServices extends PageAdmin implements IPageAdmin_Actio
                             $text = $this->lang->strtoupper($name);
                             break;
                     }
-                    $data_values .= $this->template->render("tr_name_input", compact('text', 'name', 'value'));
+                    $data_values .= $this->template->render('tr_name_input', compact('text', 'name', 'value'));
                 }
 
                 $output = $this->template->render(
-                    "admin/action_boxes/transaction_service_edit",
+                    'admin/action_boxes/transaction_service_edit',
                     compact('transaction_service', 'data_values')
                 );
                 break;

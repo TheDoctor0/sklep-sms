@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Feature\Pages\Admin;
 
 use Tests\Psr4\Concerns\AuthConcern;

@@ -38,11 +38,11 @@ class PageAdminPaymentAdmin extends PageAdmin
         $table->addHeadCell(new Cell($this->lang->translate('date')));
 
         $result = $this->db->query(
-            "SELECT SQL_CALC_FOUND_ROWS * " .
-            "FROM ({$this->settings['transactions_query']}) as t " .
-            "WHERE t.payment = 'admin' " .
-            "ORDER BY t.timestamp DESC " .
-            "LIMIT " . get_row_limit($this->currentPage->getPageNumber())
+            'SELECT SQL_CALC_FOUND_ROWS * '.
+            "FROM ({$this->settings['transactions_query']}) as t ".
+            "WHERE t.payment = 'admin' ".
+            'ORDER BY t.timestamp DESC '.
+            'LIMIT '.get_row_limit($this->currentPage->getPageNumber())
         );
 
         $table->setDbRowsAmount($this->db->get_column('SELECT FOUND_ROWS()', 'FOUND_ROWS()'));
@@ -54,7 +54,7 @@ class PageAdminPaymentAdmin extends PageAdmin
                 $body_row->setParam('class', 'highlighted');
             }
 
-            $adminname = $row['aid'] ? htmlspecialchars($row['adminname']) . " ({$row['aid']})" : $this->lang->translate('none');
+            $adminname = $row['aid'] ? htmlspecialchars($row['adminname'])." ({$row['aid']})" : $this->lang->translate('none');
 
             $body_row->setDbId($row['id']);
             $body_row->addCell(new Cell($adminname));

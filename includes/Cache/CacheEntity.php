@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Cache;
 
 class CacheEntity
@@ -17,6 +18,7 @@ class CacheEntity
 
     /**
      * @param int $seconds
+     *
      * @return bool bool
      */
     public function olderThan($seconds)

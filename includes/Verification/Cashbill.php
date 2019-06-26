@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Verification;
 
 use App\Models\Purchase;
@@ -13,15 +14,15 @@ use App\Verification\Results\SmsSuccessResult;
 
 class Cashbill extends PaymentModule implements SupportSms, SupportTransfer
 {
-    protected $id = "cashbill";
+    protected $id = 'cashbill';
 
     public function verifySms($returnCode, $number)
     {
         $handle = fopen(
-            'http://sms.cashbill.pl/backcode_check_singleuse_noip.php' .
-            '?id=' .
-            '&code=' . urlencode($this->getSmsCode()) .
-            '&check=' . urlencode($returnCode),
+            'http://sms.cashbill.pl/backcode_check_singleuse_noip.php'.
+            '?id='.
+            '&code='.urlencode($this->getSmsCode()).
+            '&check='.urlencode($returnCode),
             'r'
         );
 
@@ -50,7 +51,8 @@ class Cashbill extends PaymentModule implements SupportSms, SupportTransfer
 
     /**
      * @param Purchase $purchase
-     * @param string $dataFilename
+     * @param string   $dataFilename
+     *
      * @return array
      */
     public function prepareTransfer(Purchase $purchase, $dataFilename)
@@ -69,13 +71,13 @@ class Cashbill extends PaymentModule implements SupportSms, SupportTransfer
             'amount'   => $cost,
             'userdata' => $dataFilename,
             'sign'     => md5(
-                $this->getService() .
-                $cost .
-                $purchase->getDesc() .
-                $dataFilename .
-                $purchase->user->getForename(false) .
-                $purchase->user->getSurname(false) .
-                $purchase->getEmail() .
+                $this->getService().
+                $cost.
+                $purchase->getDesc().
+                $dataFilename.
+                $purchase->user->getForename(false).
+                $purchase->user->getSurname(false).
+                $purchase->getEmail().
                 $this->getKey()
             ),
         ];
@@ -102,7 +104,7 @@ class Cashbill extends PaymentModule implements SupportSms, SupportTransfer
 
     /**
      * Funkcja sprawdzajaca poprawnosc sygnatury
-     * przy płatnościach za pomocą przelewu
+     * przy płatnościach za pomocą przelewu.
      *
      * @param $data - dane
      * @param $key - klucz do hashowania
@@ -112,7 +114,7 @@ class Cashbill extends PaymentModule implements SupportSms, SupportTransfer
      */
     public function checkSign($data, $key, $sign)
     {
-        return md5($data['service'] . $data['orderid'] . $data['amount'] . $data['userdata'] . $data['status'] . $key) == $sign;
+        return md5($data['service'].$data['orderid'].$data['amount'].$data['userdata'].$data['status'].$key) == $sign;
     }
 
     public function getSmsCode()

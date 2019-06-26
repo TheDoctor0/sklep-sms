@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Psr4\TestCases;
 
 use App\Kernels\KernelContract;
@@ -14,7 +15,7 @@ class ServerTestCase extends TestCase
             define('IN_SCRIPT', '1');
         }
 
-        $app = require __DIR__ . '/../../../bootstrap/app.php';
+        $app = require __DIR__.'/../../../bootstrap/app.php';
         $app->singleton(KernelContract::class, ServersStuffKernel::class);
 
         return $app;
@@ -22,6 +23,6 @@ class ServerTestCase extends TestCase
 
     protected function prepareUrlForRequest($uri)
     {
-        return 'http://localhost/servers_stuff.php' . $uri;
+        return 'http://localhost/servers_stuff.php'.$uri;
     }
 }

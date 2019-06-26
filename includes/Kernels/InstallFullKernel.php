@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Kernels;
 
 use App\Database;
@@ -31,10 +32,10 @@ class InstallFullKernel extends Kernel
 
         try {
             $db = new Database($_POST['db_host'], $_POST['db_port'], $_POST['db_user'], $_POST['db_password'], $_POST['db_db']);
-            $db->query("SET NAMES utf8");
+            $db->query('SET NAMES utf8');
             $this->app->instance(Database::class, $db);
         } catch (SqlQueryException $e) {
-            return new Response($lang->translate('mysqli_' . $e->getMessage()) . "\n\n" . $e->getError());
+            return new Response($lang->translate('mysqli_'.$e->getMessage())."\n\n".$e->getError());
         }
 
         /** @var InstallManager $installManager */
@@ -50,12 +51,12 @@ class InstallFullKernel extends Kernel
 
         // Admin nick
         if (!strlen($_POST['admin_username'])) {
-            $warnings['admin_username'][] = "Nie podano nazwy dla użytkownika admin.";
+            $warnings['admin_username'][] = 'Nie podano nazwy dla użytkownika admin.';
         }
 
         // Admin hasło
         if (!strlen($_POST['admin_password'])) {
-            $warnings['admin_password'][] = "Nie podano hasła dla użytkownika admin.";
+            $warnings['admin_password'][] = 'Nie podano hasła dla użytkownika admin.';
         }
 
         foreach ($files_priv as $file) {
@@ -64,7 +65,7 @@ class InstallFullKernel extends Kernel
             }
 
             if (!is_writable($this->app->path($file))) {
-                $warnings['general'][] = "Ścieżka <b>" . htmlspecialchars($file) . "</b> nie posiada praw do zapisu.";
+                $warnings['general'][] = 'Ścieżka <b>'.htmlspecialchars($file).'</b> nie posiada praw do zapisu.';
             }
         }
 
@@ -83,16 +84,16 @@ class InstallFullKernel extends Kernel
                     continue;
                 }
 
-                if ($brick != "general") {
-                    $warning = create_dom_element("div", implode("<br />", $warning), [
-                        'class' => "form_warning",
+                if ($brick != 'general') {
+                    $warning = create_dom_element('div', implode('<br />', $warning), [
+                        'class' => 'form_warning',
                     ]);
                 }
 
                 $return_data['warnings'][$brick] = $warning;
             }
 
-            json_output("warnings", $lang->translate('form_wrong_filled'), false, $return_data);
+            json_output('warnings', $lang->translate('form_wrong_filled'), false, $return_data);
         }
 
         $installManager->start();
@@ -103,6 +104,6 @@ class InstallFullKernel extends Kernel
 
         $installManager->finish();
 
-        json_output("ok", "Instalacja przebiegła pomyślnie.", true);
+        json_output('ok', 'Instalacja przebiegła pomyślnie.', true);
     }
 }

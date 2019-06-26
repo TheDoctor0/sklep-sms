@@ -4,8 +4,8 @@ use App\Version;
 
 class PageAdminUpdateWeb extends PageAdmin
 {
-    const PAGE_ID = "update_web";
-    protected $privilage = "update";
+    const PAGE_ID = 'update_web';
+    protected $privilage = 'update';
 
     /** @var Version */
     private $version;
@@ -24,9 +24,9 @@ class PageAdminUpdateWeb extends PageAdmin
 
         // Mamy najnowszą wersję
         if ($this->app->version() === $newestVersion) {
-            return $this->template->render("admin/no_update");
+            return $this->template->render('admin/no_update');
         }
 
-        return $this->template->render("admin/update_web", compact('newestVersion') + ['title' => $this->title]);
+        return $this->template->render('admin/update_web', compact('newestVersion') + ['title' => $this->title]);
     }
 }

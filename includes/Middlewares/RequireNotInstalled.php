@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Middlewares;
 
 use App\Application;
@@ -13,7 +14,5 @@ class RequireNotInstalled implements MiddlewareContract
         if (ShopState::isInstalled()) {
             return new Response('Shop is already installed');
         }
-
-        return null;
     }
 }

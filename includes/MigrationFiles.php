@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use DirectoryIterator;
@@ -40,11 +41,11 @@ class MigrationFiles
 
     public function getMigrationPath($migration)
     {
-        return $this->migrationsPath . $migration . '.php';
+        return $this->migrationsPath.$migration.'.php';
     }
 
     public function path($file)
     {
-        return $this->migrationsPath . $file;
+        return $this->migrationsPath.$file;
     }
 }

@@ -1,12 +1,14 @@
 <?php
+
 namespace App\Requesting;
 
 class Requester
 {
     /**
      * @param string $url
-     * @param array $query
-     * @param array $headers
+     * @param array  $query
+     * @param array  $headers
+     *
      * @return Response|bool
      */
     public function get($url, array $query = [], array $headers = [])
@@ -16,8 +18,9 @@ class Requester
 
     /**
      * @param string $url
-     * @param array $body
-     * @param array $headers
+     * @param array  $body
+     * @param array  $headers
+     *
      * @return Response|bool
      */
     public function post($url, array $body = [], array $headers = [])
@@ -27,8 +30,9 @@ class Requester
 
     /**
      * @param string $url
-     * @param array $body
-     * @param array $headers
+     * @param array  $body
+     * @param array  $headers
+     *
      * @return Response|bool
      */
     public function patch($url, array $body = [], array $headers = [])
@@ -38,8 +42,9 @@ class Requester
 
     /**
      * @param string $url
-     * @param array $body
-     * @param array $headers
+     * @param array  $body
+     * @param array  $headers
+     *
      * @return Response|bool
      */
     public function put($url, array $body = [], array $headers = [])
@@ -49,8 +54,9 @@ class Requester
 
     /**
      * @param string $url
-     * @param array $query
-     * @param array $headers
+     * @param array  $query
+     * @param array  $headers
+     *
      * @return Response
      * @return Response|bool
      */
@@ -62,10 +68,11 @@ class Requester
     /**
      * @param string $method
      * @param string $url
-     * @param array $query
-     * @param array $body
-     * @param array $headers
-     * @param int $timeout
+     * @param array  $query
+     * @param array  $body
+     * @param array  $headers
+     * @param int    $timeout
+     *
      * @return Response|bool
      */
     protected function curl(
@@ -77,7 +84,7 @@ class Requester
         $timeout = 10
     ) {
         if (!empty($query)) {
-            $url .= '?' . http_build_query($query);
+            $url .= '?'.http_build_query($query);
         }
 
         $curl = curl_init();

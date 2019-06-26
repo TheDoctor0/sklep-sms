@@ -7,9 +7,9 @@ error_reporting(E_ERROR | E_CORE_ERROR | E_USER_ERROR | E_RECOVERABLE_ERROR | E_
 ini_set('display_errors', 1);
 @set_time_limit(0);
 
-require __DIR__ . '/../bootstrap/autoload.php';
+require __DIR__.'/../bootstrap/autoload.php';
 
-$app = require __DIR__ . '/../bootstrap/install.php';
+$app = require __DIR__.'/../bootstrap/install.php';
 
 $app->singleton(
     App\Kernels\KernelContract::class,

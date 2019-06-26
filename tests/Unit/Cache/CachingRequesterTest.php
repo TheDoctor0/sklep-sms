@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit\Cache;
 
 use App\Cache\CacheEntity;
@@ -88,7 +89,6 @@ class CachingRequesterTest extends TestCase
 
         // when
         $response = $requester->load('test', 100, function () {
-            return null;
         });
 
         // then

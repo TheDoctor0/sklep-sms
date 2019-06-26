@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Verification;
 
 use App\Verification\Abstracts\PaymentModule;
 use App\Verification\Abstracts\SupportSms;
 use App\Verification\Exceptions\BadCodeException;
-use App\Verification\Exceptions\NoConnectionException;
 use App\Verification\Exceptions\ExternalErrorException;
+use App\Verification\Exceptions\NoConnectionException;
 use App\Verification\Results\SmsSuccessResult;
 
 class Homepay extends PaymentModule implements SupportSms
@@ -15,10 +16,10 @@ class Homepay extends PaymentModule implements SupportSms
     public function verifySms($returnCode, $number)
     {
         $handle = fopen(
-            'http://homepay.pl/API/check_code.php' .
-            '?usr_id=' . urlencode($this->getApi()) .
-            '&acc_id=' . urlencode($this->data[$number]) .
-            '&code=' . urlencode($returnCode),
+            'http://homepay.pl/API/check_code.php'.
+            '?usr_id='.urlencode($this->getApi()).
+            '&acc_id='.urlencode($this->data[$number]).
+            '&code='.urlencode($returnCode),
             'r'
         );
 

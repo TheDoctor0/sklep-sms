@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Verification;
 
 use App\Database;
@@ -21,7 +22,7 @@ use App\Verification\Results\SmsSuccessResult;
  */
 class Microsms extends PaymentModule implements SupportSms, SupportTransfer
 {
-    protected $id = "microsms";
+    protected $id = 'microsms';
 
     /** @var Settings */
     private $settings;
@@ -60,11 +61,11 @@ class Microsms extends PaymentModule implements SupportSms, SupportTransfer
 
     public function verifySms($returnCode, $number)
     {
-        $response = $this->requester->get("https://microsms.pl/api/v2/index.php", [
-            "userid"    => $this->userId,
-            "number"    => $number,
-            "code"      => $returnCode,
-            "serviceid" => $this->serviceId,
+        $response = $this->requester->get('https://microsms.pl/api/v2/index.php', [
+            'userid'    => $this->userId,
+            'number'    => $number,
+            'code'      => $returnCode,
+            'serviceid' => $this->serviceId,
         ]);
 
         if (!$response) {
@@ -79,6 +80,7 @@ class Microsms extends PaymentModule implements SupportSms, SupportTransfer
 
         if (strlen(array_get($content, 'error'))) {
             log_error("Kod błędu: {$content['error']['errorCode']} - {$content['error']['message']}");
+
             throw new UnknownErrorException();
         }
 
@@ -90,6 +92,7 @@ class Microsms extends PaymentModule implements SupportSms, SupportTransfer
             }
 
             log_error("Kod błędu: $errorCode - {$content['data']['message']}");
+
             throw new UnknownErrorException();
         }
 
@@ -103,7 +106,7 @@ class Microsms extends PaymentModule implements SupportSms, SupportTransfer
     public function prepareTransfer(Purchase $purchase, $dataFilename)
     {
         $cost = round($purchase->getPayment('cost') / 100, 2);
-        $signature = hash('sha256', $this->shopId . $this->hash . $cost);
+        $signature = hash('sha256', $this->shopId.$this->hash.$cost);
 
         return [
             'url'         => 'https://microsms.pl/api/bankTransfer/',
@@ -112,8 +115,8 @@ class Microsms extends PaymentModule implements SupportSms, SupportTransfer
             'signature'   => $signature,
             'amount'      => $cost,
             'control'     => $dataFilename,
-            'return_urlc' => $this->settings['shop_url_slash'] . 'transfer/microsms',
-            'return_url'  => $this->settings['shop_url_slash'] . 'page/transferuj_ok',
+            'return_urlc' => $this->settings['shop_url_slash'].'transfer/microsms',
+            'return_url'  => $this->settings['shop_url_slash'].'page/transferuj_ok',
             'description' => $purchase->getDesc(),
         ];
     }

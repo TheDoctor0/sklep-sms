@@ -25,7 +25,7 @@ class PageAdmin_UserService extends PageAdmin implements IPageAdmin_ActionBox
         /** @var IService_UserServiceAdminDisplay $service_module_simple */
         $service_module_simple = $this->app->make($className);
 
-        $this->title = $this->lang->translate('users_services') . ': ' . $service_module_simple->user_service_admin_display_title_get();
+        $this->title = $this->lang->translate('users_services').': '.$service_module_simple->user_service_admin_display_title_get();
         $this->heart->page_title = $this->title;
         $wrapper = $service_module_simple->user_service_admin_display_get($get, $post);
 
@@ -55,7 +55,7 @@ class PageAdmin_UserService extends PageAdmin implements IPageAdmin_ActionBox
         $wrapper->addButton($button);
 
         // Przycisk dodajacy nowa usluge użytkownikowi
-        if (get_privilages("manage_user_services")) {
+        if (get_privilages('manage_user_services')) {
             $button = new Table\Input();
             $button->setParam('id', 'user_service_button_add');
             $button->setParam('type', 'button');
@@ -68,36 +68,36 @@ class PageAdmin_UserService extends PageAdmin implements IPageAdmin_ActionBox
 
     public function get_action_box($box_id, $data)
     {
-        if (!get_privilages("manage_user_services")) {
+        if (!get_privilages('manage_user_services')) {
             return [
-                'status' => "not_logged_in",
+                'status' => 'not_logged_in',
                 'text'   => $this->lang->translate('not_logged_or_no_perm'),
             ];
         }
 
         switch ($box_id) {
-            case "user_service_add":
+            case 'user_service_add':
                 // Pobranie usług
-                $services = "";
+                $services = '';
                 foreach ($this->heart->get_services() as $id => $row) {
                     if (($service_module = $this->heart->get_service_module($id)) === null || !object_implements($service_module,
-                            "IService_UserServiceAdminAdd")) {
+                            'IService_UserServiceAdminAdd')) {
                         continue;
                     }
 
-                    $services .= create_dom_element("option", $row['name'], [
+                    $services .= create_dom_element('option', $row['name'], [
                         'value' => $row['id'],
                     ]);
                 }
 
-                $output = $this->template->render("admin/action_boxes/user_service_add", compact('services'));
+                $output = $this->template->render('admin/action_boxes/user_service_add', compact('services'));
                 break;
 
-            case "user_service_edit":
+            case 'user_service_edit':
                 $user_service = get_users_services($data['id']);
 
                 if (empty($user_service) || ($service_module = $this->heart->get_service_module($user_service['service'])) === null
-                    || !object_implements($service_module, "IService_UserServiceAdminEdit")
+                    || !object_implements($service_module, 'IService_UserServiceAdminEdit')
                 ) {
                     $form_data = $this->lang->translate('service_edit_unable');
                 } else {
@@ -106,7 +106,7 @@ class PageAdmin_UserService extends PageAdmin implements IPageAdmin_ActionBox
                 }
 
                 $output = $this->template->render(
-                    "admin/action_boxes/user_service_edit",
+                    'admin/action_boxes/user_service_edit',
                     compact('service_module_id', 'form_data')
                 );
                 break;

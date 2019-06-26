@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Feature\Actions\Shop;
 
 use App\Models\User;

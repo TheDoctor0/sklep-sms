@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Middlewares;
 
 use App\Application;
@@ -16,7 +17,7 @@ class ManageAdminAuthentication implements MiddlewareContract
         // Logowanie się do panelu admina
         if (isset($_POST['username']) && isset($_POST['password'])) {
             $auth->loginAdminUsingCredentials($_POST['username'], $_POST['password']);
-        } elseif (isset($_POST['action']) && $_POST['action'] == "logout") {
+        } elseif (isset($_POST['action']) && $_POST['action'] == 'logout') {
             $auth->logoutAdmin();
         }
 
@@ -26,17 +27,15 @@ class ManageAdminAuthentication implements MiddlewareContract
         }
 
         // Jeżeli próbujemy wejść do PA i nie jesteśmy zalogowani, to zmień stronę
-        if (!$auth->check() || !get_privilages("acp")) {
+        if (!$auth->check() || !get_privilages('acp')) {
             /** @var CurrentPage $currentPage */
             $currentPage = $app->make(CurrentPage::class);
             $currentPage->setPid('login');
 
             // Jeżeli jest zalogowany, ale w międzyczasie odebrano mu dostęp do PA
             if ($auth->check()) {
-                $_SESSION['info'] = "no_privilages";
+                $_SESSION['info'] = 'no_privilages';
             }
         }
-
-        return null;
     }
 }

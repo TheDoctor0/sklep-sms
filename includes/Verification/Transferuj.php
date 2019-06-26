@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Verification;
 
 use App\Database;
@@ -12,11 +13,12 @@ use App\Verification\Abstracts\SupportTransfer;
 
 /**
  * Created by MilyGosc.
+ *
  * @see https://forum.sklep-sms.pl/showthread.php?tid=88
  */
 class Transferuj extends PaymentModule implements SupportTransfer
 {
-    protected $id = "transferuj";
+    protected $id = 'transferuj';
 
     /** @var Settings */
     private $settings;
@@ -48,13 +50,13 @@ class Transferuj extends PaymentModule implements SupportTransfer
             'kwota'        => $cost,
             'opis'         => $purchase->getDesc(),
             'crc'          => $dataFilename,
-            'md5sum'       => md5($this->accountId . $cost . $dataFilename . $this->key),
+            'md5sum'       => md5($this->accountId.$cost.$dataFilename.$this->key),
             'imie'         => $purchase->user->getForename(false),
             'nazwisko'     => $purchase->user->getSurname(false),
             'email'        => $purchase->getEmail(),
-            'pow_url'      => $this->settings['shop_url_slash'] . "page/transferuj_ok",
-            'pow_url_blad' => $this->settings['shop_url_slash'] . "page/transferuj_bad",
-            'wyn_url'      => $this->settings['shop_url_slash'] . "transfer/transferuj",
+            'pow_url'      => $this->settings['shop_url_slash'].'page/transferuj_ok',
+            'pow_url_blad' => $this->settings['shop_url_slash'].'page/transferuj_bad',
+            'wyn_url'      => $this->settings['shop_url_slash'].'transfer/transferuj',
         ];
     }
 
@@ -101,6 +103,6 @@ class Transferuj extends PaymentModule implements SupportTransfer
             return false;
         }
 
-        return $md5sum === md5($this->accountId . $transactionId . $transactionAmount . $crc . $this->key);
+        return $md5sum === md5($this->accountId.$transactionId.$transactionAmount.$crc.$this->key);
     }
 }

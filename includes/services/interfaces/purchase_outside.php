@@ -6,7 +6,7 @@ use App\Models\Purchase;
  * Możliwość zakupu usługi z zewnątrz ( np. z serwera )
  * Implementacja tego interfejsu powinna pociągnąć za sobą implementacje interfejsu:
  *    IService_Purchase
- * Interface IService_PurchaseOutside
+ * Interface IService_PurchaseOutside.
  */
 interface IService_PurchaseOutside
 {
@@ -17,11 +17,11 @@ interface IService_PurchaseOutside
      * @param Purchase $purchase_data
      *
      * @return array
-     *  status => string id wiadomości,
-     *  text => string treść wiadomości
-     *  positive => bool czy udało się przeprowadzić zakup czy nie
-     *  [data => array('warnings' => array())]
-     *  [purchase_data => Entity_Purchase dane zakupu]
+     *               status => string id wiadomości,
+     *               text => string treść wiadomości
+     *               positive => bool czy udało się przeprowadzić zakup czy nie
+     *               [data => array('warnings' => array())]
+     *               [purchase_data => Entity_Purchase dane zakupu]
      */
     public function purchase_data_validate($purchase_data);
 }

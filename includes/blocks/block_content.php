@@ -27,26 +27,26 @@ class BlockContent extends Block
 
     public function get_content_class()
     {
-        return "content";
+        return 'content';
     }
 
     public function get_content_id()
     {
-        return "content";
+        return 'content';
     }
 
     // Nadpisujemy get_content, aby wyswieltac info gdy nie jest zalogowany lub jest zalogowany, lecz nie powinien
     public function get_content($get, $post)
     {
         if (($this->page = $this->heart->get_page($this->currentPage->getPid())) === null) {
-            return null;
+            return;
         }
 
-        if (object_implements($this->page, "I_BeLoggedMust") && !is_logged()) {
+        if (object_implements($this->page, 'I_BeLoggedMust') && !is_logged()) {
             return $this->lang->translate('must_be_logged_in');
         }
 
-        if (object_implements($this->page, "I_BeLoggedCannot") && is_logged()) {
+        if (object_implements($this->page, 'I_BeLoggedCannot') && is_logged()) {
             return $this->lang->translate('must_be_logged_out');
         }
 

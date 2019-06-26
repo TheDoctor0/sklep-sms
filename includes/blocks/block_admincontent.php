@@ -24,12 +24,12 @@ class BlockAdminContent extends Block
 
     public function get_content_class()
     {
-        return "content";
+        return 'content';
     }
 
     public function get_content_id()
     {
-        return "content";
+        return 'content';
     }
 
     // Nadpisujemy get_content, aby wyswieltac info gdy nie jest zalogowany lub jest zalogowany, lecz nie powinien
@@ -44,8 +44,8 @@ class BlockAdminContent extends Block
 
     protected function content($get, $post)
     {
-        if (($page = $this->heart->get_page($this->page->getPid(), "admin")) === null) {
-            return null;
+        if (($page = $this->heart->get_page($this->page->getPid(), 'admin')) === null) {
+            return;
         }
 
         return $page->get_content($get, $post);

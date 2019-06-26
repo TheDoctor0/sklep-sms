@@ -41,54 +41,54 @@ class PagePurchase extends Page
 
         // Dodajemy wszystkie skrypty
         if (strlen($this::PAGE_ID)) {
-            $path = "jscripts/pages/" . $this::PAGE_ID . "/";
-            $path_file = $path . "main.js";
+            $path = 'jscripts/pages/'.$this::PAGE_ID.'/';
+            $path_file = $path.'main.js';
             if (file_exists($this->app->path($path_file))) {
-                $heart->script_add($settings['shop_url_slash'] . $path_file . "?version=" . $this->app->version());
+                $heart->script_add($settings['shop_url_slash'].$path_file.'?version='.$this->app->version());
             }
 
-            $path_file = $path . $service_module->get_module_id() . ".js";
+            $path_file = $path.$service_module->get_module_id().'.js';
             if (file_exists($this->app->path($path_file))) {
-                $heart->script_add($settings['shop_url_slash'] . $path_file . "?version=" . $this->app->version());
+                $heart->script_add($settings['shop_url_slash'].$path_file.'?version='.$this->app->version());
             }
         }
 
         // Dodajemy wszystkie css
         if (strlen($this::PAGE_ID)) {
-            $path = "styles/pages/" . $this::PAGE_ID . "/";
-            $path_file = $path . "main.css";
+            $path = 'styles/pages/'.$this::PAGE_ID.'/';
+            $path_file = $path.'main.css';
             if (file_exists($this->app->path($path_file))) {
-                $heart->style_add($settings['shop_url_slash'] . $path_file . "?version=" . $this->app->version());
+                $heart->style_add($settings['shop_url_slash'].$path_file.'?version='.$this->app->version());
             }
 
-            $path_file = $path . $service_module->get_module_id() . ".css";
+            $path_file = $path.$service_module->get_module_id().'.css';
             if (file_exists($this->app->path($path_file))) {
-                $heart->style_add($settings['shop_url_slash'] . $path_file . "?version=" . $this->app->version());
+                $heart->style_add($settings['shop_url_slash'].$path_file.'?version='.$this->app->version());
             }
         }
 
         // Globalne jsy cssy konkretnych modułów usług
         foreach ($heart->get_services_modules() as $module_info) {
             if ($module_info['id'] == $service_module->get_module_id()) {
-                $path = "styles/services/" . $module_info['id'] . ".css";
+                $path = 'styles/services/'.$module_info['id'].'.css';
                 if (file_exists($this->app->path($path))) {
-                    $heart->style_add($settings['shop_url_slash'] . $path . "?version=" . $this->app->version());
+                    $heart->style_add($settings['shop_url_slash'].$path.'?version='.$this->app->version());
                 }
 
-                $path = "jscripts/services/" . $module_info['id'] . ".js";
+                $path = 'jscripts/services/'.$module_info['id'].'.js';
                 if (file_exists($this->app->path($path))) {
-                    $heart->script_add($settings['shop_url_slash'] . $path . "?version=" . $this->app->version());
+                    $heart->script_add($settings['shop_url_slash'].$path.'?version='.$this->app->version());
                 }
 
                 break;
             }
         }
 
-        $heart->page_title .= " - " . $service_module->service['name'];
+        $heart->page_title .= ' - '.$service_module->service['name'];
 
         // Sprawdzamy, czy usluga wymaga, by użytkownik był zalogowany
         // Jeżeli wymaga, to to sprawdzamy
-        if (object_implements($service_module, "I_BeLoggedMust") && !is_logged()) {
+        if (object_implements($service_module, 'I_BeLoggedMust') && !is_logged()) {
             return $lang->translate('must_be_logged_in');
         }
 
@@ -98,21 +98,21 @@ class PagePurchase extends Page
         }
 
         // Nie ma formularza zakupu, to tak jakby strona nie istniała
-        if (!object_implements($service_module, "IService_PurchaseWeb")) {
+        if (!object_implements($service_module, 'IService_PurchaseWeb')) {
             return $lang->translate('site_not_exists');
         }
 
         // Dodajemy długi opis
         $show_more = '';
         if (strlen($service_module->description_full_get())) {
-            $show_more = $template->render("services/show_more");
+            $show_more = $template->render('services/show_more');
         }
 
         $output = $template->render(
-            "services/short_description",
+            'services/short_description',
             compact('service_module', 'show_more')
         );
 
-        return $output . $service_module->purchase_form_get();
+        return $output.$service_module->purchase_form_get();
     }
 }

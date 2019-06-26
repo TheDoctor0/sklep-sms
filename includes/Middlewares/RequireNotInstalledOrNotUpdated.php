@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Middlewares;
 
 use App\Application;
@@ -13,7 +14,5 @@ class RequireNotInstalledOrNotUpdated implements MiddlewareContract
         if (ShopState::isInstalled() && $app->make(ShopState::class)->isUpToDate()) {
             return new Response('Shop is up to date');
         }
-
-        return null;
     }
 }

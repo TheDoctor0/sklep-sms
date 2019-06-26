@@ -10,7 +10,5 @@ class SetAdminSession implements MiddlewareContract
     public function handle(Request $request, Application $app)
     {
         $app->setAdminSession();
-
-        return null;
     }
 }

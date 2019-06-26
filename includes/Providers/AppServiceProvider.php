@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Providers;
 
 use App\Application;
@@ -32,7 +33,7 @@ class AppServiceProvider
 
     protected function registerDatabase(Application $app)
     {
-        $app->singleton(Database::class, function() {
+        $app->singleton(Database::class, function () {
             return new Database(
                 getenv('DB_HOST'),
                 getenv('DB_PORT') ?: 3306,
@@ -45,7 +46,7 @@ class AppServiceProvider
 
     protected function registerCache(Application $app)
     {
-        $app->bind(FileCache::class, function() use ($app) {
+        $app->bind(FileCache::class, function () use ($app) {
             return new FileCache($app->make(Filesystem::class), $app->path('data/cache'));
         });
         $app->bind(CacheInterface::class, FileCache::class);

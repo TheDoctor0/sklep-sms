@@ -47,31 +47,31 @@ class PageAdminBoughtServices extends PageAdmin
 
         if (isset($get['search'])) {
             searchWhere([
-                "t.id",
-                "t.payment",
-                "t.payment_id",
-                "t.uid",
-                "t.ip",
-                "t.email",
-                "t.auth_data",
-                "CAST(t.timestamp as CHAR)",
+                't.id',
+                't.payment',
+                't.payment_id',
+                't.uid',
+                't.ip',
+                't.email',
+                't.auth_data',
+                'CAST(t.timestamp as CHAR)',
             ], $get['search'], $where);
         }
 
         // Jezeli jest jakis where, to dodajemy WHERE
         if (strlen($where)) {
-            $where = "WHERE " . $where . ' ';
+            $where = 'WHERE '.$where.' ';
         }
 
         $result = $this->db->query(
-            "SELECT SQL_CALC_FOUND_ROWS * " .
-            "FROM ({$this->settings['transactions_query']}) as t " .
-            $where .
-            "ORDER BY t.timestamp DESC " .
-            "LIMIT " . get_row_limit($this->currentPage->getPageNumber())
+            'SELECT SQL_CALC_FOUND_ROWS * '.
+            "FROM ({$this->settings['transactions_query']}) as t ".
+            $where.
+            'ORDER BY t.timestamp DESC '.
+            'LIMIT '.get_row_limit($this->currentPage->getPageNumber())
         );
 
-        $table->setDbRowsAmount($this->db->get_column("SELECT FOUND_ROWS()", "FOUND_ROWS()"));
+        $table->setDbRowsAmount($this->db->get_column('SELECT FOUND_ROWS()', 'FOUND_ROWS()'));
 
         while ($row = $this->db->fetch_array_assoc($result)) {
             $body_row = new BodyRow();
@@ -82,10 +82,10 @@ class PageAdminBoughtServices extends PageAdmin
             // Pobranie danych o serwerze na ktorym zostala wykupiona usługa
             $server = $this->heart->get_server($row['server']);
 
-            $username = $row['uid'] ? htmlspecialchars($row['username']) . " ({$row['uid']})" : $this->lang->translate('none');
+            $username = $row['uid'] ? htmlspecialchars($row['username'])." ({$row['uid']})" : $this->lang->translate('none');
 
             // Przerobienie ilosci
-            $amount = $row['amount'] != -1 ? $row['amount'] . ' ' . $service['tag'] : $this->lang->translate('forever');
+            $amount = $row['amount'] != -1 ? $row['amount'].' '.$service['tag'] : $this->lang->translate('forever');
 
             // Rozkulbaczenie extra daty
             $row['extra_data'] = json_decode($row['extra_data'], true);
@@ -97,14 +97,14 @@ class PageAdminBoughtServices extends PageAdmin
 
                 $value = htmlspecialchars($value);
 
-                if ($key == "password") {
+                if ($key == 'password') {
                     $key = $this->lang->translate('password');
-                } elseif ($key == "type") {
+                } elseif ($key == 'type') {
                     $key = $this->lang->translate('type');
                     $value = ExtraFlagType::get_type_name($value);
                 }
 
-                $extra_data[] = $key . ': ' . $value;
+                $extra_data[] = $key.': '.$value;
             }
             $extra_data = implode('<br />', $extra_data);
 

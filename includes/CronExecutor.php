@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 class CronExecutor
@@ -24,7 +25,7 @@ class CronExecutor
         // Pozyskujemy wszystkie klasy implementujące interface cronjob
         $classes = array_filter(
             get_declared_classes(),
-            function($className) {
+            function ($className) {
                 return in_array('I_Cronjob', class_implements($className));
             }
         );
@@ -39,7 +40,7 @@ class CronExecutor
         // Usuwamy przestarzałe logi
         if (intval($this->settings['delete_logs']) != 0) {
             $this->db->query($this->db->prepare(
-                "DELETE FROM `" . TABLE_PREFIX . "logs` " .
+                'DELETE FROM `'.TABLE_PREFIX.'logs` '.
                 "WHERE `timestamp` < DATE_SUB(NOW(), INTERVAL '%d' DAY)",
                 [$this->settings['delete_logs']]
             ));
@@ -48,8 +49,8 @@ class CronExecutor
         // Remove files older than 30 days from data/transfers
         $path = $this->app->path('data/transfers');
         foreach (scandir($path) as $file) {
-            if (filectime($path . $file) < time() - 60 * 60 * 24 * 30) {
-                unlink($path . $file);
+            if (filectime($path.$file) < time() - 60 * 60 * 24 * 30) {
+                unlink($path.$file);
             }
         }
         unset($path);

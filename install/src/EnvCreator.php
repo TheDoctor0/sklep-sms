@@ -1,4 +1,5 @@
 <?php
+
 namespace Install;
 
 use App\Application;
@@ -23,12 +24,12 @@ class EnvCreator
 
     protected function getContent($host, $port, $db, $user, $password)
     {
-        return "DB_HOST=$host" . PHP_EOL .
-            "DB_PORT=$port" . PHP_EOL .
-            "DB_DATABASE=$db" . PHP_EOL .
-            "DB_USERNAME=$user" . PHP_EOL .
-            "DB_PASSWORD=$password" . PHP_EOL .
-            "LICENSE=false" . PHP_EOL;
+        return "DB_HOST=$host".PHP_EOL.
+            "DB_PORT=$port".PHP_EOL.
+            "DB_DATABASE=$db".PHP_EOL.
+            "DB_USERNAME=$user".PHP_EOL.
+            "DB_PASSWORD=$password".PHP_EOL.
+            'LICENSE=false'.PHP_EOL;
     }
 
     protected function path()

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Verification;
 
 use App\Verification\Abstracts\PaymentModule;
@@ -14,7 +15,7 @@ use App\Verification\Results\SmsSuccessResult;
 
 class Cssetti extends PaymentModule implements SupportSms
 {
-    protected $id = "cssetti";
+    protected $id = 'cssetti';
 
     /** @var string */
     private $smsCode;

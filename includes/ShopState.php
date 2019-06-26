@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use App\Exceptions\SqlQueryException;
@@ -67,6 +68,7 @@ class ShopState
 
         try {
             $db->connect();
+
             return true;
         } catch (SqlQueryException $e) {
             return false;

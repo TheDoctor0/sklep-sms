@@ -1,4 +1,5 @@
 <?php
+
 namespace Install;
 
 use App\Application;
@@ -28,7 +29,7 @@ class Full
         }
 
         if (file_exists($this->app->path('install/progress'))) {
-            output_page("Instalacja trwa, lub została błędnie przeprowadzona.");
+            output_page('Instalacja trwa, lub została błędnie przeprowadzona.');
         }
 
         // Którym plikom / folderom trzeba nadać uprawnienia do zapisywania
@@ -38,18 +39,18 @@ class Full
                 "\n", str_replace("\n\r", "\n", file_get_contents($this->app->path('install/storage/full/files_priv.txt')))
             );
         }
-        $files_priv[] = "install";
+        $files_priv[] = 'install';
 
         // Wymagane moduły
         $modules = [
             [
-                'text'    => "PHP v5.6.0 lub wyższa",
+                'text'    => 'PHP v5.6.0 lub wyższa',
                 'value'   => PHP_VERSION_ID >= 50600,
                 'must-be' => false,
             ],
 
             [
-                'text'    => "Moduł cURL",
+                'text'    => 'Moduł cURL',
                 'value'   => function_exists('curl_version'),
                 'must-be' => true,
             ],

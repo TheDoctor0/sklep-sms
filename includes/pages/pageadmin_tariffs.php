@@ -60,23 +60,23 @@ class PageAdminTariffs extends PageAdmin implements IPageAdmin_ActionBox
 
     public function get_action_box($box_id, $data)
     {
-        if (!get_privilages("manage_settings")) {
+        if (!get_privilages('manage_settings')) {
             return [
-                'status' => "not_logged_in",
+                'status' => 'not_logged_in',
                 'text'   => $this->lang->translate('not_logged_or_no_perm'),
             ];
         }
 
         switch ($box_id) {
-            case "tariff_add":
-                $output = $this->template->render("admin/action_boxes/tariff_add");
+            case 'tariff_add':
+                $output = $this->template->render('admin/action_boxes/tariff_add');
                 break;
 
-            case "tariff_edit":
+            case 'tariff_edit':
                 $tariff = $this->heart->getTariff($data['id']);
                 $provision = number_format($tariff->getProvision() / 100.0, 2);
 
-                $output = $this->template->render("admin/action_boxes/tariff_edit", compact('provision', 'tariff'));
+                $output = $this->template->render('admin/action_boxes/tariff_edit', compact('provision', 'tariff'));
                 break;
 
             default:

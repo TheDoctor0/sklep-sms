@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Middlewares;
 
 use App\Application;
@@ -17,7 +18,5 @@ class RunCron implements MiddlewareContract
             $cronExecutor = $app->make(CronExecutor::class);
             $cronExecutor->run();
         }
-
-        return null;
     }
 }

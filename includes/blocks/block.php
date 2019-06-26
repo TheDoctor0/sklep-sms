@@ -10,25 +10,25 @@ abstract class Block
     abstract public function get_content_id();
 
     /**
-     * Zwraca treść danego bloku po przejściu wszystkich filtrów
+     * Zwraca treść danego bloku po przejściu wszystkich filtrów.
      *
-     * @param array $get - dane get
+     * @param array $get  - dane get
      * @param array $post - dane post
      *
      * @return string|null - zawartość do wyświetlenia
      */
     public function get_content($get, $post)
     {
-        if ((object_implements($this, "I_BeLoggedMust") && !is_logged()) || (object_implements($this,
-                    "I_BeLoggedCannot") && is_logged())) {
-            return null;
+        if ((object_implements($this, 'I_BeLoggedMust') && !is_logged()) || (object_implements($this,
+                    'I_BeLoggedCannot') && is_logged())) {
+            return;
         }
 
         return $this->content($get, $post);
     }
 
     /**
-     * Zwraca treść danego bloku
+     * Zwraca treść danego bloku.
      *
      * @param array $get
      * @param array $post
@@ -38,7 +38,7 @@ abstract class Block
     abstract protected function content($get, $post);
 
     /**
-     * Zwraca treść danego bloku w otoczce
+     * Zwraca treść danego bloku w otoczce.
      *
      * @param array $get
      * @param array $post
@@ -49,9 +49,9 @@ abstract class Block
     {
         $content = $this->get_content($get, $post);
 
-        return create_dom_element("div", $content, [
+        return create_dom_element('div', $content, [
             'id'    => $this->get_content_id(),
-            'class' => $content !== null ? $this->get_content_class() : "",
+            'class' => $content !== null ? $this->get_content_class() : '',
         ]);
     }
 }
@@ -63,7 +63,7 @@ abstract class BlockSimple extends Block
     public function __construct()
     {
         if (!isset($this->template)) {
-            throw new Exception('Class ' . get_class($this) . ' has to have field $template because it extends class BlockSimple');
+            throw new Exception('Class '.get_class($this).' has to have field $template because it extends class BlockSimple');
         }
     }
 

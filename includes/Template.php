@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 class Template
@@ -26,50 +27,50 @@ class Template
         $data = $this->addDefaultVariables($data);
         extract($data);
 
-        return eval('return "' . $__content . '";');
+        return eval('return "'.$__content.'";');
     }
 
     public function install_render($template, array $data = [])
     {
-        $__content = $this->get_install_template($template, function($filename) {
+        $__content = $this->get_install_template($template, function ($filename) {
             return $this->app->path("install/templates/{$filename}.html");
         });
 
         $data = $this->addDefaultVariables($data);
         extract($data);
 
-        return eval('return "' . $__content . '";');
+        return eval('return "'.$__content.'";');
     }
 
     public function install_full_render($template, array $data = [])
     {
-        $__content = $this->get_install_template($template, function($filename) {
+        $__content = $this->get_install_template($template, function ($filename) {
             return $this->app->path("install/templates/full/{$filename}.html");
         });
 
         $data = $this->addDefaultVariables($data);
         extract($data);
 
-        return eval('return "' . $__content . '";');
+        return eval('return "'.$__content.'";');
     }
 
     public function install_update_render($template, array $data = [])
     {
-        $__content = $this->get_install_template($template, function($filename) {
+        $__content = $this->get_install_template($template, function ($filename) {
             return $this->app->path("install/templates/update/{$filename}.html");
         });
 
         $data = $this->addDefaultVariables($data);
         extract($data);
 
-        return eval('return "' . $__content . '";');
+        return eval('return "'.$__content.'";');
     }
 
     /**
      * Pobranie szablonu.
      *
-     * @param string $title Nazwa szablonu
-     * @param bool   $eslashes Prawda, jeżeli zawartość szablonu ma być "escaped".
+     * @param string $title        Nazwa szablonu
+     * @param bool   $eslashes     Prawda, jeżeli zawartość szablonu ma być "escaped".
      * @param bool   $htmlcomments Prawda, jeżeli chcemy dodać komentarze o szablonie.
      *
      * @return string|bool Szablon.
@@ -77,7 +78,7 @@ class Template
     private function get_template($title, $eslashes = true, $htmlcomments = true)
     {
         if (strlen($this->lang->getCurrentLanguageShort())) {
-            $filename = $title . "." . $this->lang->getCurrentLanguageShort();
+            $filename = $title.'.'.$this->lang->getCurrentLanguageShort();
             $temp = $this->app->path("themes/{$this->settings['theme']}/{$filename}.html");
             if (file_exists($temp)) {
                 $path = $temp;
@@ -112,7 +113,7 @@ class Template
     private function get_install_template($title, callable $pathResolver)
     {
         if (strlen($this->lang->getCurrentLanguageShort())) {
-            $filename = $title . "." . $this->lang->getCurrentLanguageShort();
+            $filename = $title.'.'.$this->lang->getCurrentLanguageShort();
             $temp = call_user_func($pathResolver, $filename);
             if (file_exists($temp)) {
                 $path = $temp;
@@ -139,14 +140,14 @@ class Template
         $template = file_get_contents($path);
 
         if ($htmlcomments) {
-            $template = "<!-- start: " . htmlspecialchars($title) . " -->\n{$template}\n<!-- end: " . htmlspecialchars($title) . " -->";
+            $template = '<!-- start: '.htmlspecialchars($title)." -->\n{$template}\n<!-- end: ".htmlspecialchars($title).' -->';
         }
 
         if ($eslashes) {
             $template = str_replace("\\'", "'", addslashes($template));
         }
 
-        $template = str_replace("{__VERSION__}", $this->app->version(), $template);
+        $template = str_replace('{__VERSION__}', $this->app->version(), $template);
 
         return $template;
     }

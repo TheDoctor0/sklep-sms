@@ -3,10 +3,10 @@
 interface IPageAdmin_ActionBox
 {
     /**
-     * Zwraca html action boxa
+     * Zwraca html action boxa.
      *
      * @param       $box_id
-     * @param array $post Dane $_POST
+     * @param array $post   Dane $_POST
      *
      * @return string|null mixed
      */

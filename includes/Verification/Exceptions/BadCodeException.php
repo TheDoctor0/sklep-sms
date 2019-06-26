@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Verification\Exceptions;
 
 /**
- * Given sms code was invalid
+ * Given sms code was invalid.
  */
 class BadCodeException extends SmsPaymentException
 {
-    protected $errorCode = "bad_code";
+    protected $errorCode = 'bad_code';
 }

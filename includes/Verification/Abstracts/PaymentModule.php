@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Verification\Abstracts;
 
 use App\Database;
@@ -21,11 +22,11 @@ abstract class PaymentModule
     /** @var string */
     protected $id;
 
-    /** @var  string */
+    /** @var string */
     protected $name;
 
     /**
-     * Data from columns: data & data_hidden
+     * Data from columns: data & data_hidden.
      *
      * @var array
      */
@@ -41,36 +42,36 @@ abstract class PaymentModule
         $this->langShop = $translationManager->shop();
 
         $result = $this->db->query($this->db->prepare(
-            "SELECT `name`, `data`, `data_hidden`, `sms`, `transfer` " .
-            "FROM `" . TABLE_PREFIX . "transaction_services` " .
+            'SELECT `name`, `data`, `data_hidden`, `sms`, `transfer` '.
+            'FROM `'.TABLE_PREFIX.'transaction_services` '.
             "WHERE `id` = '%s' ",
             [$this->id]
         ));
 
         if (!$this->db->num_rows($result)) {
             // TODO Output should not happen here
-            output_page("An error occured in class: " . get_class($this) . " constructor. There is no " . $this->id . " payment service in database.");
+            output_page('An error occured in class: '.get_class($this).' constructor. There is no '.$this->id.' payment service in database.');
         }
 
         $row = $this->db->fetch_array_assoc($result);
 
         $this->name = $row['name'];
 
-        $data = (array)json_decode($row['data'], true);
+        $data = (array) json_decode($row['data'], true);
         foreach ($data as $key => $value) {
             $this->data[$key] = $value;
         }
 
-        $dataHidden = (array)json_decode($row['data_hidden'], true);
+        $dataHidden = (array) json_decode($row['data_hidden'], true);
         foreach ($dataHidden as $key => $value) {
             $this->data[$key] = $value;
         }
 
         // Pozyskujemy taryfy
         $result = $this->db->query($this->db->prepare(
-            "SELECT t.id, t.provision, t.predefined, sn.number " .
-            "FROM `" . TABLE_PREFIX . "tariffs` AS t " .
-            "LEFT JOIN `" . TABLE_PREFIX . "sms_numbers` AS sn ON t.id = sn.tariff " .
+            'SELECT t.id, t.provision, t.predefined, sn.number '.
+            'FROM `'.TABLE_PREFIX.'tariffs` AS t '.
+            'LEFT JOIN `'.TABLE_PREFIX.'sms_numbers` AS sn ON t.id = sn.tariff '.
             "WHERE sn.service = '%s' ",
             [$this->id]
         ));
@@ -87,7 +88,7 @@ abstract class PaymentModule
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function supportTransfer()
     {
@@ -95,7 +96,7 @@ abstract class PaymentModule
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function supportSms()
     {
@@ -131,7 +132,7 @@ abstract class PaymentModule
     }
 
     /**
-     * Returns tariff by sms cost brutto
+     * Returns tariff by sms cost brutto.
      *
      * @param float $cost
      *
@@ -144,8 +145,6 @@ abstract class PaymentModule
                 return $tariff;
             }
         }
-
-        return null;
     }
 
     /**

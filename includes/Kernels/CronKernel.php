@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Kernels;
 
 use App\CronExecutor;

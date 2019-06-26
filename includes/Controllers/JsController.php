@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Template;
@@ -11,8 +12,8 @@ class JsController
     {
         $output = '';
 
-        if ($request->query->get('script') == "language") {
-            $output = $template->render("js/language.js", [], true, false);
+        if ($request->query->get('script') == 'language') {
+            $output = $template->render('js/language.js', [], true, false);
         }
 
         return new Response($output, 200, [

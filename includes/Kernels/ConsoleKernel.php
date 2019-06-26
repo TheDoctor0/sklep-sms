@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Kernels;
 
 use App\Application;
@@ -25,6 +26,7 @@ class ConsoleKernel implements ConsoleKernelContract
             $databaseSetup = $this->app->make(DatabaseSetup::class);
             $databaseSetup->runForTests();
             $output->writeln('Test environment set up.');
+
             return 0;
         }
 
@@ -33,10 +35,12 @@ class ConsoleKernel implements ConsoleKernelContract
             $databaseSetup = $this->app->make(DatabaseSetup::class);
             $databaseSetup->run();
             $output->writeln('Environment set up.');
+
             return 0;
         }
 
         $output->writeln('Invalid command.');
+
         return 1;
     }
 

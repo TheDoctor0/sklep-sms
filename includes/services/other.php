@@ -7,7 +7,7 @@ use App\Translator;
 
 class ServiceOtherSimple extends Service implements IService_Create, IService_AdminManage, IService_AvailableOnServers
 {
-    const MODULE_ID = "other";
+    const MODULE_ID = 'other';
 
     public function service_admin_manage_post($data)
     {
@@ -45,6 +45,7 @@ class ServiceOther extends ServiceOtherSimple implements IService_Purchase, ISer
 
     /**
      * @param Purchase $purchase_data
+     *
      * @return array
      */
     public function purchase_data_validate($purchase_data)
@@ -70,16 +71,16 @@ class ServiceOther extends ServiceOtherSimple implements IService_Purchase, ISer
         } else {
             // Wyszukiwanie usługi o konkretnej cenie
             $result = $this->db->query($this->db->prepare(
-                "SELECT * FROM `" . TABLE_PREFIX . "pricelist` " .
+                'SELECT * FROM `'.TABLE_PREFIX.'pricelist` '.
                 "WHERE `service` = '%s' AND `tariff` = '%d' AND ( `server` = '%d' OR `server` = '-1' )",
                 [$this->service['id'], $purchase_data->getTariff(), $server['id']]
             ));
 
             if (!$this->db->num_rows($result)) {
                 // Brak takiej opcji w bazie ( ktoś coś edytował w htmlu strony )
-            {
+                {
                 return [
-                    'status'   => "no_option",
+                    'status'   => 'no_option',
                     'text'     => $this->lang->translate('service_not_affordable'),
                     'positive' => false,
                 ];
@@ -90,14 +91,14 @@ class ServiceOther extends ServiceOtherSimple implements IService_Purchase, ISer
         }
 
         // E-mail
-        if (strlen($purchase_data->getEmail()) && $warning = check_for_warnings("email", $purchase_data->getEmail())) {
-            $warnings['email'] = array_merge((array)$warnings['email'], $warning);
+        if (strlen($purchase_data->getEmail()) && $warning = check_for_warnings('email', $purchase_data->getEmail())) {
+            $warnings['email'] = array_merge((array) $warnings['email'], $warning);
         }
 
         // Jeżeli są jakieś błedy, to je zwróć
         if (!empty($warnings)) {
             return [
-                'status'   => "warnings",
+                'status'   => 'warnings',
                 'text'     => $this->lang->translate('form_wrong_filled'),
                 'positive' => false,
                 'data'     => ['warnings' => $warnings],
@@ -114,7 +115,7 @@ class ServiceOther extends ServiceOtherSimple implements IService_Purchase, ISer
         ]);
 
         return [
-            'status'        => "ok",
+            'status'        => 'ok',
             'text'          => $this->lang->translate('purchase_form_validated'),
             'positive'      => true,
             'purchase_data' => $purchase_data,

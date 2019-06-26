@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use App\Models\Purchase;
@@ -65,7 +66,7 @@ class Payment
     /**
      * @param string $code
      * @param Tariff $tariff
-     * @param User $user
+     * @param User   $user
      *
      * @return array
      */
@@ -94,8 +95,8 @@ class Payment
             }
 
             return [
-                "status" => $e->getErrorCode(),
-                "text"   => $this->getSmsExceptionMessage($e),
+                'status' => $e->getErrorCode(),
+                'text'   => $this->getSmsExceptionMessage($e),
             ];
         } catch (SmsPaymentException $e) {
             log_info($this->langShop->sprintf(
@@ -110,8 +111,8 @@ class Payment
             ));
 
             return [
-                "status" => $e->getErrorCode(),
-                "text"   => $this->getSmsExceptionMessage($e),
+                'status' => $e->getErrorCode(),
+                'text'   => $this->getSmsExceptionMessage($e),
             ];
         }
 
@@ -121,7 +122,7 @@ class Payment
     protected function storePaymentSms(SmsSuccessResult $result, $code, $smsNumber, User $user)
     {
         $this->db->query($this->db->prepare(
-            "INSERT INTO `" . TABLE_PREFIX . "payment_sms` (`code`, `income`, `cost`, `text`, `number`, `ip`, `platform`, `free`) " .
+            'INSERT INTO `'.TABLE_PREFIX.'payment_sms` (`code`, `income`, `cost`, `text`, `number`, `ip`, `platform`, `free`) '.
             "VALUES ('%s','%d','%d','%s','%s','%s','%s','%d')",
             [
                 $code,
@@ -147,25 +148,26 @@ class Payment
     /**
      * @param string $smsCode
      * @param Tariff $tariff
+     *
      * @return SmsSuccessResult|null
      */
     protected function tryToUseSmsCode($smsCode, Tariff $tariff)
     {
         $result = $this->db->query($this->db->prepare(
-            "SELECT * FROM `" . TABLE_PREFIX . "sms_codes` " .
+            'SELECT * FROM `'.TABLE_PREFIX.'sms_codes` '.
             "WHERE `code` = '%s' AND `tariff` = '%d'",
             [$smsCode, $tariff->getId()]
         ));
 
         if (!$this->db->num_rows($result)) {
-            return null;
+            return;
         }
 
         $dbCode = $this->db->fetch_array_assoc($result);
 
         // Usuwamy kod z listy kodow do wykorzystania
         $this->db->query($this->db->prepare(
-            "DELETE FROM `" . TABLE_PREFIX . "sms_codes` " .
+            'DELETE FROM `'.TABLE_PREFIX.'sms_codes` '.
             "WHERE `id` = '%d'",
             [$dbCode['id']]
         ));
@@ -175,20 +177,20 @@ class Payment
             $dbCode['tariff']
         ));
 
-        return new SmsSuccessResult(!!$dbCode['free']);
+        return new SmsSuccessResult((bool) $dbCode['free']);
     }
 
     /**
      * @param string $code
-     * @param int $tariffId
+     * @param int    $tariffId
      * @param Tariff $expectedTariff
-     * @param User $user
+     * @param User   $user
      */
     protected function addSmsCode($code, $tariffId, Tariff $expectedTariff, User $user)
     {
         // Dodajemy kod do listy kodów do wykorzystania
         $this->db->query($this->db->prepare(
-            "INSERT INTO `" . TABLE_PREFIX . "sms_codes` " .
+            'INSERT INTO `'.TABLE_PREFIX.'sms_codes` '.
             "SET `code` = '%s', `tariff` = '%d', `free` = '0'",
             [$code, $tariffId]
         ));
@@ -210,7 +212,7 @@ class Payment
             return $e->getMessage();
         }
 
-        $text = $this->lang->translate('sms_info_' . $e->getErrorCode());
+        $text = $this->lang->translate('sms_info_'.$e->getErrorCode());
 
         if (strlen($text)) {
             return $text;
@@ -228,23 +230,23 @@ class Payment
     {
         if (!$this->getPaymentModule()->supportTransfer()) {
             return [
-                'status' => Payment::TRANSFER_NOT_SUPPORTED,
-                'text'   => $this->lang->translate('transfer_' . Payment::TRANSFER_NOT_SUPPORTED),
+                'status' => self::TRANSFER_NOT_SUPPORTED,
+                'text'   => $this->lang->translate('transfer_'.self::TRANSFER_NOT_SUPPORTED),
             ];
         }
 
         $serialized = serialize($purchase_data);
-        $data_filename = time() . "-" . md5($serialized);
-        file_put_contents($this->app->path('data/transfers/' . $data_filename), $serialized);
+        $data_filename = time().'-'.md5($serialized);
+        file_put_contents($this->app->path('data/transfers/'.$data_filename), $serialized);
 
         return [
-            'status'   => "transfer",
+            'status'   => 'transfer',
             'text'     => $this->lang->translate('transfer_prepared'),
             'positive' => true,
             'data'     => [
                 'data' => $this->getPaymentModule()
                     ->prepareTransfer($purchase_data, $data_filename),
-            ]
+            ],
             // Przygotowuje dane płatności transferem
         ];
     }
@@ -257,7 +259,7 @@ class Payment
     public function transferFinalize($transfer_finalize)
     {
         $result = $this->db->query($this->db->prepare(
-            "SELECT * FROM `" . TABLE_PREFIX . "payment_transfer` " .
+            'SELECT * FROM `'.TABLE_PREFIX.'payment_transfer` '.
             "WHERE `id` = '%d'",
             [$transfer_finalize->getOrderid()]
         ));
@@ -268,7 +270,7 @@ class Payment
         }
 
         // Nie znaleziono pliku z danymi
-        if (!$transfer_finalize->getDataFilename() || !file_exists($this->app->path('data/transfers/' . $transfer_finalize->getDataFilename()))) {
+        if (!$transfer_finalize->getDataFilename() || !file_exists($this->app->path('data/transfers/'.$transfer_finalize->getDataFilename()))) {
             log_info($this->langShop->sprintf(
                 $this->langShop->translate('transfer_no_data_file'),
                 $transfer_finalize->getOrderid()
@@ -279,7 +281,7 @@ class Payment
 
         /** @var Purchase $purchase_data */
         $purchase_data = unserialize(
-            file_get_contents($this->app->path('data/transfers/' . $transfer_finalize->getDataFilename()))
+            file_get_contents($this->app->path('data/transfers/'.$transfer_finalize->getDataFilename()))
         );
 
         // Fix: get user data again to avoid bugs linked with user wallet
@@ -287,7 +289,7 @@ class Payment
 
         // Dodanie informacji do bazy danych
         $this->db->query($this->db->prepare(
-            "INSERT INTO `" . TABLE_PREFIX . "payment_transfer` " .
+            'INSERT INTO `'.TABLE_PREFIX.'payment_transfer` '.
             "SET `id` = '%s', `income` = '%d', `transfer_service` = '%s', `ip` = '%s', `platform` = '%s' ",
             [
                 $transfer_finalize->getOrderid(),
@@ -297,7 +299,7 @@ class Payment
                 $purchase_data->user->getPlatform(),
             ]
         ));
-        unlink($this->app->path('data/transfers/' . $transfer_finalize->getDataFilename()));
+        unlink($this->app->path('data/transfers/'.$transfer_finalize->getDataFilename()));
 
         // Błędny moduł
         if (($service_module = $this->heart->get_service_module($purchase_data->getService())) === null) {
@@ -310,7 +312,7 @@ class Payment
             return false;
         }
 
-        if (!object_implements($service_module, "IService_Purchase")) {
+        if (!object_implements($service_module, 'IService_Purchase')) {
             log_info($this->langShop->sprintf($this->langShop->translate('transfer_no_purchase'),
                 $transfer_finalize->getOrderid(), $purchase_data->getService()));
 

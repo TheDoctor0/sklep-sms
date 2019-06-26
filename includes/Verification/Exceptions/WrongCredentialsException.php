@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Verification\Exceptions;
 
 /**
- * Given credentials (api, token, password, key etc.) were incorrect
+ * Given credentials (api, token, password, key etc.) were incorrect.
  */
 class WrongCredentialsException extends SmsPaymentException
 {
-    protected $errorCode = "wrong_credentials";
+    protected $errorCode = 'wrong_credentials';
 }

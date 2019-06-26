@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use App\Providers\AppServiceProvider;
@@ -41,7 +42,7 @@ class Application extends Container
     protected function registerBindings()
     {
         $this->instance(Container::class, $this);
-        $this->instance(Application::class, $this);
+        $this->instance(self::class, $this);
     }
 
     protected function bootstrap()
@@ -90,10 +91,10 @@ class Application extends Container
         }
 
         if (starts_with($path, DIRECTORY_SEPARATOR)) {
-            return $this->basePath . $path;
+            return $this->basePath.$path;
         }
 
-        return $this->basePath . DIRECTORY_SEPARATOR . $path;
+        return $this->basePath.DIRECTORY_SEPARATOR.$path;
     }
 
     public function sqlLogPath()

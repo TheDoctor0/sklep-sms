@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Kernels;
 
 use App\Middlewares\RequireInstalledAndNotUpdated;
@@ -36,8 +37,8 @@ class InstallUpdateKernel extends Kernel
         // Nie wszystko jest git
         if (!$everything_ok) {
             json_output(
-                "warnings",
-                "Aktualizacja nie mogła zostać przeprowadzona. Nie wszystkie warunki są spełnione.",
+                'warnings',
+                'Aktualizacja nie mogła zostać przeprowadzona. Nie wszystkie warunki są spełnione.',
                 false,
                 [
                     'update_info' => $update_info,
@@ -51,6 +52,6 @@ class InstallUpdateKernel extends Kernel
         $migrator->update();
         $installManager->finish();
 
-        json_output('ok', "Instalacja przebiegła pomyślnie.", true);
+        json_output('ok', 'Instalacja przebiegła pomyślnie.', true);
     }
 }

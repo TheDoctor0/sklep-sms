@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Database;
@@ -17,7 +18,7 @@ class ServerServiceRepository
     public function create($serverId, $serviceId)
     {
         $this->db->query($this->db->prepare(
-            "INSERT INTO `" . TABLE_PREFIX . "servers_services` " .
+            'INSERT INTO `'.TABLE_PREFIX.'servers_services` '.
             "SET `server_id`='%d', `service_id`='%s'",
             [$serverId, $serviceId]
         ));

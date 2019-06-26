@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Models;
 
 use App\Auth;
 
 /**
- * Obiekty tej klasy są używane podczas przeprowadzania zakupu
+ * Obiekty tej klasy są używane podczas przeprowadzania zakupu.
  */
 class Purchase
 {
@@ -14,7 +15,7 @@ class Purchase
     private $service = null;
 
     /**
-     * Szczegóły zamawianej usługi
+     * Szczegóły zamawianej usługi.
      *
      * @var array
      */
@@ -36,14 +37,14 @@ class Purchase
     private $email = null;
 
     /**
-     * Szczegóły płatności
+     * Szczegóły płatności.
      *
      * @var array
      */
     private $payment = null;
 
     /**
-     * Opis zakupu ( przydaje się przy płatności przelewem )
+     * Opis zakupu ( przydaje się przy płatności przelewem ).
      *
      * @var string
      */
@@ -59,7 +60,7 @@ class Purchase
 
     public function setService($service)
     {
-        $this->service = (string)$service;
+        $this->service = (string) $service;
     }
 
     public function setOrder($order)
@@ -79,7 +80,7 @@ class Purchase
 
     public function setEmail($email)
     {
-        $this->email = (string)$email;
+        $this->email = (string) $email;
     }
 
     public function setPayment($payment)

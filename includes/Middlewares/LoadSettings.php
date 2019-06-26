@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Middlewares;
 
 use App\Application;
@@ -12,7 +13,5 @@ class LoadSettings implements MiddlewareContract
         /** @var Settings $settings */
         $settings = $app->make(Settings::class);
         $settings->load();
-
-        return null;
     }
 }

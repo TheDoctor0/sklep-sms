@@ -7,12 +7,12 @@ class BlockWallet extends Block implements I_BeLoggedMust
 {
     public function get_content_class()
     {
-        return "wallet_status";
+        return 'wallet_status';
     }
 
     public function get_content_id()
     {
-        return "wallet";
+        return 'wallet';
     }
 
     protected function content($get, $post)
@@ -33,10 +33,10 @@ class BlockWallet extends Block implements I_BeLoggedMust
     {
         $content = $this->get_content($get, $post);
 
-        return create_dom_element("a", $content, [
+        return create_dom_element('a', $content, [
             'id'    => $this->get_content_id(),
-            'class' => $content !== null ? $this->get_content_class() : "",
-            'href'  => "index.php?pid=payment_log",
+            'class' => $content !== null ? $this->get_content_class() : '',
+            'href'  => 'index.php?pid=payment_log',
         ]);
     }
 }
