@@ -1221,16 +1221,6 @@ function ends_at($string, $end)
     return substr($string, -strlen($end)) == $end;
 }
 
-function starts_with($haystack, $needle)
-{
-    return substr($haystack, 0, strlen($needle)) === (string) $needle;
-}
-
-function str_contains($string, $needle)
-{
-    return strpos($string, $needle) !== false;
-}
-
 /**
  * Prints var_dump in pre.
  *
@@ -1293,27 +1283,6 @@ function log_to_file($file, $message)
 function log_error($message)
 {
     log_to_file(app()->errorsLogPath(), $message);
-}
-
-function array_get($array, $key, $default = null)
-{
-    if (is_null($key)) {
-        return $array;
-    }
-
-    if (isset($array[$key])) {
-        return $array[$key];
-    }
-
-    foreach (explode('.', $key) as $segment) {
-        if (!is_array($array) || !array_key_exists($segment, $array)) {
-            return $default;
-        }
-
-        $array = $array[$segment];
-    }
-
-    return $array;
 }
 
 function captureRequest()
