@@ -55,7 +55,8 @@ class Application extends Container
     protected function loadEnvironmentVariables()
     {
         try {
-            (new Dotenv($this->path('confidential')))->load();
+            $dotenv = Dotenv::create($this->path('confidential'));
+            $dotenv->load();
         } catch (InvalidPathException $e) {
             //
         }
