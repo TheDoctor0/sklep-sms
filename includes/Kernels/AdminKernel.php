@@ -99,7 +99,7 @@ class AdminKernel extends Kernel
         // Pobranie przycisków do sidebaru
         if (get_privilages("view_player_flags")) {
             $pid = "players_flags";
-            $name = $lang->translate($pid);;
+            $name = $lang->translate($pid); ;
             $players_flags_link = $template->render("admin/page_link", compact('pid', 'name'));
         }
         if (get_privilages("view_user_services")) {
@@ -115,71 +115,71 @@ class AdminKernel extends Kernel
         }
         if (get_privilages("view_income")) {
             $pid = "income";
-            $name = $lang->translate($pid);;
+            $name = $lang->translate($pid); ;
             $income_link = $template->render("admin/page_link", compact('pid', 'name'));
         }
         if (get_privilages("manage_settings")) {
             // Ustawienia sklepu
             $pid = "settings";
-            $name = $lang->translate($pid);;
+            $name = $lang->translate($pid); ;
             $settings_link = $template->render("admin/page_link", compact('pid', 'name'));
 
             // Płatności
             $pid = "transaction_services";
-            $name = $lang->translate($pid);;
+            $name = $lang->translate($pid); ;
             $transaction_services_link = $template->render("admin/page_link", compact('pid', 'name'));
 
             // Taryfy
             $pid = "tariffs";
-            $name = $lang->translate($pid);;
+            $name = $lang->translate($pid); ;
             $tariffs_link = $template->render("admin/page_link", compact('pid', 'name'));
 
             // Cennik
             $pid = "pricelist";
-            $name = $lang->translate($pid);;
+            $name = $lang->translate($pid); ;
             $pricelist_link = $template->render("admin/page_link", compact('pid', 'name'));
         }
         if (get_privilages("view_users")) {
             $pid = "users";
-            $name = $lang->translate($pid);;
+            $name = $lang->translate($pid); ;
             $users_link = $template->render("admin/page_link", compact('pid', 'name'));
         }
         if (get_privilages("view_groups")) {
             $pid = "groups";
-            $name = $lang->translate($pid);;
+            $name = $lang->translate($pid); ;
             $groups_link = $template->render("admin/page_link", compact('pid', 'name'));
         }
         if (get_privilages("view_servers")) {
             $pid = "servers";
-            $name = $lang->translate($pid);;
+            $name = $lang->translate($pid); ;
             $servers_link = $template->render("admin/page_link", compact('pid', 'name'));
         }
         if (get_privilages("view_services")) {
             $pid = "services";
-            $name = $lang->translate($pid);;
+            $name = $lang->translate($pid); ;
             $services_link = $template->render("admin/page_link", compact('pid', 'name'));
         }
         if (get_privilages("view_sms_codes")) {
             // Kody SMS
             $pid = "sms_codes";
-            $name = $lang->translate($pid);;
+            $name = $lang->translate($pid); ;
             $sms_codes_link = $template->render("admin/page_link", compact('pid', 'name'));
         }
         if (get_privilages("view_service_codes")) {
             $pid = "service_codes";
-            $name = $lang->translate($pid);;
+            $name = $lang->translate($pid); ;
             $service_codes_link = $template->render("admin/page_link", compact('pid', 'name'));
         }
         if (get_privilages("view_antispam_questions")) {
             // Pytania bezpieczeństwa
             $pid = "antispam_questions";
-            $name = $lang->translate($pid);;
+            $name = $lang->translate($pid); ;
             $antispam_questions_link = $template->render("admin/page_link", compact('pid', 'name'));
         }
         if (get_privilages("view_logs")) {
             // Pytania bezpieczeństwa
             $pid = "logs";
-            $name = $lang->translate($pid);;
+            $name = $lang->translate($pid); ;
             $logs_link = $template->render("admin/page_link", compact('pid', 'name'));
         }
 

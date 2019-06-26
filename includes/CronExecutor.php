@@ -24,7 +24,7 @@ class CronExecutor
         // Pozyskujemy wszystkie klasy implementujące interface cronjob
         $classes = array_filter(
             get_declared_classes(),
-            function ($className) {
+            function($className) {
                 return in_array('I_Cronjob', class_implements($className));
             }
         );

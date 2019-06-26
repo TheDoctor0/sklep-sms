@@ -24,9 +24,11 @@ class PageResetPassword extends Page implements I_BeLoggedCannot
             [$get['code']]
         ));
 
-        if (!$this->db->num_rows($result)) // Nie znalazło użytkownika z takim kodem
+        if (!$this->db->num_rows($result)) {
+            // Nie znalazło użytkownika z takim kodem
         {
             return $this->lang->translate('wrong_reset_key');
+        }
         }
 
         $row = $this->db->fetch_array_assoc($result);

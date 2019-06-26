@@ -37,7 +37,7 @@ class Page_UserOIwnServices extends Page implements I_BeLoggedMust
         // Ktore moduly wspieraja usługi użytkowników
         $classes = array_filter(
             get_declared_classes(),
-            function ($className) {
+            function($className) {
                 return in_array('IService_UserOwnServices', class_implements($className));
             }
         );

@@ -636,10 +636,12 @@ class JsonHttpAdminKernel extends Kernel
                 }
             }
 
-            if (($action == "service_add" && !isset($warnings['id'])) || ($action == "service_edit" && $_POST['id'] !== $_POST['id2'])) // Sprawdzanie czy usługa o takim ID już istnieje
+            if (($action == "service_add" && !isset($warnings['id'])) || ($action == "service_edit" && $_POST['id'] !== $_POST['id2'])) {
+                // Sprawdzanie czy usługa o takim ID już istnieje
             {
                 if ($heart->get_service($_POST['id']) !== null) {
                     $warnings['id'][] = $lang->translate('id_exist');
+            }
                 }
             }
 
@@ -803,11 +805,13 @@ class JsonHttpAdminKernel extends Kernel
                     [$_POST['id']]
                 ));
             } catch (SqlQueryException $e) {
-                if ($e->getErrorno() == 1451) // Istnieją powiązania
+                if ($e->getErrorno() == 1451) {
+                    // Istnieją powiązania
                 {
                     return new ApiResponse(
                         "error", $lang->translate('delete_service_er_row_is_referenced_2'), 0
                     );
+                }
                 }
 
                 throw $e;
@@ -987,11 +991,13 @@ class JsonHttpAdminKernel extends Kernel
                     [$_POST['id']]
                 ));
             } catch (SqlQueryException $e) {
-                if ($e->getErrorno() == 1451) // Istnieją powiązania
+                if ($e->getErrorno() == 1451) {
+                    // Istnieją powiązania
                 {
                     return new ApiResponse(
                         "error", $lang->translate('delete_server_constraint_fails'), 0
                     );
+                }
                 }
 
                 throw $e;

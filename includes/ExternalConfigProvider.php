@@ -41,7 +41,7 @@ class ExternalConfigProvider
 
     protected function loadConfig()
     {
-        return $this->cachingRequester->load(CacheEnum::EXTERNAL_CONFIG, static::CACHE_TTL, function () {
+        return $this->cachingRequester->load(CacheEnum::EXTERNAL_CONFIG, static::CACHE_TTL, function() {
             return $this->request();
         });
     }

@@ -100,7 +100,7 @@ class License
      */
     protected function loadLicense()
     {
-        return $this->cachingRequester->load(CacheEnum::LICENSE, static::CACHE_TTL, function () {
+        return $this->cachingRequester->load(CacheEnum::LICENSE, static::CACHE_TTL, function() {
             return $this->request();
         });
     }

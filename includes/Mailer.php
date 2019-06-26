@@ -34,7 +34,7 @@ class Mailer
     public function signedSend($email, $name, $subject, $text)
     {
         ////////// USTAWIENIA //////////
-        $email = filter_var($email, FILTER_VALIDATE_EMAIL);    // Adres e-mail adresata
+        $email = filter_var($email, FILTER_VALIDATE_EMAIL); // Adres e-mail adresata
         $name = htmlspecialchars($name);
         $sender_email = $this->settings['sender_email'];
         $sender_name = $this->settings['sender_email_name'];
@@ -81,7 +81,7 @@ class Mailer
         $settings = app()->make(Settings::class);
 
         ////////// USTAWIENIA //////////
-        $email = filter_var($email, FILTER_VALIDATE_EMAIL);    // Adres e-mail adresata
+        $email = filter_var($email, FILTER_VALIDATE_EMAIL); // Adres e-mail adresata
         $name = htmlspecialchars($name);
         $sender_email = $settings['sender_email'];
         $sender_name = $settings['sender_email_name'];
