@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3539ebbe694355e600ef271ea1f79b8a",
+    "content-hash": "3cb0e65e4538cc64d201756c5bd51d89",
     "packages": [
         {
             "name": "barryvdh/composer-cleanup-plugin",
-            "version": "v0.1.1",
+            "version": "v0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/composer-cleanup-plugin.git",
