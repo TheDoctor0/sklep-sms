@@ -1,4 +1,4 @@
-# Sklep SMS
+# Sklep SMS [![Build Status](https://travis-ci.org/TheDoctor0/sklep-sms.png)](https://travis-ci.org/TheDoctor0/sklep-sms) [![StyleCI](https://github.styleci.io/repos/178412640/shield?branch=master&style=flat)](https://github.styleci.io/repos/178412640) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/TheDoctor0/sklep-sms/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/TheDoctor0/sklep-sms/?branch=master) [![License](https://img.shields.io/github/license/TheDoctor0/sklep-sms.svg?color=sucess)](https://img.shields.io/github/license/TheDoctor0/sklep-sms.svg?color=sucess&style=plastic)
 
 Sklep SMS ułatwia zarabianie realnych pieniędzy na własnych serwerach gier!
 
