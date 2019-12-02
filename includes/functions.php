@@ -1124,11 +1124,6 @@ function if_strlen2($empty, $default)
     return strlen($empty) ? $empty : $default;
 }
 
-function mb_str_split($string)
-{
-    return preg_split('/(?<!^)(?!$)/u', $string);
-}
-
 function searchWhere($search_ids, $search, &$where)
 {
     /** @var Database $db */
