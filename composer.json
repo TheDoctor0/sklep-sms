@@ -20,7 +20,7 @@
     "ext-json": "*",
     "ext-mysqli": "*",
     "ext-simplexml": "*",
-    "vlucas/phpdotenv": "^3.4",
+    "vlucas/phpdotenv": "^4.1",
     "illuminate/container": "^5.4",
     "symfony/console": "^4.3",
     "symfony/debug": "^4.3",
