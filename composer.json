@@ -24,7 +24,7 @@
     "illuminate/container": "^5.4",
     "symfony/console": "^4.3",
     "symfony/debug": "^4.3",
-    "symfony/http-foundation": "^3.4",
+    "symfony/http-foundation": "^4.4",
     "sentry/sentry": "^1.9",
     "psr/simple-cache": "^1.0",
     "nikic/fast-route": "^1.3",
